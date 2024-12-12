@@ -68,7 +68,7 @@ const InteractWithContract = () => {
         accounts[0],
         0,
         CONTRACT_ADDRESS,
-        "meme_spike",
+        "memecoins",
         "register_SPIKE",
         [],
         [],

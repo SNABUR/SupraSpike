@@ -11,8 +11,7 @@ export default function Home() {
   const [showDisconnect, setShowDisconnect] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
 
-  const CONTRACT_ADDRESS =
-    "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::memecoins::SPIKE";
+  const CONTRACT_ADDRESS = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::memecoins::SPIKE";
 
   const getProvider = () => {
     if (typeof window !== "undefined" && "starkey" in window) {
