@@ -3,15 +3,17 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import ApproveTransaction from "./components/approve";
+import Airdrop from "./components/Airdrop";
 
 export default function Home() {
   const [account, setAccount] = useState("");
   const [isInstalled, setIsInstalled] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [showDisconnect, setShowDisconnect] = useState(false);
-  const [copySuccess, setCopySuccess] = useState(false);
+  const [activeTab, setActiveTab] = useState("approve"); // State to control active tab
 
-  const CONTRACT_ADDRESS = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::memecoins::SPIKE";
+  const CONTRACT_ADDRESS =
+    "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::memecoins::SPIKE";
 
   const getProvider = () => {
     if (typeof window !== "undefined" && "starkey" in window) {
@@ -73,19 +75,9 @@ export default function Home() {
 
   const shortAccount = account ? `${account.slice(0, 6)}...${account.slice(-4)}` : "";
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(CONTRACT_ADDRESS).then(
-      () => {
-        setCopySuccess(true);
-        setTimeout(() => setCopySuccess(false), 2000);
-      },
-      (err) => console.error("Failed to copy: ", err)
-    );
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-700 to-pink-500 text-white font-sans">
-      <header className="flex items-center justify-between p-6">
+      <header className="flex items-center justify-between p-3">
         <Image
           src="/spike.jpg"
           alt="Spike Logo"
@@ -129,22 +121,39 @@ export default function Home() {
           className="rounded-full shadow-lg"
         />
         <h1 className="text-4xl font-bold mt-4">Spike Meme</h1>
-        <p className="text-lg mt-2">Have fun and connect with Supra Oracles</p>
+
+        {/* Tabs for Approve and Send */}
         <div className="mt-6 w-full max-w-lg">
-          <p className="text-lg font-semibold">Contract Address:</p>
-          <div className="flex items-center gap-2 mt-2 bg-purple-100 text-purple-700 px-4 py-2 rounded-lg shadow-md w-full">
-            <span className="truncate">{CONTRACT_ADDRESS}</span>
+          <div className="flex justify-center gap-4 mb-4">
             <button
-              onClick={copyToClipboard}
-              className="bg-purple-700 text-white px-3 py-1 rounded hover:bg-purple-800"
+              className={`px-4 py-2 rounded-lg font-bold ${
+                activeTab === "approve"
+                  ? "bg-purple-700 text-white"
+                  : "bg-purple-100 text-purple-700 hover:bg-purple-200"
+              }`}
+              onClick={() => setActiveTab("approve")}
             >
-              Copy
+              Approve
+            </button>
+            <button
+              className={`px-4 py-2 rounded-lg font-bold ${
+                activeTab === "Airdrop"
+                  ? "bg-purple-700 text-white"
+                  : "bg-purple-100 text-purple-700 hover:bg-purple-200"
+              }`}
+              onClick={() => setActiveTab("Airdrop")}
+            >
+              Airdrop
             </button>
           </div>
-          {copySuccess && (
-            <p className="text-green-400 text-sm mt-2">Copied to clipboard!</p>
-          )}
+
+          {/* Content Based on Active Tab */}
+          <div className="bg-purple-100 text-purple-700 p-6 rounded-lg shadow-md">
+            {activeTab === "approve" ? <ApproveTransaction /> : <Airdrop />}
+          </div>
         </div>
+
+
 
         {!isInstalled && (
           <p className="text-red-300 mt-6">
@@ -162,8 +171,6 @@ export default function Home() {
         )}
 
         {errorMessage && <p className="text-red-500 font-bold mt-4">{errorMessage}</p>}
-
-        <ApproveTransaction />
       </main>
 
       <footer className="mt-10 text-center text-sm">
