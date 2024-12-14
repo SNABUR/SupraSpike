@@ -49,8 +49,13 @@ export default function Home() {
       } catch (error) {
         setErrorMessage("Connection rejected by the user.");
       }
+    } else {
+      // Redirige al enlace de instalación si no está instalado
+      window.open("https://starkey.app/", "_blank");
+      setErrorMessage("StarKey Wallet is not installed. Redirecting to installation...");
     }
   };
+  
 
   useEffect(() => {
     const provider = getProvider();
@@ -148,8 +153,8 @@ export default function Home() {
           </div>
   
           {!isInstalled && (
-            <p className="text-red-300 mt-6">
-              StarKey Wallet is not installed. Please install it{' '}
+            <p className="text-white text-lg mt-6">
+              *StarKey Wallet is not installed. Please install it{' '}
               <a
                 href="https://starkey.app/"
                 target="_blank"
