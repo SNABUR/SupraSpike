@@ -10,10 +10,6 @@ export default function Home() {
   const [isInstalled, setIsInstalled] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [showDisconnect, setShowDisconnect] = useState(false);
-  const [activeTab, setActiveTab] = useState("approve"); // State to control active tab
-
-  const CONTRACT_ADDRESS =
-    "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::memecoins::SPIKE";
 
   const getProvider = () => {
     if (typeof window !== "undefined" && "starkey" in window) {
@@ -24,7 +20,7 @@ export default function Home() {
       }
     }
     setIsInstalled(false);
-    window.open("https://starkey.app/", "_blank");
+    return null; // No abrir la ventana automáticamente
   };
 
   const resetWalletData = () => {

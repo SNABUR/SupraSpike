@@ -13,6 +13,7 @@ const Airdrop = () => {
     return countdownEnd - now;
   });
   const CONTRACT_ADDRESS = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794";
+  const CONTRACT_ADDRESS_MEME = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::memecoins::SPIKE";
 
   const getProvider = useCallback(() => {
     if (typeof window !== "undefined" && "starkey" in window) {
@@ -72,7 +73,7 @@ const Airdrop = () => {
         "faucet",
         "mint",
         [                           // Tipos genéricos (CoinType)
-          "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::meme_spike::SPIKE",
+          CONTRACT_ADDRESS_MEME,
         ],
         [
         ],
