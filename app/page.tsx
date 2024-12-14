@@ -76,109 +76,109 @@ export default function Home() {
   const shortAccount = account ? `${account.slice(0, 6)}...${account.slice(-4)}` : "";
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-700 to-pink-500 text-white font-sans">
-      <header className="flex items-center justify-between p-3">
-        <Image
-          src="/spike.jpg"
-          alt="Spike Logo"
-          width={50}
-          height={50}
-          className="rounded-full shadow-lg"
-        />
-        <div className="flex items-center gap-4 relative">
+    <div className="min-h-screen bg-gradient-to-b from-purple-700 to-pink-500 text-white font-sans flex flex-col">
+      {/* Header */}
+      <header className="flex items-center justify-between px-6 py-4 bg-purple-800 shadow-md">
+        <div className="flex items-center gap-4">
+          <Image
+            src="/spike.jpg"
+            alt="Spike Logo"
+            width={50}
+            height={50}
+            className="rounded-full shadow-lg"
+          />
+          <h1 className="text-2xl font-bold tracking-wide">Spike</h1>
+        </div>
+        <div className="relative">
           {account ? (
             <div
-              className="text-sm bg-white text-purple-700 py-1 px-3 rounded-full font-mono cursor-pointer shadow-lg hover:shadow-purple-700 transition"
+              className="text-sm bg-white text-purple-700 py-1 px-3 rounded-full font-mono cursor-pointer shadow-lg hover:shadow-purple-700 transition duration-300"
               onClick={() => setShowDisconnect(!showDisconnect)}
             >
               {shortAccount}
               {showDisconnect && (
                 <button
                   onClick={disconnectWallet}
-                  className="absolute top-10 left-0 bg-red-500 text-white py-1 px-3 rounded shadow-lg hover:bg-red-600"
+                  className="absolute top-10 left-0 bg-red-500 text-white py-2 px-4 rounded shadow-lg hover:bg-red-600 transition duration-300"
                 >
                   Disconnect
                 </button>
               )}
             </div>
           ) : (
-            <button
-              onClick={connectWallet}
-              className="bg-purple-700 text-white font-bold py-2 px-4 rounded-full shadow-lg transition-all hover:bg-purple-800 hover:shadow-lg"
-            >
-              Connect Wallet
-            </button>
+          <button
+            onClick={connectWallet}
+            className="bg-gradient-to-r from-purple-400 to-orange-500 text-white font-extrabold py-3 px-8 rounded-full shadow-xl hover:from-yellow-300 hover:to-orange-400 transition duration-300 transform hover:scale-105"
+          >
+            Connect Wallet
+          </button>
+
           )}
         </div>
       </header>
-
-      <main className="flex flex-col items-center justify-center p-6 text-center">
-        <Image
-          src="/spike.jpg"
-          alt="Spike Logo"
-          width={200}
-          height={200}
-          className="rounded-full shadow-lg"
-        />
-        <h1 className="text-4xl font-bold mt-4">Spike Meme</h1>
-
-        {/* Tabs for Approve and Send */}
-        <div className="mt-6 w-full max-w-lg">
-          <div className="flex justify-center gap-4 mb-4">
-            <button
-              className={`px-4 py-2 rounded-lg font-bold ${
-                activeTab === "approve"
-                  ? "bg-purple-700 text-white"
-                  : "bg-purple-100 text-purple-700 hover:bg-purple-200"
-              }`}
-              onClick={() => setActiveTab("approve")}
-            >
-              Approve
-            </button>
-            <button
-              className={`px-4 py-2 rounded-lg font-bold ${
-                activeTab === "Airdrop"
-                  ? "bg-purple-700 text-white"
-                  : "bg-purple-100 text-purple-700 hover:bg-purple-200"
-              }`}
-              onClick={() => setActiveTab("Airdrop")}
-            >
-              Airdrop
-            </button>
-          </div>
-
-          {/* Content Based on Active Tab */}
-          <div className="bg-purple-100 text-purple-700 p-6 rounded-lg shadow-md">
-            {activeTab === "approve" ? <ApproveTransaction /> : <Airdrop />}
-          </div>
+  
+      {/* Main Content */}
+      <main className="flex-grow flex flex-col md:flex-row items-center justify-center gap-8 p-6">
+        <div className="flex-shrink-0">
+          <Image
+            src="/spike.jpg"
+            alt="Spike Logo"
+            width={200}
+            height={200}
+            className="rounded-full shadow-lg border-4 border-white"
+          />
         </div>
+        <div className="text-center md:text-left max-w-lg">
+        <h1 className="text-6xl text-center mb-12 font-extrabold tracking-tight text-pink-100">
+          Supra Spike 🦔
+        </h1>
+
+        <p className="mt-4 text-5lg font-bold text-purple-100 leading-relaxed">
+          🚀 We are the <span className="text-yellow-300 font-extrabold">first memecoin</span> on the Supra network. Join our amazing community and be part of the <span className="font-bold text-pink-300">Supra Alunization</span>. 💜
+        </p>
+
+        <p className="mt-4 text-3lg font-bold text-purple-100 leading-relaxed">
+          🌟 <span className="text-pink-300">Spike</span> is the most <span className="text-yellow-300">adorable</span> and <span className="text-pink-300">brave</span> memecoin! 🦔✨
+        </p>
 
 
 
-        {!isInstalled && (
-          <p className="text-red-300 mt-6">
-            StarKey Wallet is not installed. Please install it{" "}
-            <a
-              href="https://starkey.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline text-white hover:text-yellow-300"
-            >
-              here
-            </a>
-            .
-          </p>
-        )}
-
-        {errorMessage && <p className="text-red-500 font-bold mt-4">{errorMessage}</p>}
+  
+          <div className="mt-6">
+            <div className="bg-purple-100 text-purple-700 p-6 rounded-lg shadow-md">
+              <ApproveTransaction />
+              <Airdrop />
+            </div>
+          </div>
+  
+          {!isInstalled && (
+            <p className="text-red-300 mt-6">
+              StarKey Wallet is not installed. Please install it{' '}
+              <a
+                href="https://starkey.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline text-yellow-300 hover:text-yellow-400 transition duration-300"
+              >
+                here
+              </a>
+              .
+            </p>
+          )}
+  
+          {errorMessage && <p className="text-red-500 font-bold mt-4">{errorMessage}</p>}
+        </div>
       </main>
-
-      <footer className="mt-10 text-center text-sm">
+  
+      {/* Footer */}
+      <footer className="py-6 bg-purple-900 text-center text-sm text-purple-200">
         <p>
-          Made with ❤️ for the Supra network and the meme{" "}
-          <span className="font-bold">Spike</span>
+          Made with ❤️ in Supra network{' '}
         </p>
       </footer>
     </div>
   );
+  
+  
+  
 }

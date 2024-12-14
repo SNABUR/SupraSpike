@@ -103,54 +103,10 @@ const InteractWithContract = () => {
 
   return (
     <div className="space-y-8 mt-7">
-            {/* Step 1: Approve Token */}
-            <div className="bg-purple-100 text-purple-700 p-6 rounded-lg shadow-md">
-        <h2 className="text-xl font-bold text-center mb-4">Step 1: Approve Token</h2>
-        <p className="text-center text-lg">
-          To receive $Spike tokens in your wallet, you must approve the token. Without this step, tokens cannot be received or recognized by your wallet.
-        </p>
-        <button
-          onClick={registerToken}
-          disabled={isLoading}
-          className={`w-full max-w-md mx-auto mt-4 px-6 py-3 rounded-lg shadow-md font-semibold text-lg transition-all transform ${
-            isLoading
-              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-              : "bg-purple-700 text-white hover:bg-purple-800 hover:shadow-lg active:scale-95"
-          }`}
-        >
-          {isLoading ? (
-            <div className="flex items-center justify-center space-x-2">
-              <svg
-                className="animate-spin h-6 w-6 text-white"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                ></path>
-              </svg>
-              <span>Processing...</span>
-            </div>
-          ) : (
-            "Approve Token"
-          )}
-        </button>
-      </div>
+
       {/* Step 1: Add Token */}
       <div className="bg-purple-100 text-purple-700 p-3 rounded-lg shadow-md">
-        <h2 className="text-xl font-bold text-center mb-3">Step 2: Add $SPIKE to Your Wallet</h2>
-        <div className="flex items-center justify-center gap-2 mt-1 mb-3 bg-purple-200 text-purple-800 px-6 py-3 rounded-lg shadow-md">
+          <div className="flex items-center justify-center gap-2 mt-1 mb-3 bg-purple-200 text-purple-800 px-6 py-3 rounded-lg shadow-md">
             <span className="font-mono text-sm">
               {CONTRACT_ADDRESS_MEME.slice(0, 7)}...{CONTRACT_ADDRESS_MEME.slice(-12)}
             </span>
@@ -161,10 +117,11 @@ const InteractWithContract = () => {
               Copy
             </button>
           </div>
-        <p className="text-center text-lg">
-          To interact with $Spike tokens, you need to first add the token to your wallet by copying
-          the contract address below and pasting it into the "Add Token" section of your StarKey Wallet.
+          <p className="text-center text-lg font-semibold text-purple-700">
+          ✨ First, add the <span className="text-black font-bold">$SPIKE</span> token to your wallet through <span className="text-yellow-900 font-bold">Manage Token</span> in the StarKey Wallet to get started! 🦔💜
         </p>
+
+
         <div className="mt-6 w-full max-w-lg mx-auto">
 
           {copySuccess && (
@@ -174,9 +131,6 @@ const InteractWithContract = () => {
           )}
         </div>
       </div>
-  
-
-  
       {/* Success Message */}
       {result && (
         <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded shadow-md">
