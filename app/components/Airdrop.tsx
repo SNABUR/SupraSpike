@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback } from "react";
 
 const Airdrop = () => {
   const [provider, setProvider] = useState(null);
-  const [memeContract, setMemeContract] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [timeLeft, setTimeLeft] = useState(() => {
