@@ -128,13 +128,13 @@ export default function Admin() {
       ];
 
       const transactionData = await starkeyProvider.createRawTransactionData(rawTxPayload);
-      const networkData = await starkeyProvider.getChainId();
+      const networkData = 8 //mainnet 8
       
       const params = {
         data: transactionData,
         from: accounts[0],
         to: CONTRACT_ADDRESS,
-        chainId: networkData.chainId,
+        chainId: networkData,
         value: "",
       };
 
@@ -181,13 +181,13 @@ export default function Admin() {
           ];
         
         const transactionData2 = await starkeyProvider.createRawTransactionData(rawTxPayload2);
-        const networkData = await starkeyProvider.getChainId();
+        const networkData = 8 //mainnet 8
 
         const params = {
         data: transactionData2,
         from: accounts[0],
         to: CONTRACT_ADDRESS,
-        chainId: networkData.chainId,
+        chainId: networkData,
         value: "",
         };
 
@@ -237,13 +237,13 @@ export default function Admin() {
           ];
         
         const transactionData2 = await starkeyProvider.createRawTransactionData(rawTxPayload2);
-        const networkData = await starkeyProvider.getChainId();
+        const networkData = 8; //mainnet 8
 
         const params = {
         data: transactionData2,
         from: accounts[0],
         to: CONTRACT_ADDRESS,
-        chainId: networkData.chainId,
+        chainId: networkData,
         value: "",
         };
 

@@ -67,7 +67,7 @@ const InteractWithContract = () => {
         throw new Error("Unable to fetch the account address.");
       }
 
-      const networkData = await starkeyProvider.getChainId();
+      const networkData = await starkeyProvider.getChainId(); //mainnet is 8
       const rawTxPayload = [
         accounts[0],
         0,

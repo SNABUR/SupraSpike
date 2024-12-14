@@ -18,6 +18,7 @@ const Airdrop = () => {
   const getProvider = useCallback(() => {
     if (typeof window !== "undefined" && "starkey" in window) {
       const starkeyProvider = (window as any)?.starkey.supra;
+      console.log(starkeyProvider,"starkeyProvider")
       setProvider(starkeyProvider);
       return starkeyProvider || null;
     }
@@ -81,13 +82,12 @@ const Airdrop = () => {
       ];
 
       const transactionData = await starkeyProvider.createRawTransactionData(rawTxPayload);
-      const networkData = await starkeyProvider.getChainId();
       
       const params = {
         data: transactionData,
         from: accounts[0],
         to: CONTRACT_ADDRESS,
-        chainId: networkData.chainId,
+        chainId: 8,
         value: "",
       };
 
