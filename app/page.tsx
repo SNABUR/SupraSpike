@@ -11,6 +11,7 @@ export default function Home() {
   const [isInstalled, setIsInstalled] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [showDisconnect, setShowDisconnect] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
 
   const getProvider = () => {
     if (typeof window !== "undefined" && "starkey" in window) {
@@ -79,84 +80,149 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-700 to-pink-500 text-white font-sans flex flex-col">
       {/* Header */}
-      <header className="flex flex-wrap items-center justify-between px-4 py-3 bg-purple-800 shadow-md">
-        <div className="flex items-center gap-2 sm:gap-4">
-          <Image
-            src="/spike.jpg"
-            alt="Spike Logo"
-            width={40}
-            height={40}
-            className="rounded-full shadow-lg"
-          />
-          <h1 className="text-xl sm:text-2xl font-bold tracking-wide text-white">Spike</h1>
+      <header className="relative flex flex-wrap items-center justify-between px-4 py-3 bg-purple-800 shadow-md">
+      {/* Logo y Título */}
+      <div className="flex items-center gap-2 sm:gap-4">
+        <Image
+          src="/spike.jpg"
+          alt="Spike Logo"
+          width={40}
+          height={40}
+          className="rounded-full shadow-lg"
+        />
+        <h1 className="text-xl sm:text-2xl font-bold tracking-wide text-white">Spike</h1>
+      </div>
+      {/* Opciones del Menú Desplegable */}
+      <div
+      className={`absolute top-full right-0 w-1/3 bg-purple-900 bg-opacity-95 flex flex-col items-center py-4 shadow-lg z-50 transition-all duration-300 md:hidden ${
+        showMenu ? "opacity-100 scale-100 pointer-events-auto visible" : "opacity-0 scale-95 pointer-events-none invisible"
+      }`}
+    >
+            <button
+              onClick={connectWallet}
+              className="bg-gradient-to-r from-purple-400 to-orange-500 text-white font-bold text-sm sm:text-base py-2 px-4 sm:py-3 sm:px-6 rounded-full shadow-xl hover:from-yellow-300 hover:to-orange-400 transition duration-300 transform hover:scale-105 w-full md:w-auto"
+            >
+              Connect Wallet
+            </button>
+
+        <div className="flex items-center gap-4 mt-4">
+          <a href="https://x.com/supra_spike" target="_blank" rel="noopener noreferrer">
+            <Image
+              src="/twitter.svg"
+              alt="Twitter"
+              width={30}
+              height={30}
+              className="hover:scale-110 hover:filter invert transition transform duration-200"
+            />
+          </a>
+          <a href="https://t.me/supraspike" target="_blank" rel="noopener noreferrer">
+            <Image
+              src="/telegram.svg"
+              alt="Telegram"
+              width={30}
+              height={30}
+              className="hover:scale-110 hover:filter invert transition transform duration-200"
+            />
+          </a>
+          <a href="https://discord.gg/XGpkEXGT" target="_blank" rel="noopener noreferrer">
+            <Image
+              src="/discord.svg"
+              alt="Discord"
+              width={30}
+              height={30}
+              className="hover:scale-110 hover:filter invert transition transform duration-200"
+            />
+          </a>
+        </div>
+      </div>
+      {/* Opciones principales */}
+      <div className="md:flex items-center gap-6">
+        {/* Botón para MemeFactory */}
+        <Link
+          href="/memefactory"
+          className="bg-gradient-to-r from-yellow-500 to-orange-700 text-white font-bold py-2 px-4 rounded-full shadow-lg hover:from-yellow-300 hover:to-orange-400 hover:shadow-xl transition w-full md:w-auto text-center"
+        >
+          MemeFactory 🎨
+        </Link>
+
+        {/* Redes Sociales */}
+        <div className="hidden md:flex items-center justify-center gap-4 mt-2 md:mt-0">
+          <a href="https://x.com/supra_spike" target="_blank" rel="noopener noreferrer">
+            <Image
+              src="/twitter.svg"
+              alt="Twitter"
+              width={30}
+              height={30}
+              className="hover:scale-110 hover:filter invert transition transform duration-200"
+            />
+          </a>
+          <a href="https://t.me/supraspike" target="_blank" rel="noopener noreferrer">
+            <Image
+              src="/telegram.svg"
+              alt="Telegram"
+              width={30}
+              height={30}
+              className="hover:scale-110 hover:filter invert transition transform duration-200"
+            />
+          </a>
+          <a href="https://discord.gg/XGpkEXGT" target="_blank" rel="noopener noreferrer">
+            <Image
+              src="/discord.svg"
+              alt="Discord"
+              width={30}
+              height={30}
+              className="hover:scale-110 hover:filter invert transition transform duration-200"
+            />
+          </a>
         </div>
 
-        <div className="flex items-center gap-6">
-          {/* Redes sociales */}
-                    {/* Botón para MemeFactory */}
-          <Link
-            href="/memefactory"
-            className="bg-gradient-to-r from-yellow-500 to-orange-700 text-white font-bold py-2 px-4 rounded-full shadow-lg hover:from-yellow-300 hover:to-orange-400 hover:shadow-xl transition"
-          >
-            MemeFactory 🎨
-          </Link>
-          <div className="hidden md:flex items-center gap-4">
-            <a href="https://x.com/supra_spike" target="_blank" rel="noopener noreferrer">
-              <Image
-                src="/twitter.svg"
-                alt="Twitter"
-                width={30}
-                height={30}
-                className="hover:scale-110 hover:filter invert transition transform duration-200"
-              />
-            </a>
-            <a href="https://t.me/supraspike" target="_blank" rel="noopener noreferrer">
-              <Image
-                src="/telegram.svg"
-                alt="Telegram"
-                width={30}
-                height={30}
-                className="hover:scale-110 hover:filter invert transition transform duration-200"
-              />
-            </a>
-            <a href="https://discord.gg/XGpkEXGT" target="_blank" rel="noopener noreferrer">
-              <Image
-                src="/discord.svg"
-                alt="Discord"
-                width={30}
-                height={30}
-                className="hover:scale-110 hover:filter invert transition transform duration-200"
-              />
-            </a>
-          </div>
-          {/* Connect Wallet */}
-          <div className="relative">
-            {account ? (
-              <div
-                className="text-xs sm:text-sm bg-white text-purple-700 py-1 px-3 rounded-full font-mono cursor-pointer shadow-lg hover:shadow-purple-700 transition duration-300"
-                onClick={() => setShowDisconnect(!showDisconnect)}
-              >
-                {shortAccount}
-                {showDisconnect && (
-                  <button
-                    onClick={disconnectWallet}
-                    className="absolute top-10 left-0 bg-red-500 text-white py-2 px-4 rounded shadow-lg hover:bg-red-600 transition duration-300"
-                  >
-                    Disconnect
-                  </button>
-                )}
-              </div>
-            ) : (
-              <button
-                onClick={connectWallet}
-                className="bg-gradient-to-r from-purple-400 to-orange-500 text-white font-bold text-sm sm:text-base py-2 px-4 sm:py-3 sm:px-6 rounded-full shadow-xl hover:from-yellow-300 hover:to-orange-400 transition duration-300 transform hover:scale-105"
-              >
-                Connect Wallet
-              </button>
-            )}
-          </div>
+        {/* Connect Wallet */}
+        <div className="hidden md:flex relative mt-2 md:mt-0">
+          {account ? (
+            <div
+              className="text-xs sm:text-sm bg-white text-purple-700 py-1 px-3 rounded-full font-mono cursor-pointer shadow-lg hover:shadow-purple-700 transition duration-300"
+              onClick={() => setShowDisconnect(!showDisconnect)}
+            >
+              {shortAccount}
+              {showDisconnect && (
+                <button
+                  onClick={disconnectWallet}
+                  className="absolute top-10 left-0 bg-red-500 text-white py-2 px-4 rounded shadow-lg hover:bg-red-600 transition duration-300"
+                >
+                  Disconnect
+                </button>
+              )}
+            </div>
+          ) : (
+            <button
+              onClick={connectWallet}
+              className="bg-gradient-to-r from-purple-400 to-orange-500 text-white font-bold text-sm sm:text-base py-2 px-4 sm:py-3 sm:px-6 rounded-full shadow-xl hover:from-yellow-300 hover:to-orange-400 transition duration-300 transform hover:scale-105 w-full md:w-auto"
+            >
+              Connect Wallet
+            </button>
+          )}
         </div>
-      </header>
+      </div>
+      <div className="md:hidden">
+        <button
+        onClick={() => {
+          setShowMenu(!showMenu);
+        }}
+        className="text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
+      >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            className="w-6 h-6"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
       {/* Main Content */}
       <main className="flex-grow flex flex-col items-center justify-center gap-4 sm:gap-8 px-4 py-6">
         <div className="flex-shrink-0">
