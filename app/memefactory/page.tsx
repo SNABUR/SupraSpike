@@ -214,7 +214,7 @@ export default function Memefactory() {
       </section>
   
       {/* Form Section */}
-      <section className="w-full max-w-4xl mt-10 bg-white rounded-lg shadow-md p-6 md:p-10">
+      <section className="w-full max-w-xl mt-10 bg-white rounded-lg shadow-md p-6 md:p-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <input
             type="text"
