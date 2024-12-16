@@ -165,7 +165,7 @@ export default function Home() {
               className="hover:scale-110 hover:filter invert transition transform duration-200"
             />
           </a>
-          <a href="https://discord.gg/XGpkEXGT" target="_blank" rel="noopener noreferrer">
+          <a href="https://discord.gg/VZZWvBJYMk" target="_blank" rel="noopener noreferrer">
             <Image
               src="/discord.svg"
               alt="Discord"
