@@ -157,9 +157,6 @@ export default function Home() {
           </div>
         </div>
       </header>
-
-
-
       {/* Main Content */}
       <main className="flex-grow flex flex-col items-center justify-center gap-4 sm:gap-8 px-4 py-6">
         <div className="flex-shrink-0">
@@ -172,12 +169,12 @@ export default function Home() {
           />
         </div>
         <div className="text-center sm:text-left max-w-md">
-          <h1 className="text-4xl sm:text-6xl text-center sm:text-left mb-8 font-extrabold tracking-tight text-pink-100">
-            Supra Spike 🦔
+          <h1 className="text-4xl justify-center sm:text-6xl text-center sm:text-center mb-8 font-extrabold tracking-tight text-pink-100">
+            Supra Spike Airdrop 
           </h1>
 
           <p className="mt-4 text-lg sm:text-xl font-bold text-purple-100 leading-relaxed">
-            🚀 We are the <span className="text-yellow-300 font-extrabold">first memecoin</span> on the Supra network. Join our amazing community and be part of the <span className="font-bold text-pink-300">Supra Alunization</span>. 💜
+            🚀🦔 We are the <span className="text-yellow-300 font-extrabold">first memecoin</span> on the Supra network. Join our amazing community and be part of the <span className="font-bold text-pink-300">Supra Alunization</span>. 🦔💜
           </p>
 
           <div className="mt-6">

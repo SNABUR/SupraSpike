@@ -102,11 +102,14 @@ const InteractWithContract = () => {
   };
 
   return (
-    <div className="space-y-8 mt-7">
-
+    <div className="space-y-3 mt-3">
       {/* Step 1: Add Token */}
       <div className="bg-purple-100 text-purple-700 p-3 rounded-lg shadow-md">
-          <div className="flex items-center justify-center gap-2 mt-1 mb-3 bg-purple-200 text-purple-800 px-6 py-3 rounded-lg shadow-md">
+
+        <p className="text-center mb-5 text-lg font-semibold text-purple-700">
+          ✨ First, add the <span className="text-black font-bold">$SPIKE</span> token to your wallet through <span className="text-yellow-900 font-bold">Manage Token</span> in the StarKey Wallet to get started! 🦔💜
+        </p>
+        <div className="flex items-center justify-center gap-2 mt-1 mb-3 bg-purple-200 text-purple-800 px-6 py-3 rounded-lg shadow-md">
             <span className="font-mono text-sm">
               {CONTRACT_ADDRESS_MEME.slice(0, 7)}...{CONTRACT_ADDRESS_MEME.slice(-12)}
             </span>
@@ -117,9 +120,6 @@ const InteractWithContract = () => {
               Copy
             </button>
           </div>
-          <p className="text-center text-lg font-semibold text-purple-700">
-          ✨ First, add the <span className="text-black font-bold">$SPIKE</span> token to your wallet through <span className="text-yellow-900 font-bold">Manage Token</span> in the StarKey Wallet to get started! 🦔💜
-        </p>
 
 
         <div className="mt-6 w-full max-w-lg mx-auto">
