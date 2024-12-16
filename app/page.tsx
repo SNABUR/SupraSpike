@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import ApproveTransaction from "./components/approve";
 import Airdrop from "./components/Airdrop";
+import Link from "next/link";
 
 export default function Home() {
   const [account, setAccount] = useState("");
@@ -79,78 +80,84 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-b from-purple-700 to-pink-500 text-white font-sans flex flex-col">
       {/* Header */}
       <header className="flex flex-wrap items-center justify-between px-4 py-3 bg-purple-800 shadow-md">
-  <div className="flex items-center gap-2 sm:gap-4">
-    <Image
-      src="/spike.jpg"
-      alt="Spike Logo"
-      width={40}
-      height={40}
-      className="rounded-full shadow-lg"
-    />
-    <h1 className="text-xl sm:text-2xl font-bold tracking-wide">Spike</h1>
-  </div>
-
-  <div className="flex items-center gap-6">
-    {/* Redes sociales */}
-    <div className="flex items-center gap-4">
-      <a href="https://x.com/supra_spike" target="_blank" rel="noopener noreferrer">
+        <div className="flex items-center gap-2 sm:gap-4">
           <Image
-            src="/twitter.svg"
-            alt="Twitter"
-            width={30}
-            height={30}
-            className="hover:scale-110 hover:filter invert transition transform duration-200"
+            src="/spike.jpg"
+            alt="Spike Logo"
+            width={40}
+            height={40}
+            className="rounded-full shadow-lg"
           />
-      </a>
-      <a href="https://t.me/supraspike" target="_blank" rel="noopener noreferrer">
-        <Image
-          src="/telegram.svg"
-          alt="Telegram"
-          width={30}
-          height={30}
-          className="hover:scale-110 hover:filter invert transition transform duration-200"
-        />
-      </a>
-      <a href="https://discord.gg/XGpkEXGT" target="_blank" rel="noopener noreferrer">
-        <Image
-          src="/discord.svg"
-          alt="Discord"
-          width={30}
-          height={30}
-          className="hover:scale-110 hover:filter invert transition transform duration-200"
-        />
-      </a>
-
-    </div>
-
-    {/* Connect Wallet */}
-    <div className="relative">
-      {account ? (
-        <div
-          className="text-xs sm:text-sm bg-white text-purple-700 py-1 px-3 rounded-full font-mono cursor-pointer shadow-lg hover:shadow-purple-700 transition duration-300"
-          onClick={() => setShowDisconnect(!showDisconnect)}
-        >
-          {shortAccount}
-          {showDisconnect && (
-            <button
-              onClick={disconnectWallet}
-              className="absolute top-10 left-0 bg-red-500 text-white py-2 px-4 rounded shadow-lg hover:bg-red-600 transition duration-300"
-            >
-              Disconnect
-            </button>
-          )}
+          <h1 className="text-xl sm:text-2xl font-bold tracking-wide text-white">Spike</h1>
         </div>
-      ) : (
-        <button
-          onClick={connectWallet}
-          className="bg-gradient-to-r from-purple-400 to-orange-500 text-white font-bold text-sm sm:text-base py-2 px-4 sm:py-3 sm:px-6 rounded-full shadow-xl hover:from-yellow-300 hover:to-orange-400 transition duration-300 transform hover:scale-105"
-        >
-          Connect Wallet
-        </button>
-      )}
-    </div>
-  </div>
-</header>
+
+        <div className="flex items-center gap-6">
+          {/* Redes sociales */}
+                    {/* Botón para MemeFactory */}
+          <Link
+            href="/memefactory"
+            className="bg-gradient-to-r from-yellow-500 to-orange-700 text-white font-bold py-2 px-4 rounded-full shadow-lg hover:from-yellow-300 hover:to-orange-400 hover:shadow-xl transition"
+          >
+            MemeFactory 🎨
+          </Link>
+          <div className="hidden md:flex items-center gap-4">
+            <a href="https://x.com/supra_spike" target="_blank" rel="noopener noreferrer">
+              <Image
+                src="/twitter.svg"
+                alt="Twitter"
+                width={30}
+                height={30}
+                className="hover:scale-110 hover:filter invert transition transform duration-200"
+              />
+            </a>
+            <a href="https://t.me/supraspike" target="_blank" rel="noopener noreferrer">
+              <Image
+                src="/telegram.svg"
+                alt="Telegram"
+                width={30}
+                height={30}
+                className="hover:scale-110 hover:filter invert transition transform duration-200"
+              />
+            </a>
+            <a href="https://discord.gg/XGpkEXGT" target="_blank" rel="noopener noreferrer">
+              <Image
+                src="/discord.svg"
+                alt="Discord"
+                width={30}
+                height={30}
+                className="hover:scale-110 hover:filter invert transition transform duration-200"
+              />
+            </a>
+          </div>
+          {/* Connect Wallet */}
+          <div className="relative">
+            {account ? (
+              <div
+                className="text-xs sm:text-sm bg-white text-purple-700 py-1 px-3 rounded-full font-mono cursor-pointer shadow-lg hover:shadow-purple-700 transition duration-300"
+                onClick={() => setShowDisconnect(!showDisconnect)}
+              >
+                {shortAccount}
+                {showDisconnect && (
+                  <button
+                    onClick={disconnectWallet}
+                    className="absolute top-10 left-0 bg-red-500 text-white py-2 px-4 rounded shadow-lg hover:bg-red-600 transition duration-300"
+                  >
+                    Disconnect
+                  </button>
+                )}
+              </div>
+            ) : (
+              <button
+                onClick={connectWallet}
+                className="bg-gradient-to-r from-purple-400 to-orange-500 text-white font-bold text-sm sm:text-base py-2 px-4 sm:py-3 sm:px-6 rounded-full shadow-xl hover:from-yellow-300 hover:to-orange-400 transition duration-300 transform hover:scale-105"
+              >
+                Connect Wallet
+              </button>
+            )}
+          </div>
+        </div>
+      </header>
+
 
 
       {/* Main Content */}
