@@ -1,10 +1,9 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { BCS, TxnBuilderTypes } from "aptos";
+import { BCS } from "aptos";
 import Image from "next/image";
 import Link from "next/link";
-
 
 export default function Memefactory() {
   const [account, setAccount] = useState("");
@@ -15,87 +14,95 @@ export default function Memefactory() {
   const [memeSymbol, setMemeSymbol] = useState("");
   const [maxSupply, setMaxSupply] = useState("");
   const [URI, setURI] = useState("");
-  const [projectURL, setprojectURL] = useState("");
+  const [projectURL, setProjectURL] = useState("");
   const [result, setResult] = useState<string | null>(null);
   const [showDisconnect, setShowDisconnect] = useState(false);
-  const [isInstalled, setIsInstalled] = useState(false);
+
   const CONTRACT_ADDRESS = "0x6e3e09ab7fd0145d7befc0c68d6944ddc1a90fd45b8a6d28c76d8c48bed676b0";
-  const CONTRACT_ADDRESS_MEME = `${CONTRACT_ADDRESS}::meme_factory_test::create_token`;
-  //const CONTRACT_ADDRESS_MEME = "0x6e3e09ab7fd0145d7befc0c68d6944ddc1a90fd45b8a6d28c76d8c48bed676b0::meme_factory_test::create_token"; //MAINNET
 
+  // ** Mejorando la inicialización del proveedor **
+  const getProvider = useCallback(async () => {
+    try {
+      if (typeof window !== "undefined" && "starkey" in window) {
+        const starkeyProvider = (window as any)?.starkey?.supra;
+        if (starkeyProvider) {
+          setProvider(starkeyProvider);
 
-  const getProvider = () => {
-    if (typeof window !== "undefined" && "starkey" in window) {
-      const provider = (window as any)?.starkey?.supra;
-      if (provider) {
-        setProvider(provider);
-        setIsInstalled(true);
-        return provider;
+          const currentNetwork = await starkeyProvider.getChainId();
+          if (currentNetwork.chainId !== 8) {
+            await starkeyProvider.changeNetwork({ chainId: 6 });
+            console.log("Network changed to chainId 8");
+          }
+        }
+        return starkeyProvider || null;
       }
+      console.warn("StarKey Wallet is not installed.");
+      return null;
+    } catch (error) {
+      console.error("Error initializing provider:", error);
+      setError("Error initializing wallet provider.");
+      return null;
     }
-    setIsInstalled(false);
-    setProvider(null);
-    return null;
-  };
-  
+  }, []);
+
   useEffect(() => {
     getProvider();
-  }, []);
-  
+  }, [getProvider]);
 
+  // ** Conexión a la wallet **
   const connectWallet = async () => {
-    if (provider) {
-      try {
-        const accounts = await provider.connect();
-        if (accounts && accounts.length > 0) {
-          setAccount(accounts[0]);
-        } else {
-          throw new Error("No accounts found.");
-        }
-      } catch (error) {
-        setError("Connection rejected by the user.");
+    try {
+      if (!provider) {
+        setError("Wallet provider not initialized.");
+        return;
       }
-    } else {
-      setError("Provider not initialized.");
+      const accounts = await provider.connect();
+      if (accounts && accounts.length > 0) {
+        setAccount(accounts[0]);
+        setError(null);
+      } else {
+        throw new Error("No accounts found.");
+      }
+    } catch (err) {
+      console.error("Error connecting wallet:", err);
+      setError(err instanceof Error ? err.message : "Unknown error occurred.");
     }
   };
-  
-  const resetWalletData = () => {
-    setAccount("");
-  };
-
 
   const disconnectWallet = async () => {
-    if (provider) {
-      try {
+    try {
+      if (provider) {
         await provider.disconnect();
-      } catch (error) {
-        console.error("Error disconnecting:", error);
+        setAccount("");
+        setShowDisconnect(false);
       }
+    } catch (err) {
+      console.error("Error disconnecting:", err);
+      setError("Error disconnecting from wallet.");
     }
-    resetWalletData();
   };
 
+  // ** Crear el memecoin **
   const createMeme = async () => {
-    if (!provider) {
-      setError("StarKey Wallet is not installed or unsupported.");
-      return;
-    }
-    if (!memeName || !memeSymbol || !maxSupply) {
-      setError("Please fill all fields.");
-      return;
-    }
-
-    const parsedMaxSupply = parseInt(maxSupply, 10);
-    if (isNaN(parsedMaxSupply) || parsedMaxSupply <= 0) {
-      setError("Please provide a valid max supply.");
-      return;
-    }
-
-    setIsLoading(true);
-    setError(null);
-    console.log(memeName, "memename", memeSymbol, "symbol", parsedMaxSupply, "max supply")
     try {
+      if (!provider) {
+        setError("StarKey Wallet is not installed or unsupported.");
+        return;
+      }
+      if (!memeName || !memeSymbol || !maxSupply) {
+        setError("Please fill all fields.");
+        return;
+      }
+
+      const parsedMaxSupply = parseInt(maxSupply, 10);
+      if (isNaN(parsedMaxSupply) || parsedMaxSupply <= 0) {
+        setError("Please provide a valid max supply.");
+        return;
+      }
+
+      setIsLoading(true);
+      setError(null);
+
       const accounts = await provider.connect();
       const transactionData = await provider.createRawTransactionData([
         accounts[0],
@@ -107,12 +114,10 @@ export default function Memefactory() {
         [
           BCS.bcsSerializeStr(memeName),
           BCS.bcsSerializeStr(memeSymbol),
-          BCS.bcsSerializeUint64(parsedMaxSupply), // maximum_supply (u128)
-          BCS.bcsSerializeU8(8), // decimals (u8)
+          BCS.bcsSerializeUint64(parsedMaxSupply),
+          BCS.bcsSerializeU8(6),
           BCS.bcsSerializeStr(URI),
           BCS.bcsSerializeStr(projectURL),
-
-
         ],
         { txExpiryTime: Math.ceil(Date.now() / 1000) + 30 },
       ]);
@@ -123,37 +128,18 @@ export default function Memefactory() {
         from: accounts[0],
         to: CONTRACT_ADDRESS,
         chainId: networkData.chainId,
-        value: "",
       };
 
       const tx = await provider.sendTransaction(params);
       setResult(tx);
-      //setMemeName("");
-      //setMemeSymbol("");
-      //setMaxSupply("");
+      console.log("Transaction successful:", tx);
     } catch (err) {
+      console.error("Error creating memecoin:", err);
       setError(err instanceof Error ? err.message : "Unknown error occurred.");
     } finally {
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    const provider = getProvider();
-    if (provider) {
-      provider
-        .account()
-        .then((accounts: string | any[]) => {
-          if (accounts.length > 0) {
-            setAccount(accounts[0]);
-            console.log(`Already connected: ${accounts[0]}`);
-          }
-        })
-        .catch((error: any) => {
-          console.error(error);
-        });
-    }
-  }, []);
 
   const shortAccount = account ? `${account.slice(0, 6)}...${account.slice(-4)}` : "";
 
@@ -168,7 +154,7 @@ export default function Memefactory() {
         className="bg-gradient-to-r from-red-400 to-black-500 text-white font-bold py-2 px-4 rounded-full shadow-lg hover:from-yellow-300 hover:to-orange-400 hover:shadow-xl transition"
       >
         Airdrop 🎨
-      </Link>
+      </Link>     
 
       <div className="flex items-center gap-4">
         {account ? (
@@ -248,7 +234,7 @@ export default function Memefactory() {
             type="text"
             placeholder="Project URL"
             value={projectURL}
-            onChange={(e) => setprojectURL(e.target.value)}
+            onChange={(e) => setProjectURL(e.target.value)}
             className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-300 shadow-sm border border-pink-200"
           />
         </div>
