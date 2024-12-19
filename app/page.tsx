@@ -127,10 +127,8 @@ export default function Home() {
             />
           </a>
         </div>
-              <Link
-          //href="/launchpad"
-          href="/"
-
+        <Link
+          href="/launchpad"
           className="bg-gradient-to-r mb-3 from-purple-400 to-orange-500 text-white font-bold text-sm sm:text-base py-2 px-4 sm:py-3 sm:px-6 rounded-full shadow-xl hover:from-yellow-300 hover:to-orange-400 transition duration-300 transform hover:scale-105 w-full md:w-auto"
           >
           LaunchPad

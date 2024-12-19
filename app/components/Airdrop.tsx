@@ -129,7 +129,7 @@ const Airdrop = () => {
   const steps = [
     {
       text: "Follow us on Twitter",
-      link: "https://x.com/supra_spike",
+      link: "https://x.com/supra_spikes",
       icon: "./twitter.svg", // Ruta del ícono
 
     },

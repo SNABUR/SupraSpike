@@ -13,14 +13,25 @@ export default function LaunchPad() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [joinDeposit, setJoinDeposit] = useState("");
+  const [copySuccess, setCopySuccess] = useState(false);
+  const [progress, setProgress] = useState(50000694012300);
+  const idoSupply = 5069000000000000;
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(CONTRACT_ADDRESS_MEME).then(
+      () => {
+        setCopySuccess(true);
+        setTimeout(() => setCopySuccess(false), 2000);
+      },
+      (err) => console.error("Failed to copy: ", err)
+    );
+  };
 
   const CURRENCY = "0x1::supra_coin::SupraCoin"
   const price_meme = 0.0000000026;
   
   const CONTRACT_ADDRESS_IDO = "0x6e3e09ab7fd0145d7befc0c68d6944ddc1a90fd45b8a6d28c76d8c48bed676b0";
-
-  const CONTRACT_ADDRESS_MEME = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::meme_spike::SPIKE"; //TESTNET
-  //const CONTRACT_ADDRESS_MEME = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::memecoins::SPIKE"; //MAINNET
+  //const CONTRACT_ADDRESS_MEME = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::meme_spike::SPIKE"; //TESTNET
+  const CONTRACT_ADDRESS_MEME = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::memecoins::SPIKE"; //MAINNET
 
   const getProvider = useCallback(async () => {
     if (typeof window !== "undefined" && "starkey" in window) {
@@ -29,9 +40,9 @@ export default function LaunchPad() {
 
       if (starkeyProvider) {
         const currentNetwork = await starkeyProvider.getChainId();
-        if (currentNetwork.chainId !== 6) {
-          await starkeyProvider.changeNetwork({ chainId: 6 });
-          console.log("Network changed to chainId 6");
+        if (currentNetwork.chainId !== 8) {
+          await starkeyProvider.changeNetwork({ chainId: 8 });
+          console.log("Network changed to chainId 8");
         }
       }
 
@@ -91,7 +102,7 @@ export default function LaunchPad() {
               accounts[0],
               0,
               CONTRACT_ADDRESS_IDO,
-              "ido_10",
+              "ido",
               "joinIdo",
               [                          
                 CURRENCY,
@@ -144,7 +155,7 @@ export default function LaunchPad() {
             accounts[0],
             0,
             CONTRACT_ADDRESS_IDO,
-            "ido_10",
+            "ido",
             "claim",
             [ 
               CURRENCY,
@@ -188,6 +199,9 @@ export default function LaunchPad() {
         >
           🚀 Spike Airdrop
         </Link>
+        <div className="text-white font-extrabold text-lg sm:text-xl lg:text-2xl py-2 rounded-full shadow-md hover:from-pink-400 hover:to-purple-600 hover:shadow-lg transition">
+    🌟    Launchpad
+        </div>
         <div className="flex items-center gap-4">
           {account ? (
             <div className="relative">
@@ -226,8 +240,9 @@ export default function LaunchPad() {
               🎉 SUPRA SPIKE 🎉
             </h1>
             <p className="text-gray-700 text-sm sm:text-base lg:text-lg max-w-2xl mx-auto leading-relaxed mb-7">
-              Join the ultimate meme movement on <span className="font-bold text-pink-500">Supra Oracles</span> blockchain! Get your SPIKE tokens now and secure your place in meme history.
-            </p>
+  Be part of history with <span className="font-bold text-pink-500">Spike</span>, the first-ever memecoin on the lightning-fast <span className="font-bold text-pink-500">Supra Oracles</span> blockchain! Powered by 400,000 TPS, Spike the hedgehog is speeding into the future of memes. Don't miss your chance to join the movement—get your SPIKE tokens now!
+</p>
+
             <div className="flex justify-center gap-3">
               <Link href="/">
                 <button className="bg-white text-pink-800 font-bold px-6 py-3 rounded-full shadow hover:shadow-lg transition text-sm sm:text-base">
@@ -244,7 +259,7 @@ export default function LaunchPad() {
         </section>
     
         {/* Token Info Section */}
-        <section className="py-10 w-auto">
+        <section className="py-3 w-auto">
           <div className="max-w-6xl mx-auto px-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-10 p-3">
               {/* Imagen */}
@@ -259,10 +274,22 @@ export default function LaunchPad() {
               </div>
     
               {/* Información */}
-              <div className="text-gray-700 space-y-6">
+              <div className="text-gray-700 space-y-7">
                 <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-pink-600 text-center lg:text-left">
                   📊 Token Information
                 </h2>
+                <div className="flex items-center justify-center gap-2 mt-1 mb-1 bg-purple-200 text-purple-800 px-3 py-1 rounded-lg shadow-md">
+                  Contract:
+                  <span className="font-mono text-sm">
+                    {CONTRACT_ADDRESS_MEME.slice(0, 7)}...{CONTRACT_ADDRESS_MEME.slice(-12)}
+                  </span>
+                  <button
+                    onClick={copyToClipboard}
+                    className="bg-purple-700 text-white px-4 py-1 rounded-md hover:bg-purple-800 transition"
+                  >
+                    Copy
+                  </button>
+                </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="p-4 bg-pink-100 rounded-lg shadow">
                     <p className="text-sm sm:text-base lg:text-lg font-bold text-pink-700">
@@ -299,7 +326,10 @@ export default function LaunchPad() {
           <div className="max-w-4xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Buy Section */}
             <div className="bg-pink-50 p-6 rounded-xl shadow-md">
-              <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-pink-600 text-center mb-6">💰 Join $SPIKE IDO</h2>
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-pink-600 text-center mb-3">💰$SPIKE IDO</h2>
+              <div className=" text-gray-700 text-sm sm:text-base lg:text-lg mb-1">
+                Deposit SUPRA to join:
+              </div>
               <div className="flex items-center gap-3">
                 <input
                   type="number"
@@ -310,6 +340,10 @@ export default function LaunchPad() {
                 />
                 <p className="text-black font-bold text-sm sm:text-base">SUPRA</p>
               </div>
+              <div className="text-gray-700 text-sm sm:text-base lg:text-lg mb-6">
+                ~ {Number((Number(joinDeposit) * 1000) / (price_meme * 1000)).toLocaleString(undefined, { maximumFractionDigits: 0 })} SPIKE
+              </div>
+
     
               <div className="grid grid-cols-4 gap-2 mb-6">
                 <button className="bg-yellow-400 text-pink-800 font-bold py-2 rounded-full shadow hover:scale-105 hover:shadow-md transition text-sm sm:text-base"
@@ -329,22 +363,24 @@ export default function LaunchPad() {
                   Max
                 </button>
               </div>
-              <button className="bg-gradient-to-r from-yellow-400 to-pink-500 text-white py-3 rounded-full shadow-lg font-bold hover:scale-105 hover:shadow-xl transition w-full text-sm sm:text-base lg:text-lg"
+              <button className="bg-gradient-to-r from-yellow-400 to-pink-500 text-white py-5 px-7 rounded-full shadow-xl font-extrabold text-lg sm:text-xl lg:text-2xl hover:scale-110 hover:shadow-2xl transition transform duration-200 w-full"
                 onClick={JoinIDO}>
-                Buy Now
+                Join SPIKE IDO
               </button>
+
             </div>
     
             {/* Claim Section */}
-            <div className="bg-pink-50 p-6 rounded-xl shadow-md flex flex-col items-center">
-              <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-pink-600 font-extrabold text-center mb-4">🎁 Claim Your SPIKE</h2>
+            <div className="bg-pink-50 p-7 rounded-xl shadow-md flex flex-col items-center">
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-pink-600 font-extrabold text-center mb-4">🚀 Claim Your SPIKE</h2>
               <p className="text-gray-700 text-sm sm:text-base lg:text-lg text-center leading-relaxed mb-6 max-w-sm">
-                If you've participated in the IDO, claim your SPIKE tokens now and be part of the $SPIKE revolution!
+                If you've participated in the IDO, claim your SPIKE tokens now!
               </p>
-              <button className="bg-gradient-to-r from-yellow-300 to-pink-700 text-white text-sm sm:text-base lg:text-lg font-bold py-7 px-12 rounded-full shadow-lg hover:scale-105 hover:shadow-xl transition"
+              <button className="bg-gradient-to-r from-yellow-300 to-pink-700 text-white text-lg sm:text-xl lg:text-2xl font-extrabold py-5 px-7 rounded-full shadow-2xl hover:scale-110 hover:shadow-3xl transition transform duration-200 w-full"
                 onClick={ClaimTokens}>
-                Claim Now
+                Claim Your $SPIKE!
               </button>
+
             </div>
           </div>
         </section>
@@ -356,11 +392,11 @@ export default function LaunchPad() {
             <div className="relative w-full bg-gray-300 rounded-full h-6 overflow-hidden">
               <div
                 className="absolute top-0 left-0 bg-gradient-to-r from-pink-500 to-yellow-400 h-6"
-                style={{ width: "75%" }}
+                style={{ width: progress/idoSupply * 100 + "%" }}
               ></div>
             </div>
-            <p className="mt-4 font-bold text-gray-700 text-sm sm:text-base">75% Sold</p>
-            <p className="text-gray-500 text-sm sm:text-base">Tokens Sold: 750,000 / 5,069,000,000,000,000</p>
+            <p className="mt-4 font-bold text-gray-700 text-sm sm:text-base">{Math.round((progress * 100) / idoSupply)}% Sold</p>
+            <p className="text-gray-500 text-sm sm:text-base">Tokens Sold: {progress} / {idoSupply}</p>
           </div>
         </section>
       </div>

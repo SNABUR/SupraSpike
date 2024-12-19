@@ -36,9 +36,8 @@ export default function Admin() {
   
   const CONTRACT_ADDRESS = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794";
   const CONTRACT_ADDRESS_IDO = "0x6e3e09ab7fd0145d7befc0c68d6944ddc1a90fd45b8a6d28c76d8c48bed676b0";
-
-  const CONTRACT_ADDRESS_MEME = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::meme_spike::SPIKE"; //TESTNET
-  //const CONTRACT_ADDRESS_MEME = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::memecoins::SPIKE"; //MAINNET
+  //const CONTRACT_ADDRESS_MEME = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::meme_spike::SPIKE"; //TESTNET
+  const CONTRACT_ADDRESS_MEME = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::memecoins::SPIKE"; //MAINNET
 
 
   const getProvider = useCallback(async () => {
@@ -48,9 +47,9 @@ export default function Admin() {
 
       if (starkeyProvider) {
         const currentNetwork = await starkeyProvider.getChainId();
-        if (currentNetwork.chainId !== 6) {
-          await starkeyProvider.changeNetwork({ chainId: 6 });
-          console.log("Network changed to chainId 6");
+        if (currentNetwork.chainId !== 8) {
+          await starkeyProvider.changeNetwork({ chainId: 8 });
+          console.log("Network changed to chainId 8");
         }
       }
 
@@ -334,7 +333,7 @@ export default function Admin() {
             accounts[0],
             0,
             CONTRACT_ADDRESS_IDO,
-            "ido_10",
+            "ido",
             "createNewIDO",
             [                           // Type (CoinType)
               CURRENCY,                          // Type (CoinType)
@@ -389,7 +388,7 @@ export default function Admin() {
             accounts[0],
             0,
             CONTRACT_ADDRESS_IDO,
-            "ido_10",
+            "ido",
             "depositToken",
             [                          
               CURRENCY,
@@ -438,7 +437,7 @@ export default function Admin() {
             accounts[0],
             0,
             CONTRACT_ADDRESS_IDO,
-            "ido_10",
+            "ido",
             "joinIdo",
             [                          
               CURRENCY,
@@ -482,7 +481,7 @@ export default function Admin() {
             accounts[0],
             0,
             CONTRACT_ADDRESS_IDO,
-            "ido_10",
+            "ido",
             "claim",
             [ 
               CURRENCY,
