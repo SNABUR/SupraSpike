@@ -139,6 +139,15 @@ export default function Home() {
       <div className="md:flex items-center gap-6">
         {/* Botón para MemeFactory */}
         <Link
+          //href="/launchpad"
+          href="/"
+
+          className="bg-gradient-to-r from-yellow-500 to-orange-700 text-white font-bold py-2 px-4 rounded-full shadow-lg hover:from-yellow-300 hover:to-orange-400 hover:shadow-xl transition w-full md:w-auto text-center"
+        >
+          LaunchPad 🎨
+        </Link>
+        {/* Botón para MemeFactory */}
+        <Link
           href="/memefactory"
           className="bg-gradient-to-r from-yellow-500 to-orange-700 text-white font-bold py-2 px-4 rounded-full shadow-lg hover:from-yellow-300 hover:to-orange-400 hover:shadow-xl transition w-full md:w-auto text-center"
         >
