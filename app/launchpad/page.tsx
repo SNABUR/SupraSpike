@@ -250,7 +250,7 @@ export default function LaunchPad() {
               {/* Imagen */}
               <div className="flex justify-center lg:justify-start">
                 <Image
-                  src="/supraspike.png"
+                  src="/supraspike.jpg"
                   alt="SPIKE Meme"
                   width={260}
                   height={360}
