@@ -179,20 +179,20 @@ export default function LaunchPad() {
   const shortAccount = account ? `${account.slice(0, 6)}...${account.slice(-4)}` : "";
 
   return (
-<div className="items-center justify-center min-h-screen bg-gradient-to-br from-yellow-200 via-pink-300 to-red-400 font-sans">
-{/* Header */}
-      <header className="flex items-center justify-between px-6 py-4 bg-black shadow-lg sticky top-0 z-50">
+    <div className="items-center justify-center min-h-screen bg-gradient-to-br from-yellow-200 via-pink-300 to-red-400 font-sans">
+      {/* Header */}
+      <header className="flex items-center justify-between px-7 py-4 bg-black shadow-lg sticky top-0 z-50">
         <Link
           href="/"
-          className="bg-gradient-to-r from-yellow-500 to-orange-700 text-white font-bold py-2 px-4 rounded-full shadow-lg hover:from-yellow-300 hover:to-orange-400 hover:shadow-xl transition w-full md:w-auto text-center"
+          className="bg-gradient-to-r from-yellow-500 to-orange-700 text-white font-bold py-2 px-3 rounded-full shadow-lg hover:from-yellow-300 hover:to-orange-400 hover:shadow-xl transition w-auto md:w-auto text-center text-sm sm:text-base lg:text-lg"
         >
-          🚀 SPIKE AIRDROP
+          🚀 Spike Airdrop
         </Link>
         <div className="flex items-center gap-4">
           {account ? (
             <div className="relative">
               <div
-                className="bg-pink-600 text-white px-4 py-2 rounded-full cursor-pointer shadow hover:shadow-md transition"
+                className="bg-pink-600 text-white px-4 py-2 rounded-full cursor-pointer shadow hover:shadow-md transition text-sm sm:text-base"
                 onClick={() => setShowDisconnect(!showDisconnect)}
               >
                 {shortAccount}
@@ -200,7 +200,7 @@ export default function LaunchPad() {
               {showDisconnect && (
                 <button
                   onClick={disconnectWallet}
-                  className="absolute top-12 left-0 bg-red-500 text-white px-4 py-2 rounded shadow-md hover:bg-red-600"
+                  className="absolute top-12 left-0 bg-red-500 text-white px-4 py-2 rounded shadow-md hover:bg-red-600 text-sm sm:text-base"
                 >
                   Disconnect
                 </button>
@@ -209,147 +209,164 @@ export default function LaunchPad() {
           ) : (
             <button
               onClick={connectWallet}
-              className="bg-gradient-to-r from-pink-500 to-red-500 text-white px-6 py-2 font-bold rounded-full shadow-lg hover:scale-105 hover:shadow-xl transition"
+              className="bg-gradient-to-r from-pink-500 to-red-500 text-white px-6 py-2 font-bold rounded-full shadow-lg hover:scale-105 hover:shadow-xl transition text-sm sm:text-base lg:text-lg"
             >
               Connect Wallet
             </button>
           )}
         </div>
       </header>
-  
+    
       {/* Main Content Wrapper */}
       <div className="flex flex-col max-w-5xl mx-auto items-center justify-center h-auto border border-gray-300 rounded-xl bg-gradient-to-br from-yellow-100 via-pink-200 to-red-300 shadow-2xl p-6 space-y-7">
-      {/* Hero Section */}
+        {/* Hero Section */}
         <section className="py-3 text-center w-full">
           <div className="max-w-4xl mx-auto px-3">
-            <h1 className="text-6xl font-extrabold text-pink-600 mb-7 drop-shadow-md">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-pink-600 mb-7 drop-shadow-md">
               🎉 SUPRA SPIKE 🎉
             </h1>
-            <p className="text-gray-700 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed mb-7">
+            <p className="text-gray-700 text-sm sm:text-base lg:text-lg max-w-2xl mx-auto leading-relaxed mb-7">
               Join the ultimate meme movement on <span className="font-bold text-pink-500">Supra Oracles</span> blockchain! Get your SPIKE tokens now and secure your place in meme history.
             </p>
             <div className="flex justify-center gap-3">
               <Link href="/">
-                <button className="bg-white text-pink-800 font-bold px-6 py-3 rounded-full shadow hover:shadow-lg transition">
+                <button className="bg-white text-pink-800 font-bold px-6 py-3 rounded-full shadow hover:shadow-lg transition text-sm sm:text-base">
                   📄 website
                 </button>
               </Link>
               <Link href="https://twitter.com/supra_spikes" target="_blank">
-                <button className="bg-black text-white font-bold px-6 py-3 rounded-full shadow hover:scale-110 hover:shadow-lg transition">
+                <button className="bg-black text-white font-bold px-6 py-3 rounded-full shadow hover:scale-110 hover:shadow-lg transition text-sm sm:text-base">
                   🐦 Twitter
                 </button>
               </Link>
             </div>
           </div>
         </section>
-  
+    
         {/* Token Info Section */}
-        <section className="py-3 w-full">
-          <div className="max-w-4xl mx-auto px-4">
-            <div className="p-3 grid grid-cols-1 sm:grid-cols-2 gap-7 items-center">
-              <div className="flex justify-center sm:justify-end">
+        <section className="py-10 w-auto">
+          <div className="max-w-6xl mx-auto px-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-10 p-3">
+              {/* Imagen */}
+              <div className="flex justify-center lg:justify-start">
                 <Image
                   src="/supraspike.png"
                   alt="SPIKE Meme"
-                  width={200}
-                  height={300}
-                  className="rounded-xl w-200 h-500 shadow-lg hover:scale-105 transition-transform"
+                  width={260}
+                  height={360}
+                  className="rounded-3xl shadow-md hover:scale-105 transition-transform"
                 />
               </div>
-              <div className="text-gray-700 flex flex-col gap-2 sm:justify-center">
-                <p className="font-bold text-xl">
-                  Token Chain: <span className="text-pink-700">Supra</span>
-                </p>
-                <p className="font-bold text-xl">
-                  Total Supply: <span className="text-pink-700">13,700 Trillions</span>
-                </p>
-                <p className="font-bold text-xl">
-                  Start: <span className="text-pink-700">18/12/2025</span>
-                </p>
-                <p className="font-bold text-xl">
-                  End: <span className="text-pink-700">18/01/2025</span>
-                </p>
+    
+              {/* Información */}
+              <div className="text-gray-700 space-y-6">
+                <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-pink-600 text-center lg:text-left">
+                  📊 Token Information
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="p-4 bg-pink-100 rounded-lg shadow">
+                    <p className="text-sm sm:text-base lg:text-lg font-bold text-pink-700">
+                      Token Chain:
+                      <span className="block text-pink-900 text-base sm:text-lg lg:text-xl">Supra</span>
+                    </p>
+                  </div>
+                  <div className="p-4 bg-yellow-100 rounded-lg shadow">
+                    <p className="text-sm sm:text-base lg:text-lg font-bold text-yellow-700">
+                      Total Supply:
+                      <span className="block text-yellow-900 text-base sm:text-lg lg:text-xl">13,700 T</span>
+                    </p>
+                  </div>
+                  <div className="p-4 bg-pink-100 rounded-lg shadow">
+                    <p className="text-sm sm:text-base lg:text-lg font-bold text-pink-700">
+                      Start:
+                      <span className="block text-pink-900 text-base sm:text-lg lg:text-xl">18/12/2025</span>
+                    </p>
+                  </div>
+                  <div className="p-4 bg-yellow-100 rounded-lg shadow">
+                    <p className="text-sm sm:text-base lg:text-lg font-bold text-yellow-700">
+                      End:
+                      <span className="block text-yellow-900 text-base sm:text-lg lg:text-xl">18/01/2025</span>
+                    </p>
+                  </div>
+                </div>
               </div>
-
             </div>
           </div>
         </section>
-
+    
         {/* Buy & Claim Section */}
         <section className="py-3 w-full">
           <div className="max-w-4xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Buy Section */}
-            <div className="bg-pink-50 p-6 rounded-lg shadow-md">
-              <h2 className=" text-3xl font-extrabold text-pink-600 text-center mb-6">💰 Join $SPIKE IDO</h2>
+            <div className="bg-pink-50 p-6 rounded-xl shadow-md">
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-pink-600 text-center mb-6">💰 Join $SPIKE IDO</h2>
               <div className="flex items-center gap-3">
                 <input
                   type="number"
                   placeholder="Enter Amount"
                   value={joinDeposit}
                   onChange={(e) => setJoinDeposit(e.target.value)}
-                  className="border border-pink-300 p-3 mb-3 rounded-md focus:outline-none focus:ring-2 text-black focus:ring-pink-500 w-full"
+                  className="border border-pink-300 p-3 mb-3 rounded-md focus:outline-none focus:ring-2 text-black focus:ring-pink-500 w-full text-sm sm:text-base"
                 />
-                <p className="text-black font-bold">SUPRA</p>
+                <p className="text-black font-bold text-sm sm:text-base">SUPRA</p>
               </div>
-
-
+    
               <div className="grid grid-cols-4 gap-2 mb-6">
-                <button className="bg-yellow-400 text-pink-800 font-bold py-2 rounded-full shadow hover:scale-105 hover:shadow-md transition"
+                <button className="bg-yellow-400 text-pink-800 font-bold py-2 rounded-full shadow hover:scale-105 hover:shadow-md transition text-sm sm:text-base"
                   onClick={() => setJoinDeposit("1")}>
                   Min
                 </button>
-                <button className="bg-yellow-400 text-pink-800 font-bold py-2 rounded-full shadow hover:scale-105 hover:shadow-md transition"
+                <button className="bg-yellow-400 text-pink-800 font-bold py-2 rounded-full shadow hover:scale-105 hover:shadow-md transition text-sm sm:text-base"
                   onClick={() => setJoinDeposit("1500")}>
                   25%
                 </button>
-                <button className="bg-yellow-400 text-pink-800 font-bold py-2 rounded-full shadow hover:scale-105 hover:shadow-md transition"
+                <button className="bg-yellow-400 text-pink-800 font-bold py-2 rounded-full shadow hover:scale-105 hover:shadow-md transition text-sm sm:text-base"
                   onClick={() => setJoinDeposit("3170")}>
                   50%
                 </button>
-                <button className="bg-yellow-400 text-pink-800 font-bold py-2 rounded-full shadow hover:scale-105 hover:shadow-md transition"
+                <button className="bg-yellow-400 text-pink-800 font-bold py-2 rounded-full shadow hover:scale-105 hover:shadow-md transition text-sm sm:text-base"
                   onClick={() => setJoinDeposit("6214")}>
                   Max
                 </button>
               </div>
-              <button className="bg-gradient-to-r from-yellow-400 to-pink-500 text-white py-3 rounded-full shadow-lg font-bold hover:scale-105 hover:shadow-xl transition w-full"
+              <button className="bg-gradient-to-r from-yellow-400 to-pink-500 text-white py-3 rounded-full shadow-lg font-bold hover:scale-105 hover:shadow-xl transition w-full text-sm sm:text-base lg:text-lg"
                 onClick={JoinIDO}>
                 Buy Now
               </button>
             </div>
-
+    
             {/* Claim Section */}
-            <div className="bg-pink-50 p-6 rounded-lg shadow-md flex flex-col items-center">
-              <h2 className="text-3xl font-extrabold text-pink-600 font-extrabold  text-center mb-4">🎁 Claim Your SPIKE</h2>
-              <p className="text-gray-700 text-center  leading-relaxed mb-6 max-w-sm">
+            <div className="bg-pink-50 p-6 rounded-xl shadow-md flex flex-col items-center">
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-pink-600 font-extrabold text-center mb-4">🎁 Claim Your SPIKE</h2>
+              <p className="text-gray-700 text-sm sm:text-base lg:text-lg text-center leading-relaxed mb-6 max-w-sm">
                 If you've participated in the IDO, claim your SPIKE tokens now and be part of the $SPIKE revolution!
               </p>
-              <button className="bg-gradient-to-r from-yellow-300 to-pink-700 text-white text-xl font-bold py-7 px-12 rounded-full shadow-lg hover:scale-105 hover:shadow-xl transition"
+              <button className="bg-gradient-to-r from-yellow-300 to-pink-700 text-white text-sm sm:text-base lg:text-lg font-bold py-7 px-12 rounded-full shadow-lg hover:scale-105 hover:shadow-xl transition"
                 onClick={ClaimTokens}>
                 Claim Now
               </button>
             </div>
           </div>
         </section>
-
-
-
+    
         {/* Progress Section */}
         <section className="py-8 w-full">
           <div className="max-w-4xl mx-auto px-4 text-center">
-            <h2 className="text-3xl font-extrabold text-pink-600 mb-6">Progress</h2>
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-pink-600 mb-6">Progress</h2>
             <div className="relative w-full bg-gray-300 rounded-full h-6 overflow-hidden">
               <div
                 className="absolute top-0 left-0 bg-gradient-to-r from-pink-500 to-yellow-400 h-6"
                 style={{ width: "75%" }}
               ></div>
             </div>
-            <p className="mt-4 font-bold text-gray-700">75% Sold</p>
-            <p className="text-gray-500">Tokens Sold: 750,000 / 5,069,000,000,000,000</p>
+            <p className="mt-4 font-bold text-gray-700 text-sm sm:text-base">75% Sold</p>
+            <p className="text-gray-500 text-sm sm:text-base">Tokens Sold: 750,000 / 5,069,000,000,000,000</p>
           </div>
         </section>
       </div>
     </div>
-  );
+    );
+    
   
   
 }

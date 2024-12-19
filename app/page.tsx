@@ -94,18 +94,11 @@ export default function Home() {
       </div>
       {/* Opciones del Menú Desplegable */}
       <div
-      className={`absolute top-full right-0 w-1/3 bg-purple-900 bg-opacity-95 flex flex-col items-center py-4 shadow-lg z-50 transition-all duration-300 md:hidden ${
+      className={`absolute top-full right-0 w-1/3 bg-purple-900 bg-opacity-95 px-3 rounded-xl flex flex-col items-center py-4 shadow-lg z-50 transition-all duration-300 md:hidden ${
         showMenu ? "opacity-100 scale-100 pointer-events-auto visible" : "opacity-0 scale-95 pointer-events-none invisible"
       }`}
     >
-            <button
-              onClick={connectWallet}
-              className="bg-gradient-to-r from-purple-400 to-orange-500 text-white font-bold text-sm sm:text-base py-2 px-4 sm:py-3 sm:px-6 rounded-full shadow-xl hover:from-yellow-300 hover:to-orange-400 transition duration-300 transform hover:scale-105 w-full md:w-auto"
-            >
-              Connect Wallet
-            </button>
-
-        <div className="flex items-center gap-4 mt-4">
+              <div className="flex mb-3 items-center gap-4 mt-4">
           <a href="https://x.com/supra_spike" target="_blank" rel="noopener noreferrer">
             <Image
               src="/twitter.svg"
@@ -134,6 +127,41 @@ export default function Home() {
             />
           </a>
         </div>
+              <Link
+          //href="/launchpad"
+          href="/"
+
+          className="bg-gradient-to-r mb-3 from-purple-400 to-orange-500 text-white font-bold text-sm sm:text-base py-2 px-4 sm:py-3 sm:px-6 rounded-full shadow-xl hover:from-yellow-300 hover:to-orange-400 transition duration-300 transform hover:scale-105 w-full md:w-auto"
+          >
+          LaunchPad
+        </Link>
+        {account ? (
+  <div
+    className="text-xs sm:text-sm bg-white text-purple-700 py-1 px-3 rounded-full font-mono cursor-pointer shadow-lg hover:shadow-purple-700 transition duration-300"
+    onClick={() => setShowDisconnect(!showDisconnect)}
+  >
+    {shortAccount}
+    {showDisconnect && (
+      <button
+        onClick={disconnectWallet}
+        className="absolute top-50 left-0 bg-red-500 text-white py-2 px-4 rounded shadow-lg hover:bg-red-600 transition duration-300"
+      >
+        Disconnect
+      </button>
+    )}
+  </div>
+) : (
+  <button
+    onClick={connectWallet}
+    className="bg-gradient-to-r from-purple-400 to-orange-500 text-white font-bold text-sm sm:text-base py-2 px-4 sm:py-3 sm:px-6 rounded-full shadow-xl hover:from-yellow-300 hover:to-orange-400 transition duration-300 transform hover:scale-105 w-full md:w-auto"
+  >
+    Connect
+  </button>
+)}
+
+            
+
+
       </div>
       {/* Opciones principales */}
       <div className="md:flex items-center gap-6">
@@ -142,7 +170,7 @@ export default function Home() {
           //href="/launchpad"
           href="/"
 
-          className="bg-gradient-to-r from-yellow-500 to-orange-700 text-white font-bold py-2 px-4 rounded-full shadow-lg hover:from-yellow-300 hover:to-orange-400 hover:shadow-xl transition w-full md:w-auto text-center"
+          className="hidden md:flex bg-gradient-to-r from-yellow-500 to-orange-700 text-white font-bold py-2 px-4 rounded-full shadow-lg hover:from-yellow-300 hover:to-orange-400 hover:shadow-xl transition w-full md:w-auto text-center"
         >
           LaunchPad 🎨
         </Link>
@@ -155,7 +183,7 @@ export default function Home() {
         </Link>
 
         {/* Redes Sociales */}
-        <div className="hidden md:flex items-center justify-center gap-4 mt-2 md:mt-0">
+        <div className="hidden  md:flex items-center justify-center gap-4 mt-2 md:mt-0">
           <a href="https://x.com/supra_spike" target="_blank" rel="noopener noreferrer">
             <Image
               src="/twitter.svg"
