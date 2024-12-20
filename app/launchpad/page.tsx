@@ -14,7 +14,7 @@ export default function LaunchPad() {
   const [isLoading, setIsLoading] = useState(false);
   const [joinDeposit, setJoinDeposit] = useState("");
   const [copySuccess, setCopySuccess] = useState(false);
-  const [progress, setProgress] = useState(50000694012300);
+  const [progress, setProgress] = useState(400000694012300);
   const idoSupply = 5069000000000000;
   const copyToClipboard = () => {
     navigator.clipboard.writeText(CONTRACT_ADDRESS_MEME).then(
