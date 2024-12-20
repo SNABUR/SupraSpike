@@ -135,7 +135,7 @@ const Airdrop = () => {
     },
     {
       text: "Like & Retweet",
-      link: "https://x.com/supra_spike/status/1867630120883605986",
+      link: "https://x.com/supra_spike/status/1870090839483122010",
       icon: "./retweet.svg", // Ruta del ícono
 
     },

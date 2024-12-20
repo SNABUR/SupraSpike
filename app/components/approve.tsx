@@ -120,9 +120,7 @@ const InteractWithContract = () => {
             >
               Copy
             </button>
-          </div>
-
-
+        </div>
         <div className="mt-6 w-full max-w-lg mx-auto">
 
           {copySuccess && (

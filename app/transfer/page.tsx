@@ -13,13 +13,24 @@ export default function Admin() {
   const [isLoading, setIsLoading] = useState(false);
   const [provider, setProvider] = useState<any>(null);
   const [depositAmount, setDepositAmount] = useState("");
+  const [copySuccess, setCopySuccess] = useState(false);
+  const [recipientAddress, setRecipientAddress] = useState("");
+  const [contractAddressMeme, setContractAddressMeme] = useState("");
 
   const reciever= "0x6e3e09ab7fd0145d7befc0c68d6944ddc1a90fd45b8a6d28c76d8c48bed676b0"
   const CONTRACT_ADDRESS = "0x6e3e09ab7fd0145d7befc0c68d6944ddc1a90fd45b8a6d28c76d8c48bed676b0";
   //const CONTRACT_ADDRESS_MEME = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::meme_spike::SPIKE"; //TESTNET
   const CONTRACT_ADDRESS_MEME = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::memecoins::SPIKE"; //MAINNET
 
-
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(CONTRACT_ADDRESS_MEME).then(
+      () => {
+        setCopySuccess(true);
+        setTimeout(() => setCopySuccess(false), 2000);
+      },
+      (err) => console.error("Failed to copy: ", err)
+    );
+  };
 
   const getProvider = useCallback(async () => {
     if (typeof window !== "undefined" && "starkey" in window) {
@@ -103,7 +114,7 @@ export default function Admin() {
             "TransferCoin",
             "transfer_coins",
             [
-              CONTRACT_ADDRESS_MEME
+              contractAddressMeme
             ],
             [
               BCS.bcsToBytes(TxnBuilderTypes.AccountAddress.fromHex(reciever)), //recipient
@@ -140,7 +151,7 @@ export default function Admin() {
     <div className="min-h-screen bg-gradient-to-b from-purple-700 via-pink-600 to-yellow-500 text-white font-sans">
       <header className="flex items-center justify-between p-6 shadow-lg bg-purple-900">
         <h1 className="text-4xl font-extrabold text-yellow-300 tracking-wide">🌟 Meme Token Transfer 🎉</h1>
-        <div className="flex items-center gap-4 relative">
+        <div className="flex items-center gap-2 relative">
           {account ? (
             <div
               className="relative text-sm bg-yellow-300 text-purple-900 py-2 px-4 rounded-full font-mono cursor-pointer shadow-lg hover:shadow-yellow-500 transition"
@@ -167,7 +178,7 @@ export default function Admin() {
         </div>
       </header>
 
-      <main className="flex flex-col items-center justify-center px-5 space-y-16 mt-10">
+      <main className="flex flex-col items-center justify-center px-5 space-y-7 mt-7">
 
         {result && (
           <div className="w-full max-w-xl bg-green-100 border border-green-400 text-green-700 px-6 py-4 rounded-lg shadow-md">
@@ -191,11 +202,38 @@ export default function Admin() {
             </p>
           </div>
         )}
-        <section className="w-full max-w-xl bg-purple-800 rounded-lg shadow-xl p-8">
-          <h2 className="text-2xl font-bold text-yellow-300 mb-6">⚙️ Transfer $SPIKE coins</h2>
-          <div className="flex flex-fil gap-4">
+
+        <section className="w-full max-w-xl bg-purple-800 rounded-lg space-y-3 shadow-xl p-8">
+          <h2 className="text-2xl font-bold text-yellow-300 mb-6">⚙️ Transfer Tokens on SUPRA</h2>
+          <div className="flex flex-fil">
           <input
             type="text"
+            placeholder="Contract Address"
+            value={contractAddressMeme}
+            onChange={(e) => setContractAddressMeme(e.target.value)}
+            className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring focus:ring-yellow-300 text-black shadow-md"
+          />
+          <div>
+          </div>
+          </div>
+          <p className="text-yellow-300">Recipient Address:</p>
+
+          <div className="flex flex-fil">
+          <input
+            type="text"
+            placeholder="Recipient Address"
+            value={recipientAddress}
+            onChange={(e) => setRecipientAddress(e.target.value)}
+            className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring focus:ring-yellow-300 text-black shadow-md"
+          />
+          <div>
+          </div>
+          </div>
+          <p className="flex h-auto justify-start text-yellow-300 ">Amount:</p>
+
+          <div className="flex flex-fil mb-7 gap-3">
+          <input
+            type="number"
             placeholder="Amount To Transfer"
             value={depositAmount}
             onChange={(e) => setDepositAmount(e.target.value)}
@@ -203,18 +241,33 @@ export default function Admin() {
           />
           <div>
             <button className="w-full px-6 py-3 bg-yellow-300 text-purple-900 rounded-lg shadow-lg font-semibold text-lg transition-all transform hover:bg-yellow-400 hover:shadow-xl"
-            onClick={() => setDepositAmount("5480000000000000")}>
-              max
+            onClick={() => setDepositAmount("1")}>
+              min
             </button>
           </div>
           </div>
           <button
             onClick={TransferCoins}
-            className="w-full px-6 py-3 mt-6 bg-yellow-300 text-purple-900 rounded-lg shadow-lg font-semibold text-lg transition-all transform hover:bg-yellow-400 hover:shadow-xl"
+            className="w-full px-6 py-3  bg-yellow-300 text-purple-900 rounded-lg shadow-lg font-semibold text-lg transition-all transform hover:bg-yellow-400 hover:shadow-xl"
           >
             Transfer Coins
           </button>
         </section>
+
+        <div className="text-2xl font-bold text-yellow-300">
+          Spike Contract
+        </div>
+        <div className="flex items-center justify-center gap-2 mt-1 mb-3 bg-purple-200 text-purple-800 px-6 py-3 rounded-lg shadow-md">
+          <span className="font-mono text-sm">
+            {CONTRACT_ADDRESS_MEME.slice(0, 7)}...{CONTRACT_ADDRESS_MEME.slice(-12)}
+          </span>
+          <button
+            onClick={copyToClipboard}
+            className="bg-purple-700 text-white px-4 py-1 rounded-md hover:bg-purple-800 transition"
+          >
+            Copy
+          </button>
+        </div>
       </main>
     </div>
   );
