@@ -118,6 +118,12 @@ export default function Home() {
             />
           </a>
         </div>
+        {/*<Link
+          href="/NFT"
+          className="bg-gradient-to-r mb-3 from-purple-400 to-orange-500 text-white font-bold text-sm sm:text-base py-2 px-4 sm:py-3 sm:px-6 rounded-full shadow-xl hover:from-yellow-300 hover:to-orange-400 transition duration-300 transform hover:scale-105 w-full md:w-auto justify-center text-center"
+          >
+          NFT
+        </Link>*/}
         <Link
           href="/launchpad"
           className="bg-gradient-to-r mb-3 from-purple-400 to-orange-500 text-white font-bold text-sm sm:text-base py-2 px-4 sm:py-3 sm:px-6 rounded-full shadow-xl hover:from-yellow-300 hover:to-orange-400 transition duration-300 transform hover:scale-105 w-full md:w-auto"
@@ -147,13 +153,15 @@ export default function Home() {
     Connect
   </button>
 )}
-
-            
-
-
       </div>
       {/* Opciones principales */}
       <div className="md:flex items-center gap-6">
+        {/*<Link
+          href="/NFT"
+          className="hidden md:flex bg-gradient-to-r from-yellow-500 to-orange-700 text-white font-bold py-2 px-4 rounded-full shadow-lg hover:from-yellow-300 hover:to-orange-400 hover:shadow-xl transition w-full md:w-auto text-center"
+        >
+          NFT 🎨
+        </Link>*/}
         {/* Botón para MemeFactory */}
         <Link
           href="/launchpad"

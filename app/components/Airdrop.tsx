@@ -161,7 +161,7 @@ const Airdrop = () => {
                   setStep(step + 1); // Avanza al siguiente paso
                 }}
                 disabled={false} // Siempre habilitado
-                className={`flex items-center justify-center gap-2 px-6 py-2 text-sm font-medium rounded-full border focus:outline-none transition-all ${
+                className={`flex items-center justify-center gap-2 px-6 py-3 text-lg font-medium rounded-full border focus:outline-none transition-all ${
                   step === index
                     ? "border-purple-500 bg-purple-600 text-white hover:bg-purple-500"
                     : "border-gray-300 text-gray-400 cursor-not-allowed"

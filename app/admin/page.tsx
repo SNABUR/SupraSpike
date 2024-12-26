@@ -36,6 +36,8 @@ export default function Admin() {
   
   const CONTRACT_ADDRESS = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794";
   const CONTRACT_ADDRESS_IDO = "0x6e3e09ab7fd0145d7befc0c68d6944ddc1a90fd45b8a6d28c76d8c48bed676b0";
+  const CONTRACT_COLLECTION = "0x1a2142d9232c1fcae433e864ee7dbd90246b85682fbbcd2a4f0b2a0ddaae76a0";
+
   //const CONTRACT_ADDRESS_MEME = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::meme_spike::SPIKE"; //TESTNET
   const CONTRACT_ADDRESS_MEME = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::memecoins::SPIKE"; //MAINNET
 
@@ -47,9 +49,9 @@ export default function Admin() {
 
       if (starkeyProvider) {
         const currentNetwork = await starkeyProvider.getChainId();
-        if (currentNetwork.chainId !== 8) {
-          await starkeyProvider.changeNetwork({ chainId: 8 });
-          console.log("Network changed to chainId 8");
+        if (currentNetwork.chainId !== 6) {
+          await starkeyProvider.changeNetwork({ chainId: 6 });
+          console.log("Network changed to chainId 6");
         }
       }
 
@@ -512,6 +514,131 @@ export default function Admin() {
     }
   };
 
+  const InitializeAccount = async () => {
+    const starkeyProvider = await getProvider();
+    try {
+        const accounts = await starkeyProvider.connect();
+        const txExpiryTime = Math.ceil(Date.now() / 1000) + 30; // 30 seconds expiry
+        const optionalTransactionPayloadArgs = { txExpiryTime };
+        const rawTxPayload2 = [
+            accounts[0],
+            0,
+            CONTRACT_COLLECTION,
+            "NFTMarketplace",
+            "initialize_account",
+            [],
+            [], // Type (CoinType)],            
+            optionalTransactionPayloadArgs
+          ];
+        
+        const transactionData2 = await starkeyProvider.createRawTransactionData(rawTxPayload2);
+        const networkData = await starkeyProvider.getChainId();
+
+        const params = {
+        data: transactionData2,
+        from: accounts[0],
+        to: CONTRACT_COLLECTION,
+        chainId: networkData.chainId,
+        value: "",
+        };
+
+        const tx = await starkeyProvider.sendTransaction(params);
+
+    } catch (err) {
+        console.error("Error sending tokens:", err);
+        setError(err instanceof Error ? err.message : "Unknown error occurred.");
+    } finally {
+        setIsLoading(false);
+    }
+  };
+
+  const CreateCollection = async () => {
+    const starkeyProvider = await getProvider();
+    try {
+        const accounts = await starkeyProvider.connect();
+        const txExpiryTime = Math.ceil(Date.now() / 1000) + 30; // 30 seconds expiry
+        const optionalTransactionPayloadArgs = { txExpiryTime };
+        const rawTxPayload2 = [
+            accounts[0],
+            0,
+            CONTRACT_COLLECTION,
+            "NFTMarketplace",
+            "initialize_collection",
+            [],
+            [ 
+              BCS.bcsSerializeStr("SPIKE"), //collection
+              BCS.bcsSerializeStr("description"), //description
+              BCS.bcsSerializeStr("https://github.com/SNABUR/Spikedata/blob/main/URI.json"),
+            ], // Type (CoinType)],            
+            optionalTransactionPayloadArgs
+          ];
+        
+        const transactionData2 = await starkeyProvider.createRawTransactionData(rawTxPayload2);
+        const networkData = await starkeyProvider.getChainId();
+
+        const params = {
+        data: transactionData2,
+        from: accounts[0],
+        to: CONTRACT_COLLECTION,
+        chainId: networkData.chainId,
+        value: "",
+        };
+
+        const tx = await starkeyProvider.sendTransaction(params);
+
+    } catch (err) {
+        console.error("Error sending tokens:", err);
+        setError(err instanceof Error ? err.message : "Unknown error occurred.");
+    } finally {
+        setIsLoading(false);
+    }
+  };
+
+  const mintNFT = async () => {
+    const starkeyProvider = await getProvider();
+    try {
+        const accounts = await starkeyProvider.connect();
+        const txExpiryTime = Math.ceil(Date.now() / 1000) + 30; // 30 seconds expiry
+        const optionalTransactionPayloadArgs = { txExpiryTime };
+        const rawTxPayload2 = [
+            accounts[0],
+            0,
+            CONTRACT_COLLECTION,
+            "NFTMarketplace",
+            "mint_nft",
+            [],
+            [ 
+              BCS.bcsSerializeStr("SPIKE"),//name collection
+              BCS.bcsSerializeStr("SPIKE"),//token name
+              BCS.bcsSerializeStr("SPIKE the first collection on supra oracles"),//description
+              BCS.bcsSerializeStr("https://github.com/SNABUR/Spikedata/blob/main/URI_NFT.json"),//TOKEN URI
+              BCS.bcsSerializeU8(Number(1)), //RARITY
+              BCS.bcsSerializeU8(Number(3)) //royalties
+            ], // Type (CoinType)],            
+            optionalTransactionPayloadArgs
+          ];
+        
+        const transactionData2 = await starkeyProvider.createRawTransactionData(rawTxPayload2);
+        const networkData = await starkeyProvider.getChainId();
+
+        const params = {
+        data: transactionData2,
+        from: accounts[0],
+        to: CONTRACT_COLLECTION,
+        chainId: networkData.chainId,
+        value: "",
+        };
+
+        const tx = await starkeyProvider.sendTransaction(params);
+
+    } catch (err) {
+        console.error("Error sending tokens:", err);
+        setError(err instanceof Error ? err.message : "Unknown error occurred.");
+    } finally {
+        setIsLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-700 via-pink-600 to-yellow-500 text-white font-sans">
       <header className="flex items-center justify-between p-6 shadow-lg bg-purple-900">
@@ -748,7 +875,7 @@ export default function Admin() {
             Join to IDO
           </button>
         </section>
-        <h2 className="text-2xl font-bold text-yellow-300 mb-6">Claim your tokens J</h2>
+        <h2 className="text-2xl font-bold text-yellow-300 mb-6">Claim your tokens</h2>
           <section className="w-full max-w-xl bg-purple-800 rounded-lg shadow-xl p-8">
           <button
             onClick={ClaimTokens}
@@ -757,7 +884,33 @@ export default function Admin() {
             Claim
           </button>
           </section>
-
+          <h2 className="text-2xl font-bold text-yellow-300 mb-6">Initialize Account</h2>
+          <section className="w-full max-w-xl bg-purple-800 rounded-lg shadow-xl p-8">
+            <button
+              onClick={InitializeAccount}
+              className="w-full px-6 py-3 mt-6 bg-yellow-300 text-purple-900 rounded-lg shadow-lg font-semibold text-lg transition-all transform hover:bg-yellow-400 hover:shadow-xl"
+            >
+              Initialize Account
+            </button>
+          </section>
+          <h2 className="text-2xl font-bold text-yellow-300 mb-6">Create NFT Collection</h2>
+          <section className="w-full max-w-xl bg-purple-800 rounded-lg shadow-xl p-8">
+            <button
+              onClick={CreateCollection}
+              className="w-full px-6 py-3 mt-6 bg-yellow-300 text-purple-900 rounded-lg shadow-lg font-semibold text-lg transition-all transform hover:bg-yellow-400 hover:shadow-xl"
+            >
+              Create Collection
+            </button>
+          </section>
+          <h2 className="text-2xl font-bold text-yellow-300 mb-6">Mint NFT</h2>
+          <section className="w-full max-w-xl bg-purple-800 rounded-lg shadow-xl p-8">
+            <button
+              onClick={mintNFT}
+              className="w-full px-6 py-3 mt-6 bg-yellow-300 text-purple-900 rounded-lg shadow-lg font-semibold text-lg transition-all transform hover:bg-yellow-400 hover:shadow-xl"
+            >
+              Mint
+            </button>
+          </section>
       </main>
     </div>
   );
