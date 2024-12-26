@@ -10,13 +10,18 @@ export default function Profile() {
   const [resources, setResources] = useState<any[]>([]); // Estado para almacenar los recursos
   const [loading, setLoading] = useState(false); // Estado para manejar el estado de carga
   const [error, setError] = useState<string | null>(null); // Estado para manejar errores
+  const [debugData, setDebugData] = useState<string | null>(null); // Para mostrar los datos de depuración
 
   const getAccountResources = async (accountAddress: string) => {
     setLoading(true);
     setError(null);
+    setDebugData(null);
     try {
       const resources = await client.getAccountResources(accountAddress);
       setResources(resources);
+
+      // Formatea los datos de depuración
+      setDebugData(JSON.stringify(resources, null, 2));
     } catch (err) {
       setError("Error al obtener los recursos. Por favor, inténtalo de nuevo.");
       console.error(err);
@@ -56,6 +61,14 @@ export default function Profile() {
               </li>
             ))}
           </ul>
+        </div>
+      )}
+
+      {/* Área de depuración temporal */}
+      {debugData && (
+        <div className="bg-yellow-100 p-4 rounded shadow-md w-3/4 max-h-[400px] overflow-y-auto">
+          <h2 className="text-lg font-semibold mb-2 text-yellow-600">Debug Info:</h2>
+          <pre className="text-sm text-gray-800">{debugData}</pre>
         </div>
       )}
     </div>
