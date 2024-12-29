@@ -54,10 +54,6 @@ export default function Memefactory() {
     }
   };
 
-  const copyContractAddress = (address: string) => {
-    navigator.clipboard.writeText(address);
-  };
-
   const disconnectWallet = async () => {
     try {
       if (provider) {
