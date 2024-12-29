@@ -196,7 +196,7 @@ export default function Memefactory() {
                                     style={{ width: `${(2 / 13700) * 100}%` }}
                                 ></div>
                             </div>
-                            <p className="text-sm text-black text-right">Minted: 2/13,700</p>
+                            <p className="text-sm text-black text-right">Minted: loading.../13,700</p>
                         </div>
                     </div>
 
