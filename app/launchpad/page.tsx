@@ -240,8 +240,8 @@ export default function LaunchPad() {
               🎉 SUPRA SPIKE 🎉
             </h1>
             <p className="text-gray-700 text-sm sm:text-base lg:text-lg max-w-2xl mx-auto leading-relaxed mb-7">
-  Be part of history with <span className="font-bold text-pink-500">Spike</span>, the first-ever memecoin on the lightning-fast <span className="font-bold text-pink-500">Supra Oracles</span> blockchain! Powered by 400,000 TPS, Spike the hedgehog is speeding into the future of memes. Don't miss your chance to join the movement—get your SPIKE tokens now!
-</p>
+              Be part of history with <span className="font-bold text-pink-500">Spike</span>, the first-ever memecoin on the lightning-fast <span className="font-bold text-pink-500">Supra Oracles</span> blockchain! Powered by 400,000 TPS, Spike the hedgehog is speeding into the future of memes. Don't miss your chance to join the movement—get your SPIKE tokens now!
+            </p>
 
             <div className="flex justify-center gap-3">
               <Link href="/">

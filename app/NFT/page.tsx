@@ -10,45 +10,31 @@ export default function Memefactory() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [provider, setProvider] = useState<any>(null);
-  const [memeName, setMemeName] = useState("");
-  const [memeSymbol, setMemeSymbol] = useState("");
-  const [maxSupply, setMaxSupply] = useState("");
-  const [URI, setURI] = useState("");
-  const [projectURL, setProjectURL] = useState("");
   const [result, setResult] = useState<string | null>(null);
-  const [NFTcontract, setNFTcontract] = useState("");
   const [showDisconnect, setShowDisconnect] = useState(false);
   const [isdisable, setIsdisable] = useState(false);
-  const [currentAccount, setCurrentAccount] = useState(false);
 
-
-  const CONTRACT_ADDRESS = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794";
-  const [clicked, setClicked] = useState(false);
-
+  const CONTRACT_ADDRESS = "0xa8ff8aa5c6cf9b7511250ca1218efee986a38c50c6f794dff95389623e759a4b";
+  
   // ** Mejorando la inicialización del proveedor **
   const getProvider = useCallback(async () => {
-    try {
-      if (typeof window !== "undefined" && "starkey" in window) {
-        const starkeyProvider = (window as any)?.starkey?.supra;
-        if (starkeyProvider) {
-          setProvider(starkeyProvider);
+    if (typeof window !== "undefined" && "starkey" in window) {
+      const starkeyProvider = (window as any)?.starkey.supra;
+      setProvider(starkeyProvider);
 
-          const currentNetwork = await starkeyProvider.getChainId();
-          if (currentNetwork.chainId !== 6) {
-            await starkeyProvider.changeNetwork({ chainId: 6 });
-            console.log("Network changed to chainId 6");
-          }
+      if (starkeyProvider) {
+        const currentNetwork = await starkeyProvider.getChainId();
+        if (currentNetwork.chainId !== 8) {
+          await starkeyProvider.changeNetwork({ chainId: 8 });
+          console.log("Network changed to chainId 8");
         }
-        return starkeyProvider || null;
       }
-      console.warn("StarKey Wallet is not installed.");
-      return null;
-    } catch (error) {
-      console.error("Error initializing provider:", error);
-      setError("Error initializing wallet provider.");
-      return null;
+
+      return starkeyProvider || null;
     }
+    return null;
   }, []);
+
 
   useEffect(() => {
     getProvider();
@@ -105,7 +91,7 @@ export default function Memefactory() {
         accounts[0],
         0,
         CONTRACT_ADDRESS,
-        "nft_2",
+        "nft",
         "mint",
         [],
         [
@@ -181,21 +167,24 @@ export default function Memefactory() {
                     {/* Left Box */}
                     <div className="p-6 md:p-8 bg-gradient-to-r from-pink-200 via-pink-300 to-pink-400 text-center text-gray-800 rounded-xl shadow-lg">
                         <h1 className="text-4xl font-extrabold mb-6 text-pink-700">Supra Spike</h1>
-                        <div className="w-full h-64 bg-pink-200 rounded-lg border-4 border-pink-700 mb-6 flex items-center justify-center">
-                            <Image
-                                src={'/spike2.jpg'}
-                                alt="Spike"
-                                className="w-full h-full object-cover rounded-md"
-                                width={350}
-                                height={350}
-                            />
+                        <div className="flex items-center justify-center">
+                            <div className="flex items-center justify-center w-64 h-64 bg-pink-200 rounded-lg border-4 border-pink-700 mb-6">
+                                <Image
+                                    src={'/collection.jpg'}
+                                    alt="Spike"
+                                    className="w-full h-full object-cover rounded-md"
+                                    width={350}
+                                    height={350}
+                                />
+                            </div>
                         </div>
+
                         <div className="flex flex-col justify-center mb-6">
                             <h3 className="text-2xl font-semibold mb-4 text-pink-600">Details</h3>
                             <div className="flex flex-col justify-center mb-4">
                                 <p className="text-lg mb-2 text-gray-700">🕸️ Network: Supra Network</p>
-                                <p className="text-lg mb-2 text-gray-700">💸 Price: 1 SUPRA</p>
-                                <p className="text-lg mb-4 text-gray-700">💎 Supply: 13,700</p>
+                                <p className="text-lg mb-2 text-gray-700">💸 Price: 13.7 SUPRA</p>
+                                <p className="text-lg mb-4 text-gray-700">💎 Supply: 1370</p>
                             </div>
 
                             {/* Barra de progreso */}

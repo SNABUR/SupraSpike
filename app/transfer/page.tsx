@@ -17,8 +17,7 @@ export default function Admin() {
   const [recipientAddress, setRecipientAddress] = useState("");
   const [contractAddressMeme, setContractAddressMeme] = useState("");
 
-  const reciever= "0x6e3e09ab7fd0145d7befc0c68d6944ddc1a90fd45b8a6d28c76d8c48bed676b0"
-  const CONTRACT_ADDRESS = "0x6e3e09ab7fd0145d7befc0c68d6944ddc1a90fd45b8a6d28c76d8c48bed676b0";
+  const CONTRACT_TRANSFER_ADDRESS = "0x6e3e09ab7fd0145d7befc0c68d6944ddc1a90fd45b8a6d28c76d8c48bed676b0";
   //const CONTRACT_ADDRESS_MEME = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::meme_spike::SPIKE"; //TESTNET
   const CONTRACT_ADDRESS_MEME = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::memecoins::SPIKE"; //MAINNET
 
@@ -100,7 +99,7 @@ export default function Admin() {
       return;
     }
     console.log(parsedDeposit*1000,"amount of tokens to buy");
-    console.log("Receptor (reciever):", reciever);
+    console.log("Receptor (reciever):", recipientAddress);
     console.log("Cantidad (amount):", Number(Big(parsedDeposit * 1000).toFixed(0, 0)));
 
     try {
@@ -110,14 +109,14 @@ export default function Admin() {
         const rawTxPayload2 = [
             accounts[0],
             0,
-            CONTRACT_ADDRESS,
+            CONTRACT_TRANSFER_ADDRESS,
             "TransferCoin",
             "transfer_coins",
             [
               contractAddressMeme
             ],
             [
-              BCS.bcsToBytes(TxnBuilderTypes.AccountAddress.fromHex(reciever)), //recipient
+              BCS.bcsToBytes(TxnBuilderTypes.AccountAddress.fromHex(recipientAddress)), //recipient
               BCS.bcsSerializeUint64(Number(Big(parsedDeposit*1000).toFixed(0,0))), //amount tokens Spike to send
             ],
             optionalTransactionPayloadArgs
@@ -130,7 +129,7 @@ export default function Admin() {
         const params = {
         data: transactionData2,
         from: accounts[0],
-        to: CONTRACT_ADDRESS,
+        to: CONTRACT_TRANSFER_ADDRESS,
         chainId: networkData.chainId,
         value: "",
         };
