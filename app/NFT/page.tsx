@@ -41,24 +41,19 @@ export default function Memefactory() {
   }, [getProvider]);
 
   // ** Conexión a la wallet **
+
   const connectWallet = async () => {
     try {
-      if (!provider) {
-        setError("Wallet provider not initialized.");
-        return;
-      }
+      if (!provider) return;
       const accounts = await provider.connect();
       if (accounts && accounts.length > 0) {
         setAccount(accounts[0]);
-        setError(null);
-      } else {
-        throw new Error("No accounts found.");
       }
     } catch (err) {
       console.error("Error connecting wallet:", err);
-      setError(err instanceof Error ? err.message : "Unknown error occurred.");
     }
   };
+
   const copyContractAddress = (address: string) => {
     navigator.clipboard.writeText(address);
   };
