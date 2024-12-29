@@ -18,22 +18,33 @@ export default function Memefactory() {
   
   // ** Mejorando la inicialización del proveedor **
   const getProvider = useCallback(async () => {
-    if (typeof window !== "undefined" && "starkey" in window) {
-      const starkeyProvider = (window as any)?.starkey.supra;
-      setProvider(starkeyProvider);
-
-      if (starkeyProvider) {
-        const currentNetwork = await starkeyProvider.getChainId();
-        if (currentNetwork.chainId !== 8) {
-          await starkeyProvider.changeNetwork({ chainId: 8 });
-          console.log("Network changed to chainId 8");
+    try {
+      if (typeof window !== "undefined" && "starkey" in window) {
+        const starkeyProvider = (window as any)?.starkey?.supra;
+        setProvider(starkeyProvider);
+  
+        if (starkeyProvider) {
+          const currentNetwork = await starkeyProvider.getChainId();
+          if (currentNetwork.chainId !== 8) {
+            try {
+              await starkeyProvider.changeNetwork({ chainId: 8 });
+              console.log("Network changed to chainId 8");
+            } catch (error) {
+              setError("Failed to switch to the required network.");
+              console.error("Network switch error:", error);
+            }
+          }
         }
+        return starkeyProvider || null;
       }
-
-      return starkeyProvider || null;
+      setError("Wallet provider not found.");
+    } catch (error) {
+      console.error("Error initializing provider:", error);
+      setError("An unexpected error occurred while initializing the provider.");
     }
     return null;
   }, []);
+  
 
 
   useEffect(() => {
