@@ -263,7 +263,7 @@ export default function Memefactory() {
     <div className="text-center mb-6 sm:mb-8">
       <p className="text-sm sm:text-base lg:text-lg text-white mb-2">TX Hash:</p>
       <a 
-        href={`https://suprascan.io/tx/${txHash}`} 
+        href={`https://suprascan.io/tx/${txHash}/f?tab=tx-advance`} 
         target="_blank" 
         rel="noopener noreferrer" 
         className="text-base sm:text-lg lg:text-xl text-indigo-500 font-semibold hover:text-indigo-600 break-all"
