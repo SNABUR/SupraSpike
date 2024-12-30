@@ -279,18 +279,6 @@ export default function Memefactory() {
         </div>
       )}
     </main>
-    <Image
-          src="/spike.jpg"
-          alt="Spike Logo"
-          width={40}
-          height={40}
-          className="w-60 mx-auto mb-6 rounded-full shadow-lg"
-        />
-  
-    {/* Footer */}
-    <footer className="py-6 text-center bg-purple-600 text-white text-sm">
-      Made with ❤️ for Supra. ✨
-    </footer>
   </div>
   
       );

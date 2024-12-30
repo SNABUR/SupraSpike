@@ -250,11 +250,11 @@ export default function Home() {
       <main className="flex-grow flex flex-col items-center justify-center gap-4 sm:gap-8 px-4 py-6">
         <div className="flex-shrink-0">
           <Image
-            src="/spike.jpg"
+            src="/supraspike.jpg"
             alt="Spike Logo"
             width={150}
             height={150}
-            className="rounded-full shadow-lg border-4 border-white"
+            className="rounded-full shadow-lg border-4 border-black"
           />
         </div>
         <div className="text-center sm:text-left max-w-md">

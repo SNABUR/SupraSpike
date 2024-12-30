@@ -259,67 +259,64 @@ export default function LaunchPad() {
         </section>
     
         {/* Token Info Section */}
-        <section className="py-3 w-auto">
+        <section className="py-8 w-auto">
           <div className="max-w-6xl mx-auto px-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-10 p-3">
+            <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-12">
               {/* Imagen */}
-              <div className="flex justify-center lg:justify-start">
+              <div className="flex justify-center lg:justify-end">
                 <Image
                   src="/supraspike.jpg"
                   alt="SPIKE Meme"
-                  width={260}
-                  height={360}
-                  className="rounded-3xl shadow-md hover:scale-105 transition-transform"
+                  width={371}
+                  height={371}
+                  className="rounded-3xl shadow-lg hover:scale-105 transition-transform"
                 />
               </div>
-    
+
               {/* Información */}
-              <div className="text-gray-700 space-y-7">
-                <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-pink-600 text-center lg:text-left">
+              <div className="text-gray-700 space-y-8">
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-pink-600 text-center lg:text-left">
                   📊 Token Information
                 </h2>
-                <div className="flex items-center justify-center gap-2 mt-1 mb-1 bg-purple-200 text-purple-800 px-3 py-1 rounded-lg shadow-md">
-                  Contract:
-                  <span className="font-mono text-sm">
+
+                {/* Contract */}
+                <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 p-4 bg-purple-100 text-purple-800 rounded-lg shadow-md">
+                  <span className="font-medium text-sm sm:text-base">Contract:</span>
+                  <span className="font-mono text-sm sm:text-base bg-white px-3 py-1 rounded-md">
                     {CONTRACT_ADDRESS_MEME.slice(0, 7)}...{CONTRACT_ADDRESS_MEME.slice(-12)}
                   </span>
                   <button
                     onClick={copyToClipboard}
-                    className="bg-purple-700 text-white px-4 py-1 rounded-md hover:bg-purple-800 transition"
+                    className="bg-purple-700 text-white px-4 py-2 rounded-md hover:bg-purple-800 transition"
                   >
                     Copy
                   </button>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="p-4 bg-pink-100 rounded-lg shadow">
-                    <p className="text-sm sm:text-base lg:text-lg font-bold text-pink-700">
-                      Token Chain:
-                      <span className="block text-pink-900 text-base sm:text-lg lg:text-xl">Supra</span>
-                    </p>
+
+                {/* Información adicional */}
+                <div className="grid grid-cols-2 gap-6">
+                  <div className="p-6 bg-pink-100 rounded-lg shadow-lg text-center">
+                    <p className="text-sm sm:text-base lg:text-lg font-bold text-pink-700">Token Chain:</p>
+                    <span className="block text-pink-900 text-lg sm:text-xl lg:text-2xl font-extrabold">Supra</span>
                   </div>
-                  <div className="p-4 bg-yellow-100 rounded-lg shadow">
-                    <p className="text-sm sm:text-base lg:text-lg font-bold text-yellow-700">
-                      Total Supply:
-                      <span className="block text-yellow-900 text-base sm:text-lg lg:text-xl">13,700 T</span>
-                    </p>
+                  <div className="p-6 bg-yellow-100 rounded-lg shadow-lg text-center">
+                    <p className="text-sm sm:text-base lg:text-lg font-bold text-yellow-700">Total Supply:</p>
+                    <span className="block text-yellow-900 text-lg sm:text-xl lg:text-2xl font-extrabold">13,700 T</span>
                   </div>
-                  <div className="p-4 bg-pink-100 rounded-lg shadow">
-                    <p className="text-sm sm:text-base lg:text-lg font-bold text-pink-700">
-                      Start:
-                      <span className="block text-pink-900 text-base sm:text-lg lg:text-xl">18/12/2025</span>
-                    </p>
+                  <div className="p-6 bg-pink-100 rounded-lg shadow-lg text-center">
+                    <p className="text-sm sm:text-base lg:text-lg font-bold text-pink-700">Start:</p>
+                    <span className="block text-pink-900 text-lg sm:text-xl lg:text-2xl font-extrabold">18/12/2025</span>
                   </div>
-                  <div className="p-4 bg-yellow-100 rounded-lg shadow">
-                    <p className="text-sm sm:text-base lg:text-lg font-bold text-yellow-700">
-                      End:
-                      <span className="block text-yellow-900 text-base sm:text-lg lg:text-xl">18/01/2025</span>
-                    </p>
+                  <div className="p-6 bg-yellow-100 rounded-lg shadow-lg text-center">
+                    <p className="text-sm sm:text-base lg:text-lg font-bold text-yellow-700">End:</p>
+                    <span className="block text-yellow-900 text-lg sm:text-xl lg:text-2xl font-extrabold">18/01/2025</span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </section>
+
     
         {/* Buy & Claim Section */}
         <section className="py-3 w-full">
