@@ -97,7 +97,7 @@ export default function Memefactory() {
         accounts[0],
         0,
         CONTRACT_ADDRESS,
-        "nft_4",
+        "nft",
         "mint",
         [],
         [
