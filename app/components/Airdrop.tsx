@@ -8,6 +8,8 @@ const Airdrop = () => {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState(0); // Controla el progreso de los pasos
+  const [showPopup, setShowPopup] = useState(false); // Controla la visibilidad del popup
+  const [txHash, setTxHash] = useState<string | null>(null); // Guarda el enlace de la transacción
 
   const [timeLeft, setTimeLeft] = useState(() => {
     const now = new Date().getTime();
@@ -61,15 +63,6 @@ const Airdrop = () => {
     initializeProvider();
   }, [getProvider]);
 
-  const formatTime = (ms: number) => {
-    const seconds = Math.floor((ms / 1000) % 60);
-    const minutes = Math.floor((ms / (1000 * 60)) % 60);
-    const hours = Math.floor((ms / (1000 * 60 * 60)) % 24);
-    const days = Math.floor(ms / (1000 * 60 * 60 * 24));
-
-    return `${days}d ${hours}h ${minutes}m ${seconds}s`;
-  };
-
   const getTokens = async () => {
     setIsLoading(true); // Indica que se está procesando la solicitud
     try {
@@ -77,18 +70,18 @@ const Airdrop = () => {
       if (!starkeyProvider) {
         throw new Error("Starkey provider not found.");
       }
-
+  
       const currentNetwork = await starkeyProvider.getChainId();
       if (currentNetwork.chainId !== 8) {
         await starkeyProvider.changeNetwork({ chainId: 8 });
         console.log("Network changed to chainId 8");
       }
-
+  
       const accounts = await starkeyProvider.connect();
       if (!accounts || accounts.length === 0) {
         throw new Error("Unable to fetch the account address.");
       }
-
+  
       const txExpiryTime = Math.ceil(Date.now() / 1000) + 30; // 30 seconds expiry
       const optionalTransactionPayloadArgs = { txExpiryTime };
       const rawTxPayload = [
@@ -97,16 +90,14 @@ const Airdrop = () => {
         CONTRACT_ADDRESS,
         "faucet",
         "mint",
-        [
-          CONTRACT_ADDRESS_MEME,
-        ],
+        [CONTRACT_ADDRESS_MEME],
         [],
         optionalTransactionPayloadArgs,
       ];
-
+  
       const transactionData = await starkeyProvider.createRawTransactionData(rawTxPayload);
       const networkData = await starkeyProvider.getChainId();
-
+  
       const params = {
         data: transactionData,
         from: accounts[0],
@@ -114,10 +105,16 @@ const Airdrop = () => {
         chainId: networkData.chainId,
         value: "",
       };
-
+  
       const tx = await starkeyProvider.sendTransaction(params);
+      if (!tx) {
+        console.error("Transaction is empty.");
+        return; // Detener ejecución si `tx` está vacío
+      }
+  
       console.log("Transaction sent:", tx);
-
+      setTxHash(tx);
+      setShowPopup(true);
     } catch (err) {
       console.error("Error sending tokens:", err);
       setError(err instanceof Error ? err.message : "Unknown error occurred.");
@@ -125,6 +122,7 @@ const Airdrop = () => {
       setIsLoading(false);
     }
   };
+  
 
   const steps = [
     {
@@ -217,6 +215,59 @@ const Airdrop = () => {
           </div>
         ))}
       </div>
+      {showPopup && (
+        <div 
+          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" 
+          onClick={() => setShowPopup(false)} // Cierra el popup al hacer clic fuera del contenido
+        >
+          <div 
+            className="bg-white p-6 rounded-2xl shadow-2xl text-center max-w-sm w-full"
+            onClick={(e) => e.stopPropagation()} // Evita que el click dentro del popup cierre el modal
+          >
+            {/* Título del popup */}
+            <div className="space-y-2">
+              <h2 className="text-3xl font-extrabold text-green-600">
+                🎉 Congratulations!
+              </h2>
+              <p className="text-gray-700">
+                You just got <span className="text-purple-600 font-bold">1,000,000 SPIKE tokens!</span>
+              </p>
+            </div>
+
+            {/* Imagen opcional para reforzar el mensaje del meme */}
+            <div className="mt-4">
+              <img 
+                src="https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif" 
+                alt="Celebration meme" 
+                className="mx-auto rounded-lg shadow-lg w-48"
+              />
+            </div>
+
+            {/* Enlace a los detalles de la transacción */}
+            <div className="mt-6">
+              <a
+                href={`https://suprascan.io/tx/${txHash}/f?tab=tx-advance`} 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 underline hover:text-blue-700 transition"
+              >
+                🔗 View transaction details
+              </a>
+            </div>
+
+            {/* Botón para cerrar el popup */}
+            <div className="mt-6">
+              <button
+                onClick={() => setShowPopup(false)}
+                className="px-6 py-3 bg-purple-600 text-white font-medium rounded-lg shadow-md hover:bg-purple-500 transition"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+
+      )}
     </div>
   );
 };

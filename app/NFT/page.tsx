@@ -246,54 +246,53 @@ export default function Memefactory() {
         </div>
         {showPopup && (
           <div 
-  className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50" 
-  onClick={() => setShowPopup(false)} // Close the popup when clicking outside
->
-  <div 
-    className="bg-gradient-to-r from-pink-400 to-teal-400 rounded-lg p-6 sm:p-8 max-w-sm sm:max-w-md lg:max-w-lg w-full shadow-xl relative"
-    onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the pop-up
-  >
-    <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center mb-4 sm:mb-6 text-white">
-      Transaction Successful!
-    </h3>
-    <p className="text-center mb-4 sm:mb-6 text-base sm:text-lg lg:text-xl text-gray-100">
-      Your transaction was successfully processed.
-    </p>
-    
-    <div className="text-center mb-6 sm:mb-8">
-      <p className="text-sm sm:text-base lg:text-lg text-white mb-2">TX Hash:</p>
-      <a 
-        href={`https://suprascan.io/tx/${txHash}/f?tab=tx-advance`} 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        className="text-base sm:text-lg lg:text-xl text-indigo-500 font-semibold hover:text-indigo-600 break-all"
-      >
-        {txHash.slice(0, 10)}...{txHash.slice(-10)} {/* Display only the start and end of the hash */}
-      </a>
-    </div>
-    
-    <div className="flex justify-center mb-6 sm:mb-8">
-      <Image 
-        src={nftImage} 
-        alt="NFT" 
-        width={120} 
-        height={120} 
-        className="sm:w-[140px] sm:h-[140px] lg:w-[160px] lg:h-[160px] rounded-lg shadow-2xl transform hover:scale-105 transition duration-300"
-      />
-    </div>
-    
-    <div className="text-center mt-4 sm:mt-6">
-      <button
-        onClick={() => setShowPopup(false)}
-        className="bg-red-500 text-white py-2 sm:py-3 px-8 sm:px-12 text-sm sm:text-base lg:text-lg rounded-full hover:bg-red-600 transition duration-300"
-      >
-        Close
-      </button>
-    </div>
-  </div>
-</div>
-
-      )}
+            className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50" 
+            onClick={() => setShowPopup(false)} // Close the popup when clicking outside
+          >
+            <div 
+              className="bg-gradient-to-r from-pink-400 to-teal-400 rounded-lg p-6 sm:p-8 max-w-sm sm:max-w-md lg:max-w-lg w-full shadow-xl relative"
+              onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the pop-up
+            >
+              <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center mb-4 sm:mb-6 text-white">
+                Transaction Successful!
+              </h3>
+              <p className="text-center mb-4 sm:mb-6 text-base sm:text-lg lg:text-xl text-gray-100">
+                Your transaction was successfully processed.
+              </p>
+              
+              <div className="text-center mb-6 sm:mb-8">
+                <p className="text-sm sm:text-base lg:text-lg text-white mb-2">TX Hash:</p>
+                <a 
+                  href={`https://suprascan.io/tx/${txHash}/f?tab=tx-advance`} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-base sm:text-lg lg:text-xl text-indigo-500 font-semibold hover:text-indigo-600 break-all"
+                >
+                  {txHash.slice(0, 10)}...{txHash.slice(-10)} {/* Display only the start and end of the hash */}
+                </a>
+              </div>
+              
+              <div className="flex justify-center mb-6 sm:mb-8">
+                <Image 
+                  src={nftImage} 
+                  alt="NFT" 
+                  width={120} 
+                  height={120} 
+                  className="sm:w-[160] sm:h-[160] lg:w-[160px] lg:h-[160px] rounded-lg shadow-2xl transform hover:scale-105 transition duration-300"
+                />
+              </div>
+              
+              <div className="text-center mt-4 sm:mt-6">
+                <button
+                  onClick={() => setShowPopup(false)}
+                  className="bg-red-500 text-white py-2 sm:py-3 px-8 sm:px-12 text-sm sm:text-base lg:text-lg rounded-full hover:bg-red-600 transition duration-300"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
     </div>
 );
 

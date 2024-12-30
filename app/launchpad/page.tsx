@@ -12,10 +12,14 @@ export default function LaunchPad() {
   const [provider, setProvider] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [joinDeposit, setJoinDeposit] = useState("");
+  const [joinDeposit, setJoinDeposit] = useState("1");
   const [copySuccess, setCopySuccess] = useState(false);
   const [progress, setProgress] = useState(400000694012300);
   const idoSupply = 5069000000000000;
+  const [showPopup, setShowPopup] = useState(false); // Controla la visibilidad del popup
+  const [showPopup_2, setShowPopup_2] = useState(true); // Controla la visibilidad del popup
+  const [txHash, setTxHash] = useState<string | null>(null); // Guarda el enlace de la transacción
+
   const copyToClipboard = () => {
     navigator.clipboard.writeText(CONTRACT_ADDRESS_MEME).then(
       () => {
@@ -127,6 +131,15 @@ export default function LaunchPad() {
           };
   
           const tx = await starkeyProvider.sendTransaction(params);
+
+          if (tx) {
+            setTxHash(tx); // Store the transaction hash
+            setShowPopup(true); // Show the pop-up only if txHash is valid
+            console.log("Transaction successful:", tx);
+          } else {
+            console.error("No transaction hash received.");
+            setError("Transaction failed: No TX hash received.");
+          }
   
       } catch (err) {
           console.error("Error sending tokens:", err);
@@ -177,6 +190,15 @@ export default function LaunchPad() {
         };
 
         const tx = await starkeyProvider.sendTransaction(params);
+
+        if (tx) {
+          setTxHash(tx); // Store the transaction hash
+          setShowPopup_2(true); // Show the pop-up only if txHash is valid
+          console.log("Transaction successful:", tx);
+        } else {
+          console.error("No transaction hash received.");
+          setError("Transaction failed: No TX hash received.");
+        }
 
     } catch (err) {
         console.error("Error sending tokens:", err);
@@ -397,6 +419,116 @@ export default function LaunchPad() {
           </div>
         </section>
       </div>
+      
+      {showPopup && (
+        <div 
+          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" 
+          onClick={() => setShowPopup(false)} // Cierra el popup al hacer clic fuera del contenido
+        >
+          <div 
+            className="bg-white p-6 rounded-2xl shadow-2xl text-center max-w-sm w-full"
+            onClick={(e) => e.stopPropagation()} // Evita que el click dentro del popup cierre el modal
+          >
+            {/* Título del popup */}
+            <div className="space-y-2">
+              <h2 className="text-3xl font-extrabold text-green-600">
+                🎉 Congratulations!
+              </h2>
+              <p className="text-gray-700">
+                You just <span className="text-purple-600 font-bold">joined SPIKE IDO!</span>
+              </p>
+            </div>
+
+            {/* Imagen opcional para reforzar el mensaje del meme */}
+            <div className="mt-4">
+            <img 
+                src="https://media.giphy.com/media/l4pTfx2qLszoacZRS/giphy.gif" 
+                alt="Excited hedgehog" 
+                className="mx-auto rounded-lg shadow-lg w-48"
+              />
+            </div>
+
+            {/* Enlace a los detalles de la transacción */}
+            <div className="mt-6">
+              <a
+                href={`https://suprascan.io/tx/${txHash}/f?tab=tx-advance`} 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 underline hover:text-blue-700 transition"
+              >
+                🔗 View transaction details
+              </a>
+            </div>
+
+            {/* Botón para cerrar el popup */}
+            <div className="mt-6">
+              <button
+                onClick={() => setShowPopup(false)}
+                className="px-6 py-3 bg-purple-600 text-white font-medium rounded-lg shadow-md hover:bg-purple-500 transition"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+
+      )}
+
+      {showPopup_2 && (
+        <div 
+          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" 
+          onClick={() => setShowPopup_2(false)} // Cierra el popup al hacer clic fuera del contenido
+        >
+          <div 
+            className="bg-white p-8 rounded-2xl shadow-2xl text-center max-w-md w-full"
+            onClick={(e) => e.stopPropagation()} // Evita que el click dentro del popup cierre el modal
+          >
+            {/* Título del popup */}
+            <div className="space-y-3">
+              <h2 className="text-3xl font-extrabold text-green-500">
+                🎉 Spike Tokens Received!
+              </h2>
+              <p className="text-gray-700">
+                You just <span className="text-purple-600 font-bold">claimed SPIKE IDO tokens!</span>
+              </p>
+            </div>
+
+            {/* Imagen para enfatizar el mensaje */}
+            <div className="mt-5">
+            <img 
+              src="https://media.giphy.com/media/EWIiv7izSd4J51tntS/giphy.gif" 
+              alt="Dancing funny character" 
+              className="mx-auto rounded-lg shadow-lg w-48"
+            />
+
+            </div>
+
+            {/* Enlace a los detalles de la transacción */}
+            <div className="mt-6">
+              <a
+                href={`https://suprascan.io/tx/${txHash}/f?tab=tx-advance`} 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 font-semibold underline hover:text-blue-700 transition duration-200"
+              >
+                🔗 View Transaction Details
+              </a>
+            </div>
+
+            {/* Botón para cerrar el popup */}
+            <div className="mt-8">
+              <button
+                onClick={() => setShowPopup_2(false)}
+                className="px-6 py-3 bg-purple-600 text-white font-medium rounded-lg shadow-md hover:bg-purple-500 transition duration-200"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+
+
+      )}
     </div>
     );
     
