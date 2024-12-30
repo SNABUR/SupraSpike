@@ -17,7 +17,7 @@ export default function LaunchPad() {
   const [progress, setProgress] = useState(400000694012300);
   const idoSupply = 5069000000000000;
   const [showPopup, setShowPopup] = useState(false); // Controla la visibilidad del popup
-  const [showPopup_2, setShowPopup_2] = useState(true); // Controla la visibilidad del popup
+  const [showPopup_2, setShowPopup_2] = useState(false); // Controla la visibilidad del popup
   const [txHash, setTxHash] = useState<string | null>(null); // Guarda el enlace de la transacción
 
   const copyToClipboard = () => {
