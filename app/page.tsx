@@ -18,6 +18,8 @@ export default function Memefactory() {
   const [projectURL, setProjectURL] = useState("");
   const [result, setResult] = useState<string | null>(null);
   const [setpopUp, setPopUp] = useState(false);
+  const [showMyModal, setShowMyModal] = useState(false);
+
 
   const CONTRACT_ADDRESS = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794";
 
@@ -45,74 +47,12 @@ export default function Memefactory() {
     getProvider();
   }, [getProvider]);
 
-  const handlePopUp = () => {
-    setPopUp(true);
-  }
-  
-
-  // ** Crear el memecoin **
-  const createMeme = async () => {
-    try {
-      if (!provider) {
-        setError("StarKey Wallet is not installed or unsupported.");
-        return;
-      }
-      if (!memeName || !memeSymbol) {
-        setError("Please fill all fields.");
-        return;
-      }
-
-      setIsLoading(true);
-      setError(null);
-
-      const accounts = await provider.connect();
-      const transactionData = await provider.createRawTransactionData([
-        accounts[0],
-        0,
-        CONTRACT_ADDRESS,
-        "pump_fa",
-        "deploy",
-        [],
-        [
-          
-          BCS.bcsSerializeStr("this is a meme"), //meme description
-          BCS.bcsSerializeStr(memeName), //meme name
-          BCS.bcsSerializeStr(memeSymbol), //meme SYMBOL
-          BCS.bcsSerializeStr(URI), //URI JSON
-          BCS.bcsSerializeStr("www.supraaspike.fun"), //WEBSITE
-          BCS.bcsSerializeStr("t.me/xd"), //TELEGRAM
-          BCS.bcsSerializeStr("twitter.com/spike"), //TWITTER
-          
-          
-        ],
-        { txExpiryTime: Math.ceil(Date.now() / 1000) + 30 },
-      ]);
-
-      const networkData = await provider.getChainId();
-      console.log(networkData, "chain id");
-
-      const params = {
-        data: transactionData,
-        from: accounts[0],
-        to: CONTRACT_ADDRESS,
-        chainId: 6,
-      };
-
-      const tx = await provider.sendTransaction(params);
-      setResult(tx);
-      console.log("Transaction successful:", tx);
-    } catch (err) {
-      console.error("Error creating memecoin:", err);
-      setError(err instanceof Error ? err.message : "Unknown error occurred.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const handleOnClose = () => setShowMyModal(false);
 
 
   return (
     <div className="p-3 text-black">
-      <PopUp visible={setpopUp} onClose={undefined}/>
+      <PopUp visible={showMyModal} onClose={handleOnClose}/>
       <div className="flex flex-col mb-1 justify-center md:flex-row items-center gap-3 md:gap-3 lg:gap-3 overflow-hidden">
         
       <div className="flex flex-col w-full max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl shadow-lg p-6 sm:p-8 md:p-10 lg:p-12 rounded-xl">
@@ -125,7 +65,7 @@ export default function Memefactory() {
           <div className="flex justify-center">
             <button
               className="bg-amber-400 text-brown-900 rounded-full hover:bg-yellow-700 px-12 sm:px-12 md:px-24 py-4 sm:py-5 text-3xl md:text-3xl sm:text-xl md:text-2xl text-black font-goldeng mt-4 sm:mt-3 md:mt-5 transition duration-200 transform hover:scale-105"
-              onClick={handlePopUp}
+              onClick={() => setShowMyModal(true)}
               >
               Create
             </button>

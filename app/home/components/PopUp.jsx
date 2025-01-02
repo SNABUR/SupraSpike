@@ -120,7 +120,7 @@ function PopUp({visible, onClose}) {
     };
 
     const handleOnClose = (event) => {
-       // if (event.target.id === 'container_meme') onClose()
+      if (event.target.id === 'container_meme') onClose()
     };
 
       // Actualiza el estado del textarea y verifica la longitud
@@ -161,60 +161,68 @@ function PopUp({visible, onClose}) {
 
     
     const handleSubmit_2 = async () => {
-              try {
-                if (!provider) {
-                  setError("StarKey Wallet is not installed or unsupported.");
-                  return;
-                }
-          
-                setIsLoading(true);
-                setError(null);
-          
-                const accounts = await provider.connect();
-                const transactionData = await provider.createRawTransactionData([
-                  accounts[0],
-                  0,
-                  CONTRACT_ADDRESS,
-                  "pump_fa",
-                  "deploy",
-                  [],
-                  [
-                    
-                    BCS.bcsSerializeStr("this is a meme"), //meme description
-                    BCS.bcsSerializeStr(FormData_2.MemeName), //meme name
-                    BCS.bcsSerializeStr(FormData_2.Symbol), //meme SYMBOL
-                    BCS.bcsSerializeStr("URI"), //URI JSON
-                    BCS.bcsSerializeStr("www.supraaspike.fun"), //WEBSITE
-                    BCS.bcsSerializeStr("t.me/xd"), //TELEGRAM
-                    BCS.bcsSerializeStr("twitter.com/spike"), //TWITTER
-                    
-                    
-                  ],
-                  { txExpiryTime: Math.ceil(Date.now() / 1000) + 30 },
-                ]);
-          
-                const networkData = await provider.getChainId();
-                console.log(networkData, "chain id");
-          
-                const params = {
-                  data: transactionData,
-                  from: accounts[0],
-                  to: CONTRACT_ADDRESS,
-                  chainId: 6,
-                };
-          
-                const tx = await provider.sendTransaction(params);
-                setResult(tx);
-                console.log("Transaction successful:", tx);
-              } catch (err) {
-                console.error("Error creating memecoin:", err);
-                setError(err instanceof Error ? err.message : "Unknown error occurred.");
-              } finally {
-                setIsLoading(false);
-              }
+      try {
+        if (!provider) {
+          setError("StarKey Wallet is not installed or unsupported.");
+          return;
+        }
+
+        setIsLoading(true);
+        setError(null);
+
+        const accounts = await provider.connect();
+        const transactionData = await provider.createRawTransactionData([
+          accounts[0],
+          0,
+          CONTRACT_ADDRESS,
+          "pump_fa",
+          "deploy",
+          [],
+          [
             
-          console.log(txhash, "tx hash");
-      };
+            BCS.bcsSerializeStr("this is a meme"), //meme description
+            BCS.bcsSerializeStr(FormData_2.MemeName), //meme name
+            BCS.bcsSerializeStr(FormData_2.Symbol), //meme SYMBOL
+            BCS.bcsSerializeStr("URI"), //URI JSON
+            BCS.bcsSerializeStr("www.supraaspike.fun"), //WEBSITE
+            BCS.bcsSerializeStr("t.me/xd"), //TELEGRAM
+            BCS.bcsSerializeStr("twitter.com/spike"), //TWITTER
+            
+            
+          ],
+          { txExpiryTime: Math.ceil(Date.now() / 1000) + 30 },
+        ]);
+
+        const networkData = await provider.getChainId();
+        console.log(networkData, "chain id");
+
+        const params = {
+          data: transactionData,
+          from: accounts[0],
+          to: CONTRACT_ADDRESS,
+          chainId: 6,
+        };
+
+        const tx = await provider.sendTransaction(params);
+        setResult(tx);
+        console.log("Transaction successful:", tx);
+        
+        const response = await fetch(`/api/create_meme?name=${FormData_2.MemeName}&ticker=${FormData_2.Symbol}&fee=0.1&contract=${CONTRACT_ADDRESS}&image=URI&creator=${accounts[0]}&creation=${Date.now()}&webpage=www.supraaspike.fun&twitter=twitter.com/spike&telegram=t.me/xd&description=this is a meme&network=${networkData}`, {
+          method: "GET",
+        });
+
+        const upload_data = await response.json();
+        console.log(upload_data, "upload data");
+
+
+      } catch (err) {
+        console.error("Error creating memecoin:", err);
+        setError(err instanceof Error ? err.message : "Unknown error occurred.");
+      } finally {
+        setIsLoading(false);
+      }
+    
+    };
     
     const handleInputChange = (e2, name_2) => {
       const value = e2.target.value;
@@ -270,139 +278,6 @@ function PopUp({visible, onClose}) {
                   {formularioVisible && (
                   <div className="flex flex-col justify-around items-around">
                     <div className="flex flex-col gap-3 justify-around">
-                      {/* Primera columna descripcion*/}
-                      <div className="flex flex-col md:flex-fil items-center"> 
-                        {Network !== "Solana" && (
-                          <div className="flex flex-col md:flex-row gap-3 p-3 max-w-lg w-auto md:justify-center">
-                          {/* Card: Transfer Fee */}
-                          <div className="bg-white shadow-lg rounded-lg p-4 w-auto md:w-70 mb-4 h-min">
-                            <div
-                              className="flex items-center justify-between mb-4 cursor-pointer"
-                              onClick={handleShowFee}
-                            >
-                              <div className="flex items-center space-x-2">
-                                <input
-                                  type="checkbox"
-                                  onChange={handleShowFee}
-                                  checked={showFeeInput}
-                                  className="h-4 w-4 text-sm cursor-pointer"
-                                />
-                                <h3 className="font-bold text-sm cursor-pointer">Transfer Fee</h3>
-                              </div>
-                              <Tooltip 
-                                message={
-                                  <>
-                                    <p className="mb-3">Set a fee between 0 and 1% on each transfer.</p>
-                                    <p className="mb-3">Collected fees are sent to the creator's wallet.</p>
-                                  </>
-                                }
-                                space={1}
-                              />
-                            </div>
-                            {showFeeInput && (
-                              <div className="flex items-center gap-2">
-                                <Input2 
-                                  placeholder="0.01" 
-                                  name_2="Fee" 
-                                  type="number" 
-                                  handleChange_2={handleChange_2} 
-                                  className="placeholder:italic rounded-lg w-32"
-                                />
-                                <p>%</p>
-                              </div>
-                            )}
-                          </div>
-                          {/* Card: Trading Time Zone */}
-                          <div className="bg-white shadow-lg rounded-lg p-4 w-auto md:w-70 mb-4 h-min">
-                            <div
-                              className="flex items-center justify-between mb-4 cursor-pointer"
-                              onClick={handleShowTradingTime}
-                            >
-                              <div className="flex items-center space-x-2">
-                                <input 
-                                  type="checkbox" 
-                                  checked={isCheckedTimeZone} 
-                                  onChange={handleShowTradingTime} 
-                                  className="h-4 w-4 cursor-pointer"
-                                />
-                                <h3 className="font-bold text-sm cursor-pointer">Trading Time</h3>
-                              </div>
-                              <Tooltip
-                                message={
-                                  <>
-                                    <p className="mb-3">Choose a time zone for optimal trading hours.</p>
-                                    <p className="mb-3">Major trading times for markets like New York, London, and Tokyo are available.</p>
-                                  </>
-                                }
-                                space={1}
-                              />
-                            </div>
-                            {isCheckedTimeZone && (
-                              <select
-                                className="p-2 rounded-lg text-sm border w-32"
-                                onChange={(e2) => handleChange_2(e2, 'Timezone')}
-
-                              >
-                                <option value={0}>All Day</option>
-                                <option value={1}>London</option>
-                                <option value={2}>New York</option>
-                                <option value={3}>Tokyo</option>
-                                <option value={4}>Hong-Kong</option>
-                              </select>
-                            )}
-                          </div>
-                          {/* Card: Smart Launch */}
-                          <div className="bg-white shadow-lg rounded-lg p-4 w-auto md:w-70 mb-4 h-min">
-                            <div
-                              className="flex items-center justify-between mb-4 cursor-pointer"
-                              onClick={handleCheckboxChange}
-                            >
-                              <div className="flex items-center space-x-2">
-                                <input 
-                                  type="checkbox" 
-                                  checked={isChecked} 
-                                  onChange={handleCheckboxChange} 
-                                  className="h-4 w-4 cursor-pointer"
-                                />
-                                <h3 className="font-bold text-sm cursor-pointer">Smart Launch</h3>
-                              </div>
-                              <Tooltip
-                                message={
-                                  <>
-                                    <p className="mb-3">Smart Launch applies a sell fee that starts at 100% and gradually decreases to 0%.</p>
-                                    <p className="mb-3">This mechanism helps stabilize the token price over time.</p>
-                                  </>
-                                }
-                                space={1}
-                              />
-                            </div>
-                            {isChecked && (
-                              <div className="flex flex-fil items-center gap-2">
-                                <Input2 
-                                  placeholder="1" 
-                                  name_2="ProtectInput" 
-                                  type="number" 
-                                  handleChange_2={handleChange_2} 
-                                  disabled={!isChecked} 
-                                  className="placeholder:italic w-16 text-sm rounded-lg"
-                                />
-                                <select
-                                  onChange={(e2) => handleChange_2(e2, 'Timeframe')}
-                                  className="border p-2 rounded-lg text-sm w-20"
-                                >
-                                  <option value={60}>Hours</option>
-                                  <option value={60 * 24}>Days</option>
-                                  <option value={60 * 24 * 7}>Weeks</option>
-                                  <option value={60 * 24 * 30}>Months</option>
-                                  <option value={60 * 24 * 30 * 12}>Years</option>
-                                </select>
-                              </div>
-                            )}
-                          </div>
-                        </div>                  
-                          )}
-                      </div>
-
                       <div className="flex justify-center font-goldeng">
                         <button onClick={toggleFormulario2}>
                           {formularioVisible2 ? "Less Options" : "More Options"}
@@ -455,11 +330,20 @@ function PopUp({visible, onClose}) {
 
                           <div className="flex flex-col mb-3">
                             <div className="flex flex-fil items-center justify-center">
+                              <p className="flex justify-center font-bold mr-2">Telegram</p>
+                            </div>
+                              <div className="flex justify-end">
+                                  <p className="flex justify-center p-2 italic">t.me/</p>
+                                  <Input2 placeholder="Spiker" name_2="Telegram" type="text" handleChange_2={handleChange_2} className={`placeholder:italic w-auto p-2 border rounded-lg`}/>
+                              </div>
+                          </div>
+                          <div className="flex flex-col mb-3">
+                            <div className="flex flex-fil items-center justify-center">
                               <p className="flex justify-center font-bold mr-2">Twitter</p>
                             </div>
                               <div className="flex justify-end">
                                   <p className="flex justify-center p-2 italic">twitter.com/</p>
-                                  <Input2 placeholder="GeesesGolden" name_2="Twitter" type="text" handleChange_2={handleChange_2} className={`placeholder:italic w-auto p-2 border rounded-lg`}/>
+                                  <Input2 placeholder="Spike" name_2="Twitter" type="text" handleChange_2={handleChange_2} className={`placeholder:italic w-auto p-2 border rounded-lg`}/>
                               </div>
                           </div>
                           <div className="flex flex-col items-center mb-3">
@@ -467,31 +351,6 @@ function PopUp({visible, onClose}) {
                                 <p className="flex font-bold justify-center mr-2">Web Page</p>
                               </div>
                               <Input2 placeholder="www.yourmeme.com" name_2="Website" type="text" handleChange_2={handleChange_2} className={`placeholder:italic w-64 p-2 border rounded-lg`}/>
-                          </div>
-                        </div>
-                        <div className="flex flex-col">
-
-                          <div className="flex flex-col mb-3">
-                            <div className="flex flex-col mb-3">
-                              <div className="flex flex-fil items-center justify-center">
-                                <p className="flex justify-center font-bold mr-2">Twitch</p>
-                                <Tooltip 
-                                  message="This channel will appear in the Degen section, allowing you to watch live streams in real time."
-                                  space={1}
-                                />
-                              </div>
-                              <div className="flex justify-end">
-                                  <p className="flex justify-center p-2 italic">twitch.tv/</p>
-                                  <Input2 placeholder="gg" name_2="Twitch" type="text" handleChange_2={handleChange_2} className={`placeholder:italic rounded-lg`}/>
-                              </div>
-                            </div>
-                            <div className="flex flex-fil items-center justify-center">
-                              <p className="flex justify-center font-bold mr-2">Discord</p>
-                            </div>
-                            <div className="flex justify-end">
-                                <p className="flex justify-center p-2 italic">discord.com/</p>
-                                <Input2 placeholder="invite/FfeHwrqdAY" name_2="Discord" type="text" handleChange_2={handleChange_2} className={`placeholder:italic rounded-lg`}/>
-                            </div>
                           </div>
                         </div>
                       </div>

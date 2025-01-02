@@ -33,12 +33,20 @@ const Meme_Search = () => {
     const MAX_RETRIES = 3; // Número máximo de intentos
     const RETRY_DELAY = 3000; // Retraso entre intentos (en milisegundos)
     
-    /*const fetchDataWithRetry = async (retries = MAX_RETRIES) => {
+    const fetchDataWithRetry = async (retries = MAX_RETRIES) => {
         setLoading(true); // Establecer el estado de carga al inicio de la solicitud
         try {
-            const response = await dbMemesPoint.get('/db_memes');
-            setMemes(response.data);
-            console.log(response.data, "all meme data");
+            const response = await fetch('/api/db_memes');
+            console.log(response, "response data");
+    
+            // Verifica que la respuesta sea exitosa (status 200)
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+    
+            const data = await response.json(); // Solo parsea JSON si la respuesta fue exitosa
+            setMemes(data);
+            console.log(data, "all meme data");
         } catch (error) {
             console.error('Error fetching memes:', error);
             if (retries > 0) {
@@ -49,17 +57,16 @@ const Meme_Search = () => {
                 console.log("Se han agotado todos los reintentos. No se pudo obtener los datos.");
             }
         } finally {
-            // Solo se ejecutará al final del proceso de reintentos
             setLoading(false); // Dejar de mostrar el estado de carga
         }
-    };*/
+    };
     
-    
-
-    /*useEffect(() => {
+        
+    useEffect(() => {
         setLoading(true);
         fetchDataWithRetry();
-    }, []);*/
+    }, []);
+    
 
     const handleKeyPress = (event) => {
         if (event.key === 'Enter') {
@@ -95,15 +102,17 @@ const Meme_Search = () => {
     const handleSearch = async () => {
         try {
             console.log("Enviando solicitud de búsqueda...");
-            const response = await dbMemesPoint.get('/db_memes', {
+            const response = await fetch('/api/db_memes', {
 
                 params: {
                     search: search, // Usar el estado 'search' para realizar la búsqueda tanto por 'name' como por 'contract'
                 }
             });
+            console.log(response, "response data handle search");
 
+            const data = await response.json(); // Solo parsea JSON si la respuesta fue exitosa
             // Actualizar el estado 'memes' con los resultados de la búsqueda
-            setMemes(response.data);
+            setMemes(data);
         } catch (error) {
             console.error('Error fetching memes:', error);
         }
@@ -183,7 +192,9 @@ const Meme_Search = () => {
                                     <button 
                                         //onClick={() => add_metamask(meme.contract, meme.image)}
                                         className="flex font-semibold">
-                                        <img src={metamask} alt="metamask" className="w-3 md:w-5" />
+                                        <img 
+                                        //src={metamask} 
+                                        alt="metamask" className="w-3 md:w-5" />
                                     </button>
                                 </div>
                                 <div className="flex justify-between items-center text-xs">
@@ -201,7 +212,9 @@ const Meme_Search = () => {
                                 <div className="flex justify-between items-center text-xs mb-2">
                                     <a href={`https://www.basescan.org/${meme.contract}`} target="_blank" rel="noopener noreferrer" className="text-gray-700 font-semibold">Created by: {meme.creator?.slice(0, 6)}...{meme.creator?.slice(-4)}</a>
                                     <a href={`https://sepolia.basescan.org/${meme.contract}`} target="_blank" rel="noopener noreferrer">
-                                        <img src={etherscan} alt="etherscan" className="w-5 md:w-5" />
+                                        <img 
+                                        //src={etherscan} 
+                                        alt="etherscan" className="w-5 md:w-5" />
                                     </a>
                                 </div>
                             </div>
