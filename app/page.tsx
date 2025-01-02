@@ -1,301 +1,182 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { BCS,TxnBuilderTypes } from "aptos";
 import Image from "next/image";
-import ApproveTransaction from "./components/approve";
-import Airdrop from "./components/Airdrop";
 import Link from "next/link";
+import PopUp from "./home/components/PopUp";
+import Meme_search from "./home/Memesearch"; 
 
-export default function Home() {
+export default function Memefactory() {
   const [account, setAccount] = useState("");
-  const [isInstalled, setIsInstalled] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [showDisconnect, setShowDisconnect] = useState(false);
-  const [showMenu, setShowMenu] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [provider, setProvider] = useState<any>(null);
+  const [memeName, setMemeName] = useState("");
+  const [memeSymbol, setMemeSymbol] = useState("");
+  const [URI, setURI] = useState("");
+  const [projectURL, setProjectURL] = useState("");
+  const [result, setResult] = useState<string | null>(null);
+  const [setpopUp, setPopUp] = useState(false);
 
-  const getProvider = () => {
+  const CONTRACT_ADDRESS = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794";
+
+  // ** Mejorando la inicialización del proveedor **
+  const getProvider = useCallback(async () => {
     if (typeof window !== "undefined" && "starkey" in window) {
-      const provider = (window as any)?.starkey.supra;
-      if (provider) {
-        setIsInstalled(true);
-        return provider;
+      const starkeyProvider = (window as any)?.starkey.supra;
+      setProvider(starkeyProvider);
+
+      if (starkeyProvider) {
+        const currentNetwork = await starkeyProvider.getChainId();
+        if (currentNetwork.chainId !== 6) {
+          await starkeyProvider.changeNetwork({ chainId: 6 });
+          console.log("Network changed to chainId 6");
+        }
       }
-    }
-    setIsInstalled(false);
-    return null; 
-  };
 
-  const resetWalletData = () => {
-    setAccount("");
-  };
-
-  const disconnectWallet = async () => {
-    const provider = getProvider();
-    if (provider) {
-      try {
-        await provider.disconnect();
-      } catch (error) {
-        console.error("Error disconnecting:", error);
-      }
+      return starkeyProvider || null;
     }
-    resetWalletData();
-  };
-
-  const connectWallet = async () => {
-    const provider = getProvider();
-    if (provider) {
-      try {
-        const accounts = await provider.connect();
-        setAccount(accounts[0]);
-        console.log(`Connected: ${accounts[0]}`);
-      } catch (error) {
-        setErrorMessage("Connection rejected by the user.");
-      }
-    } else {
-      // Redirige al enlace de instalación si no está instalado
-      window.open("https://starkey.app/", "_blank");
-      setErrorMessage("StarKey Wallet is not installed. Redirecting to installation...");
-    }
-  };
-
-  useEffect(() => {
-    const provider = getProvider();
-    if (provider) {
-      provider
-        .account()
-        .then((accounts: string | any[]) => {
-          if (accounts.length > 0) {
-            setAccount(accounts[0]);
-            console.log(`Already connected: ${accounts[0]}`);
-          }
-        })
-        .catch((error: any) => {
-          console.error(error);
-        });
-    }
+    return null;
   }, []);
 
-  const shortAccount = account ? `${account.slice(0, 6)}...${account.slice(-4)}` : "";
+
+  useEffect(() => {
+    getProvider();
+  }, [getProvider]);
+
+  const handlePopUp = () => {
+    setPopUp(true);
+  }
+  
+
+  // ** Crear el memecoin **
+  const createMeme = async () => {
+    try {
+      if (!provider) {
+        setError("StarKey Wallet is not installed or unsupported.");
+        return;
+      }
+      if (!memeName || !memeSymbol) {
+        setError("Please fill all fields.");
+        return;
+      }
+
+      setIsLoading(true);
+      setError(null);
+
+      const accounts = await provider.connect();
+      const transactionData = await provider.createRawTransactionData([
+        accounts[0],
+        0,
+        CONTRACT_ADDRESS,
+        "pump_fa",
+        "deploy",
+        [],
+        [
+          
+          BCS.bcsSerializeStr("this is a meme"), //meme description
+          BCS.bcsSerializeStr(memeName), //meme name
+          BCS.bcsSerializeStr(memeSymbol), //meme SYMBOL
+          BCS.bcsSerializeStr(URI), //URI JSON
+          BCS.bcsSerializeStr("www.supraaspike.fun"), //WEBSITE
+          BCS.bcsSerializeStr("t.me/xd"), //TELEGRAM
+          BCS.bcsSerializeStr("twitter.com/spike"), //TWITTER
+          
+          
+        ],
+        { txExpiryTime: Math.ceil(Date.now() / 1000) + 30 },
+      ]);
+
+      const networkData = await provider.getChainId();
+      console.log(networkData, "chain id");
+
+      const params = {
+        data: transactionData,
+        from: accounts[0],
+        to: CONTRACT_ADDRESS,
+        chainId: 6,
+      };
+
+      const tx = await provider.sendTransaction(params);
+      setResult(tx);
+      console.log("Transaction successful:", tx);
+    } catch (err) {
+      console.error("Error creating memecoin:", err);
+      setError(err instanceof Error ? err.message : "Unknown error occurred.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-700 to-pink-500 text-white font-sans flex flex-col">
-      {/* Header */}
-      <header className="relative flex flex-wrap items-center justify-between px-4 py-3 bg-purple-800 shadow-md">
-      {/* Logo y Título */}
-      <div className="flex items-center gap-2 sm:gap-4">
-        <Image
-          src="/spike.jpg"
-          alt="Spike Logo"
-          width={40}
-          height={40}
-          className="rounded-full shadow-lg"
-        />
-        <h1 className="text-xl sm:text-2xl font-bold tracking-wide text-white">Spike</h1>
-      </div>
-      {/* Opciones del Menú Desplegable */}
-      <div
-      className={`absolute top-full right-0 w-1/3 bg-purple-900 bg-opacity-95 px-3 rounded-xl flex flex-col items-center py-4 shadow-lg z-50 transition-all duration-300 md:hidden ${
-        showMenu ? "opacity-100 scale-100 pointer-events-auto visible" : "opacity-0 scale-95 pointer-events-none invisible"
-      }`}
-    >
-              <div className="flex mb-3 items-center gap-4 mt-4">
-          <a href="https://x.com/supra_spike" target="_blank" rel="noopener noreferrer">
-            <Image
-              src="/twitter.svg"
-              alt="Twitter"
-              width={30}
-              height={30}
-              className="hover:scale-110 hover:filter invert transition transform duration-200"
-            />
-          </a>
-          <a href="https://t.me/supraspike" target="_blank" rel="noopener noreferrer">
-            <Image
-              src="/telegram.svg"
-              alt="Telegram"
-              width={30}
-              height={30}
-              className="hover:scale-110 hover:filter invert transition transform duration-200"
-            />
-          </a>
-        </div>
-        <Link
-          href="/NFT"
-          className="bg-gradient-to-r mb-3 from-purple-400 to-orange-500 text-white font-bold text-sm sm:text-base py-2 px-4 sm:py-3 sm:px-6 rounded-full shadow-xl hover:from-yellow-300 hover:to-orange-400 transition duration-300 transform hover:scale-105 w-full md:w-auto justify-center text-center"
-          >
-          NFT
-        </Link>
-        <Link
-          href="/launchpad"
-          className="bg-gradient-to-r mb-3 from-purple-400 to-orange-500 text-white font-bold text-sm sm:text-base py-2 px-4 sm:py-3 sm:px-6 rounded-full shadow-xl hover:from-yellow-300 hover:to-orange-400 transition duration-300 transform hover:scale-105 w-full md:w-auto justify-center text-center"
-          >
-          LaunchPad
-        </Link>
-        {account ? (
-  <div
-    className="text-xs sm:text-sm bg-white text-purple-700 py-1 px-3 rounded-full font-mono cursor-pointer shadow-lg hover:shadow-purple-700 transition duration-300"
-    onClick={() => setShowDisconnect(!showDisconnect)}
-  >
-    {shortAccount}
-    {showDisconnect && (
-      <button
-        onClick={disconnectWallet}
-        className="absolute top-50 left-0 bg-red-500 text-white py-2 px-4 rounded shadow-lg hover:bg-red-600 transition duration-300"
-      >
-        Disconnect
-      </button>
-    )}
-  </div>
-) : (
-  <button
-    onClick={connectWallet}
-    className="bg-gradient-to-r from-purple-400 to-orange-500 text-white font-bold text-sm sm:text-base py-2 px-4 sm:py-3 sm:px-6 rounded-full shadow-xl hover:from-yellow-300 hover:to-orange-400 transition duration-300 transform hover:scale-105 w-full md:w-auto"
-  >
-    Connect
-  </button>
-)}
-      </div>
-      {/* Opciones principales */}
-      <div className="md:flex items-center gap-6">
-        <Link
-          href="/NFT"
-          className="hidden md:flex bg-gradient-to-r from-yellow-500 to-orange-700 text-white font-bold py-2 px-4 rounded-full shadow-lg hover:from-yellow-300 hover:to-orange-400 hover:shadow-xl transition w-full md:w-auto text-center"
-        >
-          NFT 🎨
-        </Link>
-        {/* Botón para MemeFactory */}
-        <Link
-          href="/launchpad"
-          className="hidden md:flex bg-gradient-to-r from-yellow-500 to-orange-700 text-white font-bold py-2 px-4 rounded-full shadow-lg hover:from-yellow-300 hover:to-orange-400 hover:shadow-xl transition w-full md:w-auto text-center"
-        >
-          LaunchPad 🎨
-        </Link>
-        {/* Botón para MemeFactory */}
-        <Link
-          href="/memefactory"
-          className="bg-gradient-to-r from-yellow-500 to-orange-700 text-white font-bold py-2 px-4 rounded-full shadow-lg hover:from-yellow-300 hover:to-orange-400 hover:shadow-xl transition w-full md:w-auto text-center"
-        >
-          MemeFactory 🎨
-        </Link>
-
-        {/* Redes Sociales */}
-        <div className="hidden  md:flex items-center justify-center gap-4 mt-2 md:mt-0">
-          <a href="https://x.com/supra_spike" target="_blank" rel="noopener noreferrer">
-            <Image
-              src="/twitter.svg"
-              alt="Twitter"
-              width={30}
-              height={30}
-              className="hover:scale-110 hover:filter invert transition transform duration-200"
-            />
-          </a>
-          <a href="https://t.me/supraspike" target="_blank" rel="noopener noreferrer">
-            <Image
-              src="/telegram.svg"
-              alt="Telegram"
-              width={30}
-              height={30}
-              className="hover:scale-110 hover:filter invert transition transform duration-200"
-            />
-          </a>
-        </div>
-
-        {/* Connect Wallet */}
-        <div className="hidden md:flex relative mt-2 md:mt-0">
-          {account ? (
-            <div
-              className="text-xs sm:text-sm bg-white text-purple-700 py-1 px-3 rounded-full font-mono cursor-pointer shadow-lg hover:shadow-purple-700 transition duration-300"
-              onClick={() => setShowDisconnect(!showDisconnect)}
-            >
-              {shortAccount}
-              {showDisconnect && (
-                <button
-                  onClick={disconnectWallet}
-                  className="absolute top-10 left-0 bg-red-500 text-white py-2 px-4 rounded shadow-lg hover:bg-red-600 transition duration-300"
-                >
-                  Disconnect
-                </button>
-              )}
-            </div>
-          ) : (
+    <div className="p-3 text-black">
+      <PopUp visible={setpopUp} onClose={undefined}/>
+      <div className="flex flex-col mb-1 justify-center md:flex-row items-center gap-3 md:gap-3 lg:gap-3 overflow-hidden">
+        
+      <div className="flex flex-col w-full max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl shadow-lg p-6 sm:p-8 md:p-10 lg:p-12 rounded-xl">
+          <h1 className="text-5xl sm:text-5xl font-semibold md:text-5xl lg:text-7xl text-white font-goldeng text-center mb-4 sm:mb-7">
+            CREATE MEMES
+          </h1>
+          <p className="text-md sm:text-base md:text-lg font-role font-bold lg:text-xl text-gray-300 text-center mb-3 mt-3 sm:mb-5 md:mb-7">
+           Spike token Factory!! 🚀✨
+          </p>
+          <div className="flex justify-center">
             <button
-              onClick={connectWallet}
-              className="bg-gradient-to-r from-purple-400 to-orange-500 text-white font-bold text-sm sm:text-base py-2 px-4 sm:py-3 sm:px-6 rounded-full shadow-xl hover:from-yellow-300 hover:to-orange-400 transition duration-300 transform hover:scale-105 w-full md:w-auto"
-            >
-              Connect Wallet
+              className="bg-amber-400 text-brown-900 rounded-full hover:bg-yellow-700 px-12 sm:px-12 md:px-24 py-4 sm:py-5 text-3xl md:text-3xl sm:text-xl md:text-2xl text-black font-goldeng mt-4 sm:mt-3 md:mt-5 transition duration-200 transform hover:scale-105"
+              onClick={handlePopUp}
+              >
+              Create
             </button>
-          )}
+          </div>
         </div>
-      </div>
-      <div className="md:hidden">
-        <button
-        onClick={() => {
-          setShowMenu(!showMenu);
-        }}
-        className="text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
-      >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            className="w-6 h-6"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
-      </div>
-    </header>
-
-      {/* Main Content */}
-      <main className="flex-grow flex flex-col items-center justify-center gap-4 sm:gap-8 px-4 py-6">
-        <div className="flex-shrink-0">
-          <Image
-            src="/supraspike.jpg"
-            alt="Spike Logo"
-            width={150}
-            height={150}
-            className="rounded-full shadow-lg border-4 border-black"
+        <div className="flex w-full max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl shadow-lg overflow-hidden rounded-lg">
+          <img 
+            alt="spike"
+            src="/spike.png"
+            width={500}
+            height={500}
+            className="w-full h-auto object-cover" 
+            style={{ transform: "rotate(-7deg)" }} 
           />
         </div>
-        <div className="text-center sm:text-left max-w-md">
-          <h1 className="text-4xl justify-center sm:text-6xl text-center sm:text-center mb-8 font-extrabold tracking-tight text-pink-100">
-            Supra Spike Airdrop 
-          </h1>
+  
 
-          <p className="mt-4 text-lg sm:text-xl font-bold text-purple-100 leading-relaxed">
-            🚀🦔 We are the <span className="text-yellow-300 font-extrabold">first memecoin</span> on the Supra network. Join our amazing community and be part of the <span className="font-bold text-pink-300">Supra Alunization</span>. 🦔💜
-          </p>
+  
 
-          <div className="mt-6">
-            <div className="bg-purple-100 text-purple-700 p-4 sm:p-6 rounded-lg shadow-md">
-              <ApproveTransaction />
-              <Airdrop />
-            </div>
-          </div>
-
-          {!isInstalled && (
-            <p className="text-white text-sm sm:text-lg mt-6">
-              *StarKey Wallet is not installed. Please install it{' '}
-              <a
-                href="https://starkey.app/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline text-yellow-300 hover:text-yellow-400 transition duration-300"
-              >
-                here
-              </a>
-              .
-            </p>
-          )}
-
-          {errorMessage && <p className="text-red-500 font-bold mt-4">{errorMessage}</p>}
-        </div>
-      </main>
-
-      {/* Footer */}
-      <footer className="py-4 sm:py-6 bg-purple-900 text-center text-xs sm:text-sm text-purple-200">
-        <p>Made with ❤️ in Supra network</p>
-      </footer>
     </div>
-  );
+          {/* Result Section */}
+          {result && (
+        <div className="w-full max-w-4xl mt-10 bg-green-100 border border-green-400 text-green-800 px-6 py-4 rounded-lg shadow-md flex items-center gap-4">
+          <span className="text-2xl">✅</span>
+          <p>
+            <strong>Transaction Successful:</strong>{" "}
+            <a
+              href={`https://testnet.suprascan.io/tx/${result}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 underline hover:text-blue-700"
+            >
+              View on Explorer
+            </a>
+          </p>
+        </div>
+      )}
+  
+      {/* Error Section */}
+      {error && (
+        <div className="w-full max-w-4xl mt-10 bg-red-100 border border-red-400 text-red-800 px-6 py-4 rounded-lg shadow-md flex items-center gap-4">
+          <span className="text-2xl">❌</span>
+          <p>
+            <strong>Error:</strong> {error}
+          </p>
+        </div>
+      )}
+      <div>
+      </div>
+      <Meme_search/>
+  </div>
+  
+      );
 }

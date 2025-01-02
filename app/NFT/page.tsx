@@ -140,42 +140,7 @@ export default function Memefactory() {
 
   return (
     <div className="items-center justify-center min-h-screen bg-gradient-to-br from-yellow-200 via-pink-300 to-red-400 font-sans">
-        {/* Header */}
-        <header className="w-full fixed z-50 bg-black sticky top-0 shadow-lg">
 
-            <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 py-4">
-                <Link
-                    href="/"
-                    className="bg-gradient-to-r from-yellow-500 to-orange-700 text-white font-bold py-2 px-4 rounded-full shadow-lg hover:from-yellow-300 hover:to-orange-400 hover:shadow-xl transition w-auto md:w-auto text-center"
-                    >
-                    Airdrop 💖
-                </Link>
-
-                <div className="flex items-center gap-4">
-                {account ? (
-                  <div className="relative text-xs sm:text-sm bg-white text-purple-700 py-1 px-3 rounded-full font-mono cursor-pointer shadow-lg hover:shadow-purple-700 transition duration-300">
-                    <span onClick={() => setShowDisconnect(!showDisconnect)}>{shortAccount}</span>
-                    {showDisconnect && (
-                      <button
-                        onClick={disconnectWallet}
-                        className="absolute top-full left-0 mt-2 bg-red-500 text-white py-2 px-4 rounded shadow-lg hover:bg-red-600 transition duration-300"
-                        >
-                        Disconnect
-                      </button>
-                    )}
-                  </div>
-                ) : (
-                  <button
-                    onClick={connectWallet}
-                    className="bg-pink-500 text-white font-bold py-2 px-6 rounded-full shadow-md hover:bg-pink-600 hover:shadow-lg transition"
-                  >
-                    Connect Wallet
-                  </button>
-                )}
-
-                </div>
-            </div>
-        </header>
 
         {/* Main Content */}
         <div className="flex flex-col items-center px-4">
