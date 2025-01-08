@@ -63,7 +63,7 @@ export default function Bar() {
             <Link href="/NFT" className="nav-link">NFT</Link>
             {/*<Link href="/Degen" className="nav-link">Degen</Link>*/}
 
-            <FormControl variant="outlined" className="min-w-120 text-white">
+            <FormControl variant="outlined" className="min-w-120 text-black bg-white">
               <InputLabel id="network-select-label">Network</InputLabel>
               <Select
                 labelId="network-select-label"
@@ -71,7 +71,7 @@ export default function Bar() {
                 value={network}
                 onChange={handleNetworkChange}
                 label="Network"
-                className="text-white"
+                className="text-black"
               >
                 <MenuItem className="text-white" value="8">Mainnet</MenuItem>
                 <MenuItem className="text-white" value="6">Testnet</MenuItem>
