@@ -65,29 +65,6 @@ function PopUp({visible, onClose}) {
     const [Error, setError] = useState(null);
 
 
-  const getProvider = useCallback(async () => {
-    if (typeof window !== "undefined" && "starkey" in window) {
-      const starkeyProvider = (window)?.starkey.supra;
-      setProvider(starkeyProvider);
-
-      if (starkeyProvider) {
-        const currentNetwork = await starkeyProvider.getChainId();
-        if (currentNetwork.chainId !== 6) {
-          await starkeyProvider.changeNetwork({ chainId: 6 });
-          console.log("Network changed to chainId 6");
-        }
-      }
-
-      return starkeyProvider || null;
-    }
-    return null;
-  }, []);
-
-
-  useEffect(() => {
-    getProvider();
-  }, [getProvider]);
-
     const [FormData_2, setFormData_2] = useState({ MemeName: '', Symbol: ''});
     const handleChange_2 = (e2, name_2) => {
         setFormData_2((prevState) => ({ ...prevState, [name_2]: e2.target.value }));
