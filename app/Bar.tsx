@@ -63,7 +63,7 @@ export default function Bar() {
             <Link href="/NFT" className="nav-link">NFT</Link>
             {/*<Link href="/Degen" className="nav-link">Degen</Link>*/}
 
-            <FormControl variant="outlined" className="min-w-120 text-white bg-gray-700">
+            <FormControl variant="outlined" className="min-w-120 text-white">
               <InputLabel id="network-select-label">Network</InputLabel>
               <Select
                 labelId="network-select-label"
