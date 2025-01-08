@@ -1,4 +1,8 @@
+"use client";
+
 import React, { useState, useEffect, useContext } from "react";
+//import { useRouter } from 'next/router';
+
 //import { dbMemesPoint } from '../../../utils/axiossonfig'; // Importa la configuración de Axios
 
 //import no_image from "../../../../images/goldeng.png";
@@ -24,12 +28,12 @@ const LoadingBox = () => (
 );
 
 const Meme_Search = () => {
-
+    //const router = useRouter();
     const [memes, setMemes] = useState([]);
     const [search, setSearch] = useState("");
     const [scalingButtons, setScalingButtons] = useState({});
     const [loading, setLoading] = useState(true);
-    
+
     const MAX_RETRIES = 3; // Número máximo de intentos
     const RETRY_DELAY = 3000; // Retraso entre intentos (en milisegundos)
     
@@ -132,9 +136,12 @@ const Meme_Search = () => {
     }
 
 
-    /*const handleClick = (meme) => {
-        Navigate(`/Degen/${meme.network}-${meme.contract}`, { state: { meme } });
-    };*/
+    const handleClick = (meme) => {
+        router.push({
+          pathname: `/Degen/${meme.network}-${meme.contract}`,
+          query: { meme: JSON.stringify(meme) }
+        });
+      };
 
 
     return (
@@ -175,7 +182,7 @@ const Meme_Search = () => {
                     <div key={meme.contract} className="flex flex-col border border-gray-400 px-3 md:px-1 font-role rounded-xl md:rounded-3xl p-1 md:p-1 shadow-sm overflow-hidden bg-white w-72">
                         <div className="flex flex-row md:flex-col">
                             <div className="p-3 cursor-pointer mb-3"
-                                //onClick={() => handleClick(meme)}
+                                onClick={() => handleClick(meme)}
                                 >
                                 <img 
                                     className="w-full max-h-56 sm:max-h-64 md:max-h-72 lg:max-h-80 object-contain rounded-3xl" 

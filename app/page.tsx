@@ -8,44 +8,9 @@ import PopUp from "./home/components/PopUp";
 import Meme_search from "./home/Memesearch"; 
 
 export default function Memefactory() {
-  const [account, setAccount] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [provider, setProvider] = useState<any>(null);
-  const [memeName, setMemeName] = useState("");
-  const [memeSymbol, setMemeSymbol] = useState("");
-  const [URI, setURI] = useState("");
-  const [projectURL, setProjectURL] = useState("");
   const [result, setResult] = useState<string | null>(null);
-  const [setpopUp, setPopUp] = useState(false);
   const [showMyModal, setShowMyModal] = useState(false);
-
-
-  const CONTRACT_ADDRESS = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794";
-
-  // ** Mejorando la inicialización del proveedor **
-  const getProvider = useCallback(async () => {
-    if (typeof window !== "undefined" && "starkey" in window) {
-      const starkeyProvider = (window as any)?.starkey.supra;
-      setProvider(starkeyProvider);
-
-      if (starkeyProvider) {
-        const currentNetwork = await starkeyProvider.getChainId();
-        if (currentNetwork.chainId !== 6) {
-          await starkeyProvider.changeNetwork({ chainId: 6 });
-          console.log("Network changed to chainId 6");
-        }
-      }
-
-      return starkeyProvider || null;
-    }
-    return null;
-  }, []);
-
-
-  useEffect(() => {
-    getProvider();
-  }, [getProvider]);
 
   const handleOnClose = () => setShowMyModal(false);
 

@@ -2,8 +2,7 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
 import  PopUp_2  from "./PopUp_2"
 import  FileUpload  from './FileUpload'
-import useCreateMemeTransaction from '../../hooks/creatememetx';
-import { BCS,TxnBuilderTypes } from "aptos";
+import useCreateMemeTransaction from "../..//hooks/useCreateMeme";
 
 
 const Input2 = ({ placeholder, name_2, type, value, handleChange_2, disabled, className }) => (
@@ -49,6 +48,7 @@ const Tooltip = ({ message, space }) => (
 
 function PopUp({visible, onClose}) {
     const [showMyModalWallets, setShowMyModalWallets] = useState(false);
+    const { createMeme, error, result } = useCreateMemeTransaction();
     const [file, setFile] = useState(null); // Agregar estado para el archivo
     const [formularioVisible, setFormularioVisible] = useState(false);
     const [formularioVisible2, setFormularioVisible2] = useState(false);
@@ -63,9 +63,7 @@ function PopUp({visible, onClose}) {
     const [currentAccount, setCurrentAccount] = useState("0x2134werfg"); // Estado para la cuenta actual
     const [provider, setProvider] = useState(null);
     const [Error, setError] = useState(null);
-    const [result, setResult] = useState(null);
 
-    const CONTRACT_ADDRESS = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794";
 
   const getProvider = useCallback(async () => {
     if (typeof window !== "undefined" && "starkey" in window) {
@@ -90,7 +88,7 @@ function PopUp({visible, onClose}) {
     getProvider();
   }, [getProvider]);
 
-    const [FormData_2, setFormData_2] = useState({ MemeName: '', Symbol: '', Supply: '', ProtectInput: '', Timeframe: '', Timezone: '0'});
+    const [FormData_2, setFormData_2] = useState({ MemeName: '', Symbol: ''});
     const handleChange_2 = (e2, name_2) => {
         setFormData_2((prevState) => ({ ...prevState, [name_2]: e2.target.value }));
     }
@@ -160,68 +158,13 @@ function PopUp({visible, onClose}) {
     };
 
     
-    const handleSubmit_2 = async () => {
+    const handleSubmit_2 = async (file) => {
       try {
-        if (!provider) {
-          setError("StarKey Wallet is not installed or unsupported.");
-          return;
-        }
-
-        setIsLoading(true);
-        setError(null);
-
-        const accounts = await provider.connect();
-        const transactionData = await provider.createRawTransactionData([
-          accounts[0],
-          0,
-          CONTRACT_ADDRESS,
-          "pump_fa",
-          "deploy",
-          [],
-          [
-            
-            BCS.bcsSerializeStr("this is a meme"), //meme description
-            BCS.bcsSerializeStr(FormData_2.MemeName), //meme name
-            BCS.bcsSerializeStr(FormData_2.Symbol), //meme SYMBOL
-            BCS.bcsSerializeStr("URI"), //URI JSON
-            BCS.bcsSerializeStr("www.supraaspike.fun"), //WEBSITE
-            BCS.bcsSerializeStr("t.me/xd"), //TELEGRAM
-            BCS.bcsSerializeStr("twitter.com/spike"), //TWITTER
-            
-            
-          ],
-          { txExpiryTime: Math.ceil(Date.now() / 1000) + 30 },
-        ]);
-
-        const networkData = await provider.getChainId();
-        console.log(networkData, "chain id");
-
-        const params = {
-          data: transactionData,
-          from: accounts[0],
-          to: CONTRACT_ADDRESS,
-          chainId: 6,
-        };
-
-        const tx = await provider.sendTransaction(params);
-        setResult(tx);
-        console.log("Transaction successful:", tx);
-        
-        const response = await fetch(`/api/create_meme?name=${FormData_2.MemeName}&ticker=${FormData_2.Symbol}&fee=0.1&contract=${CONTRACT_ADDRESS}&image=URI&creator=${accounts[0]}&creation=${Date.now()}&webpage=www.supraaspike.fun&twitter=twitter.com/spike&telegram=t.me/xd&description=this is a meme&network=${networkData}`, {
-          method: "GET",
-        });
-
-        const upload_data = await response.json();
-        console.log(upload_data, "upload data");
-
-
+        await createMeme(FormData_2.MemeName, FormData_2.Symbol, "memeURI"); // Pasa los datos necesarios
+        console.log("done tx meme")
       } catch (err) {
-        console.error("Error creating memecoin:", err);
-        setError(err instanceof Error ? err.message : "Unknown error occurred.");
-      } finally {
-        setIsLoading(false);
+        console.error("Error:", err);
       }
-    
     };
     
     const handleInputChange = (e2, name_2) => {
@@ -267,16 +210,9 @@ function PopUp({visible, onClose}) {
                           <Input2 placeholder="GG" name_2="Symbol" type="text" handleChange_2={handleChange_2} className={`placeholder:italic uppercase rounded-xl`}/>
                       </div>
                   </div>
-
-                  <div className="flex justify-center font-goldeng">
-                    <button className="p-4" onClick={toggleFormulario}>
-                      {formularioVisible ? "Less Options" : "More Options"}
-                    </button>
-                  </div>
-
            
-                  {formularioVisible && (
-                  <div className="flex flex-col justify-around items-around">
+                  {(
+                  <div className="flex flex-col justify-around mt-5 items-around">
                     <div className="flex flex-col gap-3 justify-around">
                       <div className="flex justify-center font-goldeng">
                         <button onClick={toggleFormulario2}>
@@ -284,7 +220,7 @@ function PopUp({visible, onClose}) {
                         </button>
                       </div>
                       {formularioVisible2 && (
-                      <div className="flex flex-col gap-7 flex-1"> {/* Utiliza flex-1 para que esta columna ocupe el espacio restante */}
+                      <div className="flex flex-col gap-3 flex-1"> {/* Utiliza flex-1 para que esta columna ocupe el espacio restante */}
                         <div className="flex flex-col lg:flex-row items-center justify-center gap-7">
                           <div className="flex flex-col items-center">
                             <div className="flex flex-fil items-center">
@@ -377,7 +313,7 @@ function PopUp({visible, onClose}) {
                         <div className="flex flex-col p-4 text-xl font-goldeng mt-3">
                           <button
                             className="px-10 py-4 bg-black text-xl text-white rounded-2xl shadow-md hover:bg-[#9e701f] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-                            onClick={() => handleSubmit_2()} // Pasar 'file' como parámetro
+                            onClick={() => handleSubmit_2(file)} // Pasar 'file' como parámetro
                           >
                             Create Meme
                           </button>

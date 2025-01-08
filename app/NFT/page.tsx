@@ -4,13 +4,12 @@ import { useState, useEffect, useCallback } from "react";
 import { BCS, TxnBuilderTypes } from "aptos";
 import Image from "next/image";
 import Link from "next/link";
+import useGetNFT from "../hooks/getNFT";
 
 export default function Memefactory() {
   const [account, setAccount] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const {mintNFT, isLoading, error, result } = useGetNFT();
   const [provider, setProvider] = useState<any>(null);
-  const [result, setResult] = useState<string | null>(null);
   const [showDisconnect, setShowDisconnect] = useState(false);
   const [isdisable, setIsdisable] = useState(false);
   const [showPopup, setShowPopup] = useState(false); // State for the pop-up
@@ -21,120 +20,8 @@ export default function Memefactory() {
   const CONTRACT_ADDRESS = "0xa8ff8aa5c6cf9b7511250ca1218efee986a38c50c6f794dff95389623e759a4b";
   
   // ** Mejorando la inicialización del proveedor **
-  const getProvider = useCallback(async () => {
-    try {
-      if (typeof window !== "undefined" && "starkey" in window) {
-        const starkeyProvider = (window as any)?.starkey?.supra;
-        setProvider(starkeyProvider);
-  
-        if (starkeyProvider) {
-          const currentNetwork = await starkeyProvider.getChainId();
-          if (currentNetwork.chainId !== 8) {
-            try {
-              await starkeyProvider.changeNetwork({ chainId: 8 });
-              console.log("Network changed to chainId 8");
-            } catch (error) {
-              setError("Failed to switch to the required network.");
-              console.error("Network switch error:", error);
-            }
-          }
-        }
-        return starkeyProvider || null;
-      }
-      setError("Wallet provider not found.");
-    } catch (error) {
-      console.error("Error initializing provider:", error);
-      setError("An unexpected error occurred while initializing the provider.");
-    }
-    return null;
-  }, []);
-  
 
 
-  useEffect(() => {
-    getProvider();
-  }, [getProvider]);
-
-  // ** Conexión a la wallet **
-
-  const connectWallet = async () => {
-    try {
-      if (!provider) return;
-      const accounts = await provider.connect();
-      if (accounts && accounts.length > 0) {
-        setAccount(accounts[0]);
-      }
-    } catch (err) {
-      console.error("Error connecting wallet:", err);
-    }
-  };
-
-  const disconnectWallet = async () => {
-    try {
-      if (provider) {
-        await provider.disconnect();
-        setAccount("");
-        setShowDisconnect(false);
-      }
-    } catch (err) {
-      console.error("Error disconnecting:", err);
-      setError("Error disconnecting from wallet.");
-    }
-  };
-
-  // ** Crear el memecoin **
-  const handleMinNft = async () => {
-    try {
-      if (!provider) {
-        setError("StarKey Wallet is not installed or unsupported.");
-        return;
-      }
-      setIsLoading(true);
-      setError(null);
-
-      const accounts = await provider.connect();
-      const transactionData = await provider.createRawTransactionData([
-        accounts[0],
-        0,
-        CONTRACT_ADDRESS,
-        "nft",
-        "mint",
-        [],
-        [
-          BCS.bcsSerializeUint64(Number(1)), //amount to deposit in vault faucet
-        ],
-        { txExpiryTime: Math.ceil(Date.now() / 1000) + 30 },
-      ]);
-
-      const networkData = await provider.getChainId();
-      const params = {
-        data: transactionData,
-        from: accounts[0],
-        to: CONTRACT_ADDRESS,
-        chainId: networkData.chainId,
-      };
-
-      const tx = await provider.sendTransaction(params);
-      if (tx) {
-        setTxHash(tx); // Store the transaction hash
-        setResult(tx);
-        setShowPopup(true); // Show the pop-up only if txHash is valid
-        setTxStatus("success"); // Transaction successful
-        console.log("Transaction successful:", tx);
-      } else {
-        console.error("No transaction hash received.");
-        setTxStatus("failed"); // Transaction failed
-        setError("Transaction failed: No TX hash received.");
-      }
-    } catch (err) {
-      console.error("Error creating memecoin:", err);
-      setError(err instanceof Error ? err.message : "Unknown error occurred.");
-      setTxStatus("failed"); // Transacción fallida
-      setShowPopup(true); // Mostrar el pop-up con el error
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const shortAccount = account ? `${account.slice(0, 6)}...${account.slice(-4)}` : "";
 
@@ -194,7 +81,7 @@ export default function Memefactory() {
                         </div>
                         <div className="flex flex-col items-center">
                             <button
-                                onClick={() => handleMinNft()}
+                                onClick={() => mintNFT()}
                                 className={`w-full bg-gradient-to-r from-pink-600 to-pink-500 hover:bg-gradient-to-l text-white font-semibold py-3 px-6 rounded-lg transition duration-300 text-lg ${
                                     isdisable ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'
                                 }`}

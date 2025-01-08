@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import { BCS } from "aptos";
+import { useWallet } from "../context/walletContext"; // Importa el hook del contexto
 
 const useCreateMemeTransaction = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState(null);
+  const { provider } = useWallet(); // Obtén el provider desde el contexto
+  const CONTRACT_ADDRESS = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794";
 
-
-  const createMemeTransaction = async (provider:any, memeName:any, memeSymbol:any, URI:any) => {
-    const CONTRACT_ADDRESS = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794";
+  const createMeme = async (memeName: string, memeSymbol: string, URI: string) => {
     try {
       if (!provider) {
         setError("StarKey Wallet is not installed or unsupported.");
@@ -21,7 +22,8 @@ const useCreateMemeTransaction = () => {
 
       setIsLoading(true);
       setError(null);
-
+      console.log("pass here")
+      // Conectar con la wallet
       const accounts = await provider.connect();
       const transactionData = await provider.createRawTransactionData([
         accounts[0],
@@ -63,7 +65,7 @@ const useCreateMemeTransaction = () => {
     }
   };
 
-  return { createMemeTransaction, isLoading, error, result };
+  return { createMeme, isLoading, error, result };
 };
 
 export default useCreateMemeTransaction;

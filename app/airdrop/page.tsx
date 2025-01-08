@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import ApproveTransaction from "./components/approve";
 import Airdrop from "./components/Airdrop";
-import Link from "next/link";
+import { useWallet } from "../context/walletContext"; // Importa el hook del contexto
 
 export default function Home() {
   const [account, setAccount] = useState("");
@@ -13,67 +13,6 @@ export default function Home() {
   const [showDisconnect, setShowDisconnect] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
 
-  const getProvider = () => {
-    if (typeof window !== "undefined" && "starkey" in window) {
-      const provider = (window as any)?.starkey.supra;
-      if (provider) {
-        setIsInstalled(true);
-        return provider;
-      }
-    }
-    setIsInstalled(false);
-    return null; 
-  };
-
-  const resetWalletData = () => {
-    setAccount("");
-  };
-
-  const disconnectWallet = async () => {
-    const provider = getProvider();
-    if (provider) {
-      try {
-        await provider.disconnect();
-      } catch (error) {
-        console.error("Error disconnecting:", error);
-      }
-    }
-    resetWalletData();
-  };
-
-  const connectWallet = async () => {
-    const provider = getProvider();
-    if (provider) {
-      try {
-        const accounts = await provider.connect();
-        setAccount(accounts[0]);
-        console.log(`Connected: ${accounts[0]}`);
-      } catch (error) {
-        setErrorMessage("Connection rejected by the user.");
-      }
-    } else {
-      // Redirige al enlace de instalación si no está instalado
-      window.open("https://starkey.app/", "_blank");
-      setErrorMessage("StarKey Wallet is not installed. Redirecting to installation...");
-    }
-  };
-
-  useEffect(() => {
-    const provider = getProvider();
-    if (provider) {
-      provider
-        .account()
-        .then((accounts: string | any[]) => {
-          if (accounts.length > 0) {
-            setAccount(accounts[0]);
-            console.log(`Already connected: ${accounts[0]}`);
-          }
-        })
-        .catch((error: any) => {
-          console.error(error);
-        });
-    }
-  }, []);
 
   const shortAccount = account ? `${account.slice(0, 6)}...${account.slice(-4)}` : "";
 

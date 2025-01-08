@@ -2,14 +2,14 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
+import useGetAirdropTransaction from "../..//hooks/getAirdrop";
 
 const Airdrop = () => {
   const [provider, setProvider] = useState(null);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState(0); // Controla el progreso de los pasos
   const [showPopup, setShowPopup] = useState(false); // Controla la visibilidad del popup
   const [txHash, setTxHash] = useState<string | null>(null); // Guarda el enlace de la transacción
+  const { getTokens, isLoading, error, result } = useGetAirdropTransaction();
 
   const [timeLeft, setTimeLeft] = useState(() => {
     const now = new Date().getTime();
@@ -18,111 +18,6 @@ const Airdrop = () => {
   });
   const CONTRACT_ADDRESS = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794";
   const CONTRACT_ADDRESS_MEME = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::memecoins::SPIKE";
-
-  const getProvider = useCallback(async () => {
-    if (typeof window !== "undefined" && "starkey" in window) {
-      const starkeyProvider = (window as any)?.starkey.supra;
-      setProvider(starkeyProvider);
-
-      if (starkeyProvider) {
-        const currentNetwork = await starkeyProvider.getChainId();
-        if (currentNetwork.chainId !== 8) {
-          await starkeyProvider.changeNetwork({ chainId: 8 });
-          console.log("Network changed to chainId 8");
-        }
-      }
-
-      return starkeyProvider || null;
-    }
-    return null;
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeLeft((prevTime) => {
-        const newTime = prevTime - 1000;
-        if (newTime <= 0) {
-          clearInterval(interval);
-          return 0;
-        }
-        return newTime;
-      });
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    const initializeProvider = async () => {
-      const starkeyProvider = await getProvider();
-      if (!starkeyProvider) {
-        console.error("Provider not available");
-      }
-    };
-
-    initializeProvider();
-  }, [getProvider]);
-
-  const getTokens = async () => {
-    setIsLoading(true); // Indica que se está procesando la solicitud
-    try {
-      const starkeyProvider = await getProvider();
-      if (!starkeyProvider) {
-        throw new Error("Starkey provider not found.");
-      }
-  
-      const currentNetwork = await starkeyProvider.getChainId();
-      if (currentNetwork.chainId !== 8) {
-        await starkeyProvider.changeNetwork({ chainId: 8 });
-        console.log("Network changed to chainId 8");
-      }
-  
-      const accounts = await starkeyProvider.connect();
-      if (!accounts || accounts.length === 0) {
-        throw new Error("Unable to fetch the account address.");
-      }
-  
-      const txExpiryTime = Math.ceil(Date.now() / 1000) + 30; // 30 seconds expiry
-      const optionalTransactionPayloadArgs = { txExpiryTime };
-      const rawTxPayload = [
-        accounts[0],
-        0,
-        CONTRACT_ADDRESS,
-        "faucet",
-        "mint",
-        [CONTRACT_ADDRESS_MEME],
-        [],
-        optionalTransactionPayloadArgs,
-      ];
-  
-      const transactionData = await starkeyProvider.createRawTransactionData(rawTxPayload);
-      const networkData = await starkeyProvider.getChainId();
-  
-      const params = {
-        data: transactionData,
-        from: accounts[0],
-        to: CONTRACT_ADDRESS,
-        chainId: networkData.chainId,
-        value: "",
-      };
-  
-      const tx = await starkeyProvider.sendTransaction(params);
-      if (!tx) {
-        console.error("Transaction is empty.");
-        return; // Detener ejecución si `tx` está vacío
-      }
-  
-      console.log("Transaction sent:", tx);
-      setTxHash(tx);
-      setShowPopup(true);
-    } catch (err) {
-      console.error("Error sending tokens:", err);
-      setError(err instanceof Error ? err.message : "Unknown error occurred.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  
 
   const steps = [
     {
