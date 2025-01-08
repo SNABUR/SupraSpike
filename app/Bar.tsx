@@ -73,8 +73,8 @@ export default function Bar() {
                 label="Network"
                 className="text-white"
               >
-                <MenuItem value="8">Mainnet</MenuItem>
-                <MenuItem value="6">Testnet</MenuItem>
+                <MenuItem className="text-white" value="8">Mainnet</MenuItem>
+                <MenuItem className="text-white" value="6">Testnet</MenuItem>
               </Select>
             </FormControl>
 
