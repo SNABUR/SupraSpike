@@ -61,8 +61,6 @@ function PopUp({visible, onClose}) {
     const [description, setDescription] = useState(''); // Estado para el texto del textarea
     const [isLoading, setIsLoading] = useState(false); // Estado para controlar la carga
     const [currentAccount, setCurrentAccount] = useState("0x2134werfg"); // Estado para la cuenta actual
-    const [provider, setProvider] = useState(null);
-    const [Error, setError] = useState(null);
 
 
     const [FormData_2, setFormData_2] = useState({ MemeName: '', Symbol: ''});

@@ -5,11 +5,16 @@ const useGetAirdropTransaction = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState(null);
-  const { provider, walletAddress } = useWallet(); // Obtén el provider desde el contexto
+  const { connectWallet, provider, walletAddress } = useWallet(); // Obtén el provider desde el contexto
   const CONTRACT_ADDRESS = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794";
   const CONTRACT_ADDRESS_MEME = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::memecoins::SPIKE";
 
   const getTokens = async () => {
+    if (!walletAddress) {
+      await connectWallet();
+      return
+    }
+
     try {
 
     setIsLoading(true);

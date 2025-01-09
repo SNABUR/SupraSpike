@@ -9,13 +9,10 @@ import useGetNFT from "../hooks/getNFT";
 export default function Memefactory() {
   const [account, setAccount] = useState("");
   const {mintNFT, isLoading, error, result } = useGetNFT();
-  const [provider, setProvider] = useState<any>(null);
-  const [showDisconnect, setShowDisconnect] = useState(false);
   const [isdisable, setIsdisable] = useState(false);
   const [showPopup, setShowPopup] = useState(false); // State for the pop-up
   const [txHash, setTxHash] = useState(""); // State for the transaction hash
   const [nftImage, setNftImage] = useState("/collection.jpg"); // Image for the NFT
-  const [txStatus, setTxStatus] = useState<"success" | "failed" | null>(null); // Estado de la transacción
 
   const CONTRACT_ADDRESS = "0xa8ff8aa5c6cf9b7511250ca1218efee986a38c50c6f794dff95389623e759a4b";
   

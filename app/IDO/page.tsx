@@ -5,12 +5,12 @@ import Image from "next/image";
 import Link from "next/link";
 import {BCS} from "aptos";
 import Big from "big.js";
+import useJoinIDO from "../hooks/JoinIDO";
+import useClaimIDO from "../hooks/ClaimIDO";
 
 export default function LaunchPad() {
   const [account, setAccount] = useState("");
   const [showDisconnect, setShowDisconnect] = useState(false);
-  const [provider, setProvider] = useState<any>(null);
-  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [joinDeposit, setJoinDeposit] = useState("1");
   const [copySuccess, setCopySuccess] = useState(false);
@@ -19,7 +19,9 @@ export default function LaunchPad() {
   const [showPopup, setShowPopup] = useState(false); // Controla la visibilidad del popup
   const [showPopup_2, setShowPopup_2] = useState(false); // Controla la visibilidad del popup
   const [txHash, setTxHash] = useState<string | null>(null); // Guarda el enlace de la transacción
-
+  const { JoinIDO, error: errorJoin, result:resultJoin } = useJoinIDO();
+  const { ClaimIDO, error: errorClaim, result: resultClaim } = useClaimIDO();
+  
   const copyToClipboard = () => {
     navigator.clipboard.writeText(CONTRACT_ADDRESS_MEME).then(
       () => {
@@ -37,221 +39,11 @@ export default function LaunchPad() {
   //const CONTRACT_ADDRESS_MEME = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::meme_spike::SPIKE"; //TESTNET
   const CONTRACT_ADDRESS_MEME = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::memecoins::SPIKE"; //MAINNET
 
-  const getProvider = useCallback(async () => {
-    if (typeof window !== "undefined" && "starkey" in window) {
-      const starkeyProvider = (window as any)?.starkey.supra;
-      setProvider(starkeyProvider);
-
-      if (starkeyProvider) {
-        const currentNetwork = await starkeyProvider.getChainId();
-        if (currentNetwork.chainId !== 8) {
-          await starkeyProvider.changeNetwork({ chainId: 8 });
-          console.log("Network changed to chainId 8");
-        }
-      }
-
-      return starkeyProvider || null;
-    }
-    return null;
-  }, []);
-
-  useEffect(() => {
-    getProvider();
-  }, [getProvider]);
-
-  const connectWallet = async () => {
-    try {
-      if (!provider) return;
-      const accounts = await provider.connect();
-      if (accounts && accounts.length > 0) {
-        setAccount(accounts[0]);
-      }
-    } catch (err) {
-      console.error("Error connecting wallet:", err);
-    }
-  };
-
-  const disconnectWallet = async () => {
-    try {
-      if (provider) await provider.disconnect();
-      setAccount("");
-      setShowDisconnect(false);
-    } catch (err) {
-      console.error("Error disconnecting wallet:", err);
-    }
-  };
-
-    const JoinIDO = async () => {
-      if (!account) {
-        await connectWallet();
-        if (!account) {
-          setError("Please connect your wallet to proceed.");
-          return; // Detenemos el flujo
-        }
-      }
-      const starkeyProvider = await getProvider();
-            // Verificar si la wallet está conectada
-
-
-      const parsedjoinDeposit = parseInt(joinDeposit, 10);
-      if (isNaN(parsedjoinDeposit) || parsedjoinDeposit <= 0) {
-        setError("Please provide a valid integer amount.");
-        return;
-      }
-      try {
-          const accounts = await starkeyProvider.connect();
-          const txExpiryTime = Math.ceil(Date.now() / 1000) + 30; // 30 seconds expiry
-          const optionalTransactionPayloadArgs = { txExpiryTime };
-          const rawTxPayload2 = [
-              accounts[0],
-              0,
-              CONTRACT_ADDRESS_IDO,
-              "ido",
-              "joinIdo",
-              [                          
-                CURRENCY,
-                CONTRACT_ADDRESS_MEME, // Type (CoinType)
-              ],
-              [
-                //BCS.bcsSerializeUint64(Number(Big(parsedjoinDeposit*1).toFixed(0,0))), //amount to deposit in vault faucet
-                BCS.bcsSerializeUint64(Number(Big(parsedjoinDeposit*1000/price_meme).toFixed(0,0))), //amount tokens Spike to buyt
-              ],
-              optionalTransactionPayloadArgs
-            ];
-          
-          const transactionData2 = await starkeyProvider.createRawTransactionData(rawTxPayload2);
-          const networkData = await starkeyProvider.getChainId();
-  
-          const params = {
-          data: transactionData2,
-          from: accounts[0],
-          to: CONTRACT_ADDRESS_IDO,
-          chainId: networkData.chainId,
-          value: "",
-          };
-  
-          const tx = await starkeyProvider.sendTransaction(params);
-
-          if (tx) {
-            setTxHash(tx); // Store the transaction hash
-            setShowPopup(true); // Show the pop-up only if txHash is valid
-            console.log("Transaction successful:", tx);
-          } else {
-            console.error("No transaction hash received.");
-            setError("Transaction failed: No TX hash received.");
-          }
-  
-      } catch (err) {
-          console.error("Error sending tokens:", err);
-          setError(err instanceof Error ? err.message : "Unknown error occurred.");
-      } finally {
-          setIsLoading(false);
-      }
-    };
-
-  const ClaimTokens = async () => {
-  // Si la wallet no está conectada
-  if (!account) {
-    await connectWallet();
-    if (!account) {
-      setError("Please connect your wallet to claim tokens.");
-      return; // Detenemos el flujo
-    }
-  }
-    const starkeyProvider = await getProvider();
-
-    try {
-        const accounts = await starkeyProvider.connect();
-        const txExpiryTime = Math.ceil(Date.now() / 1000) + 30; // 30 seconds expiry
-        const optionalTransactionPayloadArgs = { txExpiryTime };
-        const rawTxPayload2 = [
-            accounts[0],
-            0,
-            CONTRACT_ADDRESS_IDO,
-            "ido",
-            "claim",
-            [ 
-              CURRENCY,
-              CONTRACT_ADDRESS_MEME
-            ], // Type (CoinType)],
-            [],
-            optionalTransactionPayloadArgs
-          ];
-        
-        const transactionData2 = await starkeyProvider.createRawTransactionData(rawTxPayload2);
-        const networkData = await starkeyProvider.getChainId();
-
-        const params = {
-        data: transactionData2,
-        from: accounts[0],
-        to: CONTRACT_ADDRESS_IDO,
-        chainId: networkData.chainId,
-        value: "",
-        };
-
-        const tx = await starkeyProvider.sendTransaction(params);
-
-        if (tx) {
-          setTxHash(tx); // Store the transaction hash
-          setShowPopup_2(true); // Show the pop-up only if txHash is valid
-          console.log("Transaction successful:", tx);
-        } else {
-          console.error("No transaction hash received.");
-          setError("Transaction failed: No TX hash received.");
-        }
-
-    } catch (err) {
-        console.error("Error sending tokens:", err);
-        setError(err instanceof Error ? err.message : "Unknown error occurred.");
-    } finally {
-        setIsLoading(false);
-    }
-  };
-
 
   const shortAccount = account ? `${account.slice(0, 6)}...${account.slice(-4)}` : "";
 
   return (
     <div className="items-center justify-center min-h-screen bg-gradient-to-br from-yellow-200 via-pink-300 to-red-400 font-sans">
-      {/* Header */}
-      <header className="flex items-center justify-between px-7 py-4 bg-black shadow-lg sticky top-0 z-50">
-        <Link
-          href="/"
-          className="bg-gradient-to-r from-yellow-500 to-orange-700 text-white font-bold py-2 px-3 rounded-full shadow-lg hover:from-yellow-300 hover:to-orange-400 hover:shadow-xl transition w-auto md:w-auto text-center text-sm sm:text-base lg:text-lg"
-        >
-          🚀 Spike Airdrop
-        </Link>
-        <div className="text-white font-extrabold text-lg sm:text-xl lg:text-2xl py-2 rounded-full shadow-md hover:from-pink-400 hover:to-purple-600 hover:shadow-lg transition">
-    🌟    Launchpad
-        </div>
-        <div className="flex items-center gap-4">
-          {account ? (
-            <div className="relative">
-              <div
-                className="bg-pink-600 text-white px-4 py-2 rounded-full cursor-pointer shadow hover:shadow-md transition text-sm sm:text-base"
-                onClick={() => setShowDisconnect(!showDisconnect)}
-              >
-                {shortAccount}
-              </div>
-              {showDisconnect && (
-                <button
-                  onClick={disconnectWallet}
-                  className="absolute top-12 left-0 bg-red-500 text-white px-4 py-2 rounded shadow-md hover:bg-red-600 text-sm sm:text-base"
-                >
-                  Disconnect
-                </button>
-              )}
-            </div>
-          ) : (
-            <button
-              onClick={connectWallet}
-              className="bg-gradient-to-r from-pink-500 to-red-500 text-white px-6 py-2 font-bold rounded-full shadow-lg hover:scale-105 hover:shadow-xl transition text-sm sm:text-base lg:text-lg"
-            >
-              Connect Wallet
-            </button>
-          )}
-        </div>
-      </header>
     
       {/* Main Content Wrapper */}
       <div className="flex flex-col max-w-5xl mx-auto items-center justify-center h-auto border border-gray-300 rounded-xl bg-gradient-to-br from-yellow-100 via-pink-200 to-red-300 shadow-2xl p-6 space-y-7">
@@ -383,7 +175,7 @@ export default function LaunchPad() {
                 </button>
               </div>
               <button className="bg-gradient-to-r from-yellow-400 to-pink-500 text-white py-5 px-7 rounded-full shadow-xl font-extrabold text-lg sm:text-xl lg:text-2xl hover:scale-110 hover:shadow-2xl transition transform duration-200 w-full"
-                onClick={JoinIDO}>
+                onClick={() => JoinIDO(Number(joinDeposit))}>
                 Join SPIKE IDO
               </button>
 
@@ -396,7 +188,7 @@ export default function LaunchPad() {
                 If you've participated in the IDO, claim your SPIKE tokens now!
               </p>
               <button className="bg-gradient-to-r from-yellow-300 to-pink-700 text-white text-lg sm:text-xl lg:text-2xl font-extrabold py-5 px-7 rounded-full shadow-2xl hover:scale-110 hover:shadow-3xl transition transform duration-200 w-full"
-                onClick={ClaimTokens}>
+                onClick={ClaimIDO}>
                 Claim Your $SPIKE!
               </button>
 

@@ -49,7 +49,7 @@ export default function Bar() {
     <div className="flex w-full z-50">
       <header className="relative w-full bg-black font-bold flex md:justify-center justify-between items-center py-4">
         <div className="z-10 flex items-center w-auto max-w-screen-xl mx-auto px-4 z-40">
-          <nav className="hidden md:flex list-none text-xl sm:text-lg md:text-2xl lg:text-3xl xl:text-xl sm:gap-6 md:gap-12 xl:gap-16 gap-3 items-center">
+          <nav className="hidden md:flex text-white list-none text-xl sm:text-lg md:text-2xl lg:text-3xl xl:text-xl sm:gap-6 md:gap-12 xl:gap-16 gap-3 items-center">
             <Link href="/">
               <Image
                 src="/supraspike.jpg"
@@ -61,20 +61,42 @@ export default function Bar() {
             </Link>
             <Link href="/airdrop" className="nav-link">Airdrop</Link>
             <Link href="/NFT" className="nav-link">NFT</Link>
+            <Link href="/IDO" className="nav-link">IDO</Link>
+
             {/*<Link href="/Degen" className="nav-link">Degen</Link>*/}
 
-            <FormControl variant="outlined" className="min-w-120 text-black bg-white">
-              <InputLabel id="network-select-label">Network</InputLabel>
-              <Select
-                labelId="network-select-label"
-                id="network-select"
-                value={network}
-                onChange={handleNetworkChange}
-                label="Network"
-                className="text-black"
-              >
-                <MenuItem className="text-white" value="8">Mainnet</MenuItem>
-                <MenuItem className="text-white" value="6">Testnet</MenuItem>
+            <FormControl sx={{ minWidth: 120, color: 'black' }}>
+              <InputLabel id="network-select-label" sx={{ color: 'black' }}>Network</InputLabel>
+                <Select
+                className="bg-black"
+                  labelId="network-select-label"
+                  id="network-select"
+                  value={network}
+                  onChange={handleNetworkChange}
+                  label="Network"
+                  sx={{
+                    color: 'white',
+                    '.MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'black',
+                    },
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'white',
+                    },
+                    '.MuiSvgIcon-root': {
+                      color: 'black',
+                    },
+                  }}
+                  MenuProps={{
+                    PaperProps: {
+                      sx: {
+                        backgroundColor: 'black', // Fondo oscuro para el menú desplegable
+                        color: 'white',
+                      },
+                    },
+                  }}
+                >
+                <MenuItem sx={{ color: 'white' }} value="8">Mainnet</MenuItem>
+                <MenuItem sx={{ color: 'white' }} value="6">Testnet</MenuItem>
               </Select>
             </FormControl>
 
@@ -87,7 +109,7 @@ export default function Bar() {
                 {showDisconnect && (
                   <button
                     onClick={disconnectWallet}
-                    className="absolute top-50 left-0 bg-red-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-red-700 transition duration-300"
+                    className="absolute top-50 bg-red-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-red-700 transition duration-300"
                   >
                     Disconnect
                   </button>
@@ -122,6 +144,8 @@ export default function Bar() {
               <li><Link href="/launchpad">Home</Link></li>
               <li><Link href="/memefactory">Factory</Link></li>
               <li><Link href="/NFT">Hall</Link></li>
+              <li><Link href="/IDO">Hall</Link></li>
+
             </ul>
           )}
         </div>

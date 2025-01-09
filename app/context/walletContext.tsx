@@ -5,11 +5,11 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 // Estructura del contexto
 interface WalletContextType {
   walletAddress: string | null;
-  provider: any; // Agregar provider aquí
   connectWallet: () => Promise<void>;
   disconnectWallet: () => Promise<void>;
   isConnected: boolean;
   changeNetworkSupra: (chainNumber: number) => Promise<void>;
+  provider: any;
 }
 
 // Crear el contexto
@@ -20,24 +20,25 @@ const getProvider = () => {
   if (typeof window !== "undefined" && (window as any).starkey) {
     return (window as any).starkey.supra;
   }
-  
-  throw new Error("Starkey provider not found. Please install the wallet.");
+  return null;
 };
 
 export const WalletProvider = ({ children }: { children: ReactNode }) => {
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [provider, setProvider] = useState<any>(null);
+
   // Conectar la wallet
   const connectWallet = async () => {
     try {
       const prov = getProvider();
-      setProvider(prov);
-      console.log(prov, "provider here")
+      if (!prov) {
+        window.open('https://starkey.app/', '_blank'); // Abrir una nueva pestaña con el URL
+        return;
+      }
       const accounts = await prov.connect();
       setWalletAddress(accounts[0]);
       setIsConnected(true);
-      changeNetworkSupra(8);
     } catch (error: any) {
       if (error.code === 4001) {
         console.error("Connection rejected by user.");
@@ -49,17 +50,15 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
 
   // Desconectar la wallet
   const disconnectWallet = async () => {
-    try {
-      await provider.disconnect();
-      setWalletAddress(null);
-      setIsConnected(false);
-    } catch (error) {
-      console.error("Error disconnecting from Starkey:", error);
-    }
+        setWalletAddress(null);
+        setIsConnected(false);
+        await provider.disconnect();    
   };
 
   const changeNetworkSupra = async (chainNumber: number) => {
+    console.log("Changing network to", chainNumber);
     try {
+      const provider = getProvider();
       if (typeof chainNumber !== 'number' || isNaN(chainNumber)) {
         throw new Error('Invalid chain number');
       }
@@ -68,7 +67,47 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
       console.error("Error changing network:", error);
     }
   };
- // Escuchar cambios en la cuenta
+
+  // Escuchar cambios en la cuenta
+  useEffect(() => {
+    const prov = getProvider();
+    if (!prov) {
+      console.error("Provider not found.");
+      return;
+    }
+
+    const initializeProvider = async () => {
+      try {
+        console.log("Connected to network 8");
+        setProvider(prov); // Guardamos el provider en el estado
+
+        if (typeof prov.on === 'function') {
+          const handleAccountChanged = (accounts: string[]) => {
+            if (accounts.length > 0) {
+              console.log(`Switched to account ${accounts[0]}`);
+              setWalletAddress(accounts[0]);
+            } else {
+              console.log("No accounts connected.");
+              setWalletAddress(null);
+              setIsConnected(false);
+            }
+          };
+
+          prov.on("accountChanged", handleAccountChanged);
+
+          return () => {
+            prov.removeListener("accountChanged", handleAccountChanged);
+          };
+        } else {
+          console.error("Provider does not support event listeners.");
+        }
+      } catch (error) {
+        console.error("Error initializing provider:", error);
+      }
+    };
+
+    initializeProvider();
+  }, []);
 
   return (
     <WalletContext.Provider value={{ walletAddress, provider, connectWallet, disconnectWallet, isConnected, changeNetworkSupra }}>

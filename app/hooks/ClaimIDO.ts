@@ -1,36 +1,43 @@
 import { useState } from 'react';
 import { useWallet } from "../context/walletContext"; // Importa el hook del contexto
-import {BCS} from "aptos";
 
-const useGetNFT = () => {
+const useClaimIDO = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState(null);
-  const { connectWallet, provider, walletAddress } = useWallet(); // Obtén el provider desde el contexto
-  const CONTRACT_ADDRESS = "0xa8ff8aa5c6cf9b7511250ca1218efee986a38c50c6f794dff95389623e759a4b";
+  const { provider, walletAddress } = useWallet(); // Obtén el provider desde el contexto
+  const CURRENCY = "0x1::supra_coin::SupraCoin"
+  const price_meme = 0.0000000026;
+  
+  const CONTRACT_ADDRESS_IDO = "0x6e3e09ab7fd0145d7befc0c68d6944ddc1a90fd45b8a6d28c76d8c48bed676b0";
+  //const CONTRACT_ADDRESS_MEME = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::meme_spike::SPIKE"; //TESTNET
+  const CONTRACT_ADDRESS_MEME = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::memecoins::SPIKE"; //MAINNET
 
-  const mintNFT = async () => {
-    if (!walletAddress) {
-      await connectWallet();
-      return
-    }
+  
+  const ClaimIDO = async () => {
     try {
-    setIsLoading(true);
-    setError(null);
+        setIsLoading(true);
+        setError(null);
+
       const txExpiryTime = Math.ceil(Date.now() / 1000) + 30; // 30 seconds expiry
       const optionalTransactionPayloadArgs = { txExpiryTime };
       const rawTxPayload = [
         walletAddress,
         0,
-        CONTRACT_ADDRESS,
-        "nft",
-        "mint",
-        [], // Arguments for the mint function
+        CONTRACT_ADDRESS_IDO,
+        "ido",
+        "claim",
         [
-          BCS.bcsSerializeUint64(Number(1)), //amount to deposit in vault faucet
-        ],
-        optionalTransactionPayloadArgs,
-      ];  
+          CURRENCY,
+          CONTRACT_ADDRESS_MEME
+        ], // Arguments for the mint function
+        [],
+        optionalTransactionPayloadArgs
+      ];
+
+      setIsLoading(true);
+      setError(null);
+  
       const transactionData = await provider.createRawTransactionData(rawTxPayload);
       const networkData = await provider.getChainId();
       console.log("networkData", networkData);
@@ -38,7 +45,7 @@ const useGetNFT = () => {
       const params = {
         data: transactionData,
         from: walletAddress,
-        to: CONTRACT_ADDRESS,
+        to: CONTRACT_ADDRESS_IDO,
         chainId: networkData.chainId,
         value: "",
       };
@@ -60,7 +67,7 @@ const useGetNFT = () => {
     }
   };
 
-  return { mintNFT, isLoading, error, result };
+  return { ClaimIDO, isLoading, error, result };
 };
 
-export default useGetNFT;
+export default useClaimIDO;
