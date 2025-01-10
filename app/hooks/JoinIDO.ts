@@ -33,7 +33,10 @@ const useJoinIDO = () => {
         CONTRACT_ADDRESS_IDO,
         "ido",
         "joinIdo",
-        [], // Arguments for the mint function
+        [
+          CURRENCY,
+          CONTRACT_ADDRESS_MEME
+        ], // Arguments for the mint function
         [
             BCS.bcsSerializeUint64(Number(Big(joinDeposit*1000/price_meme).toFixed(0,0))), //amount tokens Spike to buyt
         ],
