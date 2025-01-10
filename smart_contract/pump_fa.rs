@@ -696,8 +696,8 @@ module pump::pump_fa {
         buy_token_amount: u64
     ) acquires PumpConfig, PoolRecord, Handle, LastBuyer {
         assert!(buy_token_amount > 0, ERROR_PUMP_AMOUNT_IS_NULL);
-        let token_addr =
-            Liquid_Staking_Token::get_fa_obj_address(token_in_name, token_in_symbol);
+        
+        let token_addr = Liquid_Staking_Token::get_fa_obj_address(token_in_name, token_in_symbol);
         let sender = address_of(caller);
         let config = borrow_global<PumpConfig>(@pump);
 
@@ -707,13 +707,13 @@ module pump::pump_fa {
 
         let resource = account::create_signer_with_capability(&config.resource_cap);
         let resource_addr = address_of(&resource);
+
         assert!(exists<PoolRecord>(resource_addr), ERROR_PUMP_NOT_EXIST);
 
         let pool_record = borrow_global_mut<PoolRecord>(resource_addr);
-        let token_pair_record =
-            simple_map::borrow<address, TokenPairRecord>(
-                &mut pool_record.records, &token_addr
-            );
+        let token_pair_record = simple_map::borrow<address, TokenPairRecord>(
+            &mut pool_record.records, &token_addr
+        );
         let pool = token_pair_record.pool;
 
         assert!(!pool.is_completed, ERROR_PUMP_COMPLETED);
@@ -921,7 +921,7 @@ module pump::pump_fa {
         let resource = account::create_signer_with_capability(&config.resource_cap);
         let resource_addr = address_of(&resource);
         
-        assert!(exists<Pool>(resource_addr), ERROR_PUMP_NOT_EXIST);
+        assert!(exists<PoolRecord>(resource_addr), ERROR_PUMP_NOT_EXIST);
         
         let pool_record = borrow_global_mut<PoolRecord>(resource_addr);
         let token_pair_record = simple_map::borrow<address, TokenPairRecord>(

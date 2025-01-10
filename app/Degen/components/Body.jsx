@@ -12,6 +12,9 @@ import  Description  from "./Description";
 //import useTokenBalance  from '../../../context/Hooks/GetBalance';
 //import LoginButton from '../../LoginButton';
 import { useWallet } from '../../context/walletContext';
+import useBuyMeme from "@/app/hooks/BuyMeme";
+import useSellMeme from "@/app/hooks/SellMeme";
+
 
 const Input = ({ placeholder, name_6, type, value, handleChange_6 }) => (
   <input
@@ -27,6 +30,8 @@ const Input = ({ placeholder, name_6, type, value, handleChange_6 }) => (
 
 const Body = () => {
   const { walletAddress } = useWallet(); // Obtén el provider desde el contexto
+  const { BuyMeme, isLoading, error, result } = useBuyMeme(); // Obtén la función de compra desde el contexto
+  const { SellMeme, isLoading: sellisLoading, error: errorisLoading, result: resultisLoading } = useSellMeme(); // Obtén la función de venta desde el contexto
   const [activeTab, setActiveTab] = useState("buy");
   const [buyPercentage, setBuyPercentage] = useState(0); // Nuevo estado para porcentaje de compra
   const [sellPercentage, setSellPercentage] = useState(0); // Nuevo estado para porcentaje de venta
@@ -347,7 +352,8 @@ const Body = () => {
                 {<div className="flex justify-center mt-4">
                   {walletAddress ? (
                     <button
-                      onClick={() => handleBuy(id.split('-')[1])}
+                      onClick={() => BuyMeme("DODO", "DODO", 100000000000000)}
+                      //onClick={() => handleBuy(id.split('-')[1])}
                       className="w-full py-2 lg:py-3 rounded-md shadow-md bg-green-500 hover:bg-green-600 transition duration-200"
                     >
                       Buy
@@ -413,7 +419,8 @@ const Body = () => {
                 <div className="flex justify-center mt-4">
                   {walletAddress ? (
                     <button
-                      onClick={() => handleSell(id.split('-')[1])}
+                      onClick={() => SellMeme("DODO", "DODO", 1)}
+                      //onClick={() => handleSell(id.split('-')[1])}
                       className="w-full py-2 lg:py-3 rounded-md shadow-md bg-red-500 hover:bg-red-600 transition duration-200"
                     >
                       Sell

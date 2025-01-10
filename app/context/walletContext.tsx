@@ -50,10 +50,17 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
 
   // Desconectar la wallet
   const disconnectWallet = async () => {
+    try {
+      if (provider) {
+        await provider.disconnect();
         setWalletAddress(null);
         setIsConnected(false);
-        await provider.disconnect();    
+      }
+    } catch (error) {
+      console.error("Error disconnecting from Starkey:", error);
+    }
   };
+
 
   const changeNetworkSupra = async (chainNumber: number) => {
     console.log("Changing network to", chainNumber);
@@ -78,6 +85,7 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
 
     const initializeProvider = async () => {
       try {
+        await prov.changeNetwork({ chainId: 8 }); // Set to mainnet
         console.log("Connected to network 8");
         setProvider(prov); // Guardamos el provider en el estado
 

@@ -62,6 +62,7 @@ export default function Bar() {
             <Link href="/airdrop" className="nav-link">Airdrop</Link>
             <Link href="/NFT" className="nav-link">NFT</Link>
             <Link href="/IDO" className="nav-link">IDO</Link>
+            <Link href="/Degen" className="nav-link">Degen</Link>
 
             {/*<Link href="/Degen" className="nav-link">Degen</Link>*/}
 
