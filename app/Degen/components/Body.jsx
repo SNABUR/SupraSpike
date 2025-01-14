@@ -352,7 +352,7 @@ const Body = () => {
                 {<div className="flex justify-center mt-4">
                   {walletAddress ? (
                     <button
-                      onClick={() => BuyMeme("DODO", "DODO", 100000000000000)}
+                      onClick={() => BuyMeme("GOGO", "GOGO", FormData_6.amountswap)}
                       //onClick={() => handleBuy(id.split('-')[1])}
                       className="w-full py-2 lg:py-3 rounded-md shadow-md bg-green-500 hover:bg-green-600 transition duration-200"
                     >
@@ -419,7 +419,7 @@ const Body = () => {
                 <div className="flex justify-center mt-4">
                   {walletAddress ? (
                     <button
-                      onClick={() => SellMeme("DODO", "DODO", 1)}
+                      onClick={() => SellMeme("GOGO", "GOGO", FormData_6.amountswap)}
                       //onClick={() => handleSell(id.split('-')[1])}
                       className="w-full py-2 lg:py-3 rounded-md shadow-md bg-red-500 hover:bg-red-600 transition duration-200"
                     >

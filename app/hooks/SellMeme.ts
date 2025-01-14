@@ -9,7 +9,7 @@ const useSellMeme = () => {
   const [result, setResult] = useState(null);
   const { provider, walletAddress } = useWallet(); // Obtén el provider desde el contexto
   
-  const CONTRACT_ADDRESS = "0xa8ff8aa5c6cf9b7511250ca1218efee986a38c50c6f794dff95389623e759a4b";
+  const CONTRACT_ADDRESS = "0x6110f7805e01a3b4f90c1c7fb42a78c5790441a6a39b389aef0f39fd5185471d";
   //const CONTRACT_ADDRESS_MEME = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::meme_spike::SPIKE"; //TESTNET
 
   
@@ -30,7 +30,7 @@ const useSellMeme = () => {
         [
           BCS.bcsSerializeStr(memeName), // meme description
           BCS.bcsSerializeStr(memeSymbol), // meme SYMBOL
-          BCS.bcsSerializeUint64(1), //amount tokens Spike to buyt
+          BCS.bcsSerializeUint64(Number(Big(Number(SellAmount) * 100000000).toFixed(0, 0))), //amount tokens Spike to buy
         ],
         optionalTransactionPayloadArgs
       ];

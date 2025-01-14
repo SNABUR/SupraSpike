@@ -17,11 +17,19 @@ const WalletContext = createContext<WalletContextType | undefined>(undefined);
 
 // Función para detectar el proveedor de Starkey
 const getProvider = () => {
-  if (typeof window !== "undefined" && (window as any).starkey) {
-    return (window as any).starkey.supra;
+  if (typeof window !== "undefined" && (window as any).starkey?.supra) {
+    const provider = (window as any).starkey.supra;
+    if (typeof provider.changeNetwork === "function") {
+      return provider;
+    } else {
+      console.error("Supra provider found but does not support 'changeNetwork'.");
+    }
+  } else {
+    console.error("Supra provider not found.");
   }
   return null;
 };
+
 
 export const WalletProvider = ({ children }: { children: ReactNode }) => {
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
@@ -86,7 +94,6 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
     const initializeProvider = async () => {
       try {
         await prov.changeNetwork({ chainId: 8 }); // Set to mainnet
-        console.log("Connected to network 8");
         setProvider(prov); // Guardamos el provider en el estado
 
         if (typeof prov.on === 'function') {
@@ -115,7 +122,7 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
     };
 
     initializeProvider();
-  }, []);
+  }, [walletAddress]);
 
   return (
     <WalletContext.Provider value={{ walletAddress, provider, connectWallet, disconnectWallet, isConnected, changeNetworkSupra }}>
