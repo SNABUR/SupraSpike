@@ -1,26 +1,20 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { BCS, TxnBuilderTypes } from "aptos";
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import useGetNFT from "../hooks/getNFT";
 
 export default function Memefactory() {
-  const [account, setAccount] = useState("");
   const {mintNFT, isLoading, error, result } = useGetNFT();
   const [isdisable, setIsdisable] = useState(false);
   const [showPopup, setShowPopup] = useState(false); // State for the pop-up
-  const [txHash, setTxHash] = useState(""); // State for the transaction hash
-  const [nftImage, setNftImage] = useState("/collection.jpg"); // Image for the NFT
 
-  const CONTRACT_ADDRESS = "0xa8ff8aa5c6cf9b7511250ca1218efee986a38c50c6f794dff95389623e759a4b";
-  
   // ** Mejorando la inicialización del proveedor **
-
-
-
-  const shortAccount = account ? `${account.slice(0, 6)}...${account.slice(-4)}` : "";
+  useEffect(() => {
+    if (result) {
+        setShowPopup(true);
+    }
+  }, [result]);
 
   return (
     <div className="items-center justify-center min-h-screen bg-gradient-to-br from-yellow-200 via-pink-300 to-red-400 font-sans">
@@ -112,18 +106,19 @@ export default function Memefactory() {
               <div className="text-center mb-6 sm:mb-8">
                 <p className="text-sm sm:text-base lg:text-lg text-white mb-2">TX Hash:</p>
                 <a 
-                  href={`https://suprascan.io/tx/${txHash}/f?tab=tx-advance`} 
+                  href={`https://suprascan.io/tx/${result}/f?tab=tx-advance`} 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="text-base sm:text-lg lg:text-xl text-indigo-500 font-semibold hover:text-indigo-600 break-all"
                 >
-                  {txHash.slice(0, 10)}...{txHash.slice(-10)} {/* Display only the start and end of the hash */}
+                  {result ? `${result.slice(0, 10)}...${result.slice(-10)}` : "No transaction yet"}
+
                 </a>
               </div>
               
               <div className="flex justify-center mb-6 sm:mb-8">
                 <Image 
-                  src={nftImage} 
+                  src={"/collection.jpg"} 
                   alt="NFT" 
                   width={120} 
                   height={120} 

@@ -59,11 +59,9 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
   // Desconectar la wallet
   const disconnectWallet = async () => {
     try {
-      if (provider) {
-        await provider.disconnect();
-        setWalletAddress(null);
-        setIsConnected(false);
-      }
+      setWalletAddress(null);
+      setIsConnected(false);
+      await provider.disconnect();
     } catch (error) {
       console.error("Error disconnecting from Starkey:", error);
     }
@@ -72,31 +70,59 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
 
   const changeNetworkSupra = async (chainNumber: number) => {
     console.log("Changing network to", chainNumber);
+  
     try {
-      const provider = getProvider();
-      if (typeof chainNumber !== 'number' || isNaN(chainNumber)) {
-        throw new Error('Invalid chain number');
+      if (typeof chainNumber !== 'number' || isNaN(chainNumber) || chainNumber <= 0) {
+        throw new Error('Invalid chain number: must be a positive number.');
       }
+  
+      const provider = getProvider();
+      if (!provider) {
+        throw new Error('Provider is not initialized.');
+      }
+  
+      if (typeof provider.changeNetwork !== 'function') {
+        throw new Error('Provider does not support changeNetwork.');
+      }
+  
       await provider.changeNetwork({ chainId: chainNumber });
-    } catch (error) {
-      console.error("Error changing network:", error);
+      console.log(`Network changed to chain ID: ${chainNumber}`);
+    } catch (error:any) {
+      console.log("Error changing network:", error.message);
+      console.debug("Full error details:", error);
     }
   };
+  
 
   // Escuchar cambios en la cuenta
   useEffect(() => {
     const prov = getProvider();
+  
     if (!prov) {
       console.error("Provider not found.");
       return;
     }
-
+  
     const initializeProvider = async () => {
       try {
-        await prov.changeNetwork({ chainId: 8 }); // Set to mainnet
-        setProvider(prov); // Guardamos el provider en el estado
-
-        if (typeof prov.on === 'function') {
+        // Validar el proveedor antes de llamar al método
+        if (typeof prov.changeNetwork !== "function") {
+          throw new Error("changeNetwork is not supported by the provider.");
+        }
+  
+        // Validar el argumento que se pasa al método changeNetwork
+        const chainId = 8;
+        if (typeof chainId !== "number" || isNaN(chainId) || chainId <= 0) {
+          throw new Error("Invalid chainId value. It must be a positive number.");
+        }
+  
+        // Intentar cambiar la red
+        await prov.changeNetwork({ chainId });
+        console.log(`Network changed to chainId: ${chainId}`);
+        setProvider(prov);
+  
+        // Configurar los listeners
+        if (typeof prov.on === "function") {
           const handleAccountChanged = (accounts: string[]) => {
             if (accounts.length > 0) {
               console.log(`Switched to account ${accounts[0]}`);
@@ -107,22 +133,24 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
               setIsConnected(false);
             }
           };
-
+  
           prov.on("accountChanged", handleAccountChanged);
-
+  
           return () => {
             prov.removeListener("accountChanged", handleAccountChanged);
           };
         } else {
-          console.error("Provider does not support event listeners.");
+          console.log("Provider does not support event listeners.");
         }
-      } catch (error) {
-        console.error("Error initializing provider:", error);
+      } catch (error:any) {
+        console.log("Error initializing provider:", error.message);
+        console.debug("Full error details:", error);
       }
     };
-
+  
     initializeProvider();
   }, [walletAddress]);
+  
 
   return (
     <WalletContext.Provider value={{ walletAddress, provider, connectWallet, disconnectWallet, isConnected, changeNetworkSupra }}>

@@ -7,7 +7,7 @@ const useCreateMemeTransaction = () => {
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState(null);
   const { provider } = useWallet(); // Obtén el provider desde el contexto
-  const CONTRACT_ADDRESS = "0x6110f7805e01a3b4f90c1c7fb42a78c5790441a6a39b389aef0f39fd5185471d";
+  const CONTRACT_ADDRESS = "0x2b96e17617714a76df603191cb44dce6684a3e494da9f25eddc1cae0436c95bd";
 
   const createMeme = async (memeName: string, memeSymbol: string, URI: string) => {
     try {

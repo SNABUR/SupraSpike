@@ -5,11 +5,17 @@ import Image from "next/image";
 import useGetAirdropTransaction from "../..//hooks/getAirdrop";
 
 const Airdrop = () => {
-  const [provider, setProvider] = useState(null);
   const [step, setStep] = useState(0); // Controla el progreso de los pasos
   const [showPopup, setShowPopup] = useState(false); // Controla la visibilidad del popup
-  const [txHash, setTxHash] = useState<string | null>(null); // Guarda el enlace de la transacción
   const { getTokens, isLoading, error, result } = useGetAirdropTransaction();
+
+
+  useEffect(() => {
+    if (result) {
+        setShowPopup(true);
+    }
+  }, [result]);
+
 
   const [timeLeft, setTimeLeft] = useState(() => {
     const now = new Date().getTime();
@@ -141,7 +147,7 @@ const Airdrop = () => {
             {/* Enlace a los detalles de la transacción */}
             <div className="mt-6">
               <a
-                href={`https://suprascan.io/tx/${txHash}/f?tab=tx-advance`} 
+                href={`https://suprascan.io/tx/${result}/f?tab=tx-advance`} 
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-500 underline hover:text-blue-700 transition"

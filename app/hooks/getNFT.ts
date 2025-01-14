@@ -5,7 +5,7 @@ import {BCS} from "aptos";
 const useGetNFT = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState<string | null>(null);
   const { connectWallet, provider, walletAddress } = useWallet(); // Obtén el provider desde el contexto
   const CONTRACT_ADDRESS = "0xa8ff8aa5c6cf9b7511250ca1218efee986a38c50c6f794dff95389623e759a4b";
 

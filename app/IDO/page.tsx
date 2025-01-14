@@ -10,17 +10,14 @@ import useClaimIDO from "../hooks/ClaimIDO";
 
 export default function LaunchPad() {
   const [account, setAccount] = useState("");
-  const [showDisconnect, setShowDisconnect] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [joinDeposit, setJoinDeposit] = useState("1");
   const [copySuccess, setCopySuccess] = useState(false);
   const [progress, setProgress] = useState(400000694012300);
   const idoSupply = 5069000000000000;
   const [showPopup, setShowPopup] = useState(false); // Controla la visibilidad del popup
   const [showPopup_2, setShowPopup_2] = useState(false); // Controla la visibilidad del popup
-  const [txHash, setTxHash] = useState<string | null>(null); // Guarda el enlace de la transacción
-  const { JoinIDO, error: errorJoin, result:resultJoin } = useJoinIDO();
-  const { ClaimIDO, error: errorClaim, result: resultClaim } = useClaimIDO();
+  const { JoinIDO, error: errorJoin, result:txJoin } = useJoinIDO();
+  const { ClaimIDO, error: errorClaim, result: txClaim } = useClaimIDO();
   
   const copyToClipboard = () => {
     navigator.clipboard.writeText(CONTRACT_ADDRESS_MEME).then(
@@ -31,16 +28,25 @@ export default function LaunchPad() {
       (err) => console.error("Failed to copy: ", err)
     );
   };
+  
+  // ** Mejorando la inicialización del proveedor **
+  useEffect(() => {
+    if (txJoin) {
+        setShowPopup(true);
+    }
+  }, [txJoin]);
 
-  const CURRENCY = "0x1::supra_coin::SupraCoin"
+  // ** Mejorando la inicialización del proveedor **
+  useEffect(() => {
+    if (txClaim) {
+      setShowPopup_2(true);
+    }
+  }, [txClaim]);
+
   const price_meme = 0.0000000026;
   
-  const CONTRACT_ADDRESS_IDO = "0x6e3e09ab7fd0145d7befc0c68d6944ddc1a90fd45b8a6d28c76d8c48bed676b0";
   //const CONTRACT_ADDRESS_MEME = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::meme_spike::SPIKE"; //TESTNET
   const CONTRACT_ADDRESS_MEME = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::memecoins::SPIKE"; //MAINNET
-
-
-  const shortAccount = account ? `${account.slice(0, 6)}...${account.slice(-4)}` : "";
 
   return (
     <div className="items-center justify-center min-h-screen bg-gradient-to-br from-yellow-200 via-pink-300 to-red-400 font-sans">
@@ -243,7 +249,7 @@ export default function LaunchPad() {
             {/* Enlace a los detalles de la transacción */}
             <div className="mt-6">
               <a
-                href={`https://suprascan.io/tx/${txHash}/f?tab=tx-advance`} 
+                href={`https://suprascan.io/tx/${txJoin}/f?tab=tx-advance`} 
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-500 underline hover:text-blue-700 transition"
@@ -298,7 +304,7 @@ export default function LaunchPad() {
             {/* Enlace a los detalles de la transacción */}
             <div className="mt-6">
               <a
-                href={`https://suprascan.io/tx/${txHash}/f?tab=tx-advance`} 
+                href={`https://suprascan.io/tx/${txClaim}/f?tab=tx-advance`} 
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-600 font-semibold underline hover:text-blue-700 transition duration-200"

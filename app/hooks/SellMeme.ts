@@ -9,7 +9,7 @@ const useSellMeme = () => {
   const [result, setResult] = useState(null);
   const { provider, walletAddress } = useWallet(); // Obtén el provider desde el contexto
   
-  const CONTRACT_ADDRESS = "0x6110f7805e01a3b4f90c1c7fb42a78c5790441a6a39b389aef0f39fd5185471d";
+  const CONTRACT_ADDRESS = "0x2b96e17617714a76df603191cb44dce6684a3e494da9f25eddc1cae0436c95bd";
   //const CONTRACT_ADDRESS_MEME = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::meme_spike::SPIKE"; //TESTNET
 
   
