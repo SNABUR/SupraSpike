@@ -61,13 +61,16 @@ function PopUp({visible, onClose}) {
     const [description, setDescription] = useState(''); // Estado para el texto del textarea
     const [isLoading, setIsLoading] = useState(false); // Estado para controlar la carga
     const [currentAccount, setCurrentAccount] = useState("0x2134werfg"); // Estado para la cuenta actual
-
-
-    const [FormData_2, setFormData_2] = useState({ MemeName: '', Symbol: ''});
+    const [FormData_2, setFormData_2] = useState({ MemeName: '', Symbol: '', telegram: '', twitter: '', website: ''});
     const handleChange_2 = (e2, name_2) => {
         setFormData_2((prevState) => ({ ...prevState, [name_2]: e2.target.value }));
     }
 
+    useEffect(() => {
+      if (result) {
+          
+      }
+    }, [result]);
 
         // Estado para el checkbox
         const [isCheckedTimeZone, setIsCheckedTimeZonet] = useState(false);
@@ -135,7 +138,8 @@ function PopUp({visible, onClose}) {
     
     const handleSubmit_2 = async (file) => {
       try {
-        await createMeme(FormData_2.MemeName, FormData_2.Symbol, "memeURI"); // Pasa los datos necesarios
+        await createMeme(FormData_2.MemeName, FormData_2.Symbol, description, file, FormData_2.website, FormData_2.telegram, FormData_2.twitter); // Pasa los datos necesarios
+        console.log(FormData_2.MemeName, FormData_2.Symbol, description, file, FormData_2.website, FormData_2.telegram, FormData_2.twitter,"data create meme")
         console.log("done tx meme")
       } catch (err) {
         console.error("Error:", err);

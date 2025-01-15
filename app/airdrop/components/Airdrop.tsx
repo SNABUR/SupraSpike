@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import useGetAirdropTransaction from "../..//hooks/getAirdrop";
+import useGetAirdropTransaction from "../../hooks/getAirdrop";
 
 const Airdrop = () => {
   const [step, setStep] = useState(0); // Controla el progreso de los pasos
@@ -15,15 +15,6 @@ const Airdrop = () => {
         setShowPopup(true);
     }
   }, [result]);
-
-
-  const [timeLeft, setTimeLeft] = useState(() => {
-    const now = new Date().getTime();
-    const countdownEnd = new Date("2024-12-17T00:00:00Z").getTime(); // Fecha específica
-    return countdownEnd - now;
-  });
-  const CONTRACT_ADDRESS = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794";
-  const CONTRACT_ADDRESS_MEME = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::memecoins::SPIKE";
 
   const steps = [
     {
