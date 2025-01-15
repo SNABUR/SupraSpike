@@ -40,7 +40,7 @@ const Meme_Search = () => {
     const fetchDataWithRetry = async (retries = MAX_RETRIES) => {
         setLoading(true); // Establecer el estado de carga al inicio de la solicitud
         try {
-            const response = await fetch('/api/db_memes');
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/db_memes`  );
             console.log(response, "response data");
     
             // Verifica que la respuesta sea exitosa (status 200)
