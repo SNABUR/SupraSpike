@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // No incluyas la propiedad turbo
+  images: {
+    domains: ['ipfs.io', 's2.coinmarketcap.com'],
+  },
   webpack: (config) => {
     // Aquí puedes personalizar Webpack si es necesario
     return config;

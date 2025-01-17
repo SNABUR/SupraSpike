@@ -2,16 +2,24 @@
 
 import React, { useState, useEffect, useContext } from "react";
 import Link from 'next/link';
-
+import Image from 'next/image';
 //import { useRouter } from 'next/router';
 
 //import { dbMemesPoint } from '../../../utils/axiossonfig'; // Importa la configuración de Axios
 
-//import no_image from "../../../../images/goldeng.png";
+//import no_image from "../../../../images/no_image.png";
 //import metamask from "../../../../images/metamask.svg";
 //import etherscan from "../../../../images/etherscan_logo.svg";
 //import copy_logo from "../../../../images/copy.svg";
 
+const isValidUrl = (url) => {
+    try {
+      new URL(url);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
 
 const LoadingBox = () => (
     <div className="border border-gray-300 rounded-3xl shadow-sm overflow-hidden bg-white bg-opacity-80" style={{ width: '300px', height:'550px' }}>
@@ -174,19 +182,22 @@ const Meme_Search = () => {
                     <div key={meme.id} className="flex flex-col border border-gray-400 px-3 md:px-1 font-role rounded-xl md:rounded-3xl p-1 md:p-1 shadow-sm overflow-hidden bg-white w-72">
                         <div className="flex flex-row md:flex-col">
                         <Link
-                                    href={{
-                                        pathname: `/Degen/${meme.name}-${meme.ticker}`,
-                                        //query: { meme: JSON.stringify(meme) }
-                                    }}
-                                >
-                                    <div className="p-3 cursor-pointer mb-3">
-                                        <img 
-                                            className="w-full max-h-56 sm:max-h-64 md:max-h-72 lg:max-h-80 object-contain rounded-3xl" 
-                                            src={meme.image || no_image} 
-                                            alt={meme.name} 
-                                        />
-                                    </div>
-                                </Link>
+                            href={{
+                                pathname: `/Degen/${meme.name}-${meme.ticker}`,
+                                //query: { meme: JSON.stringify(meme) }
+                            }}
+                        >
+                            <div className="p-3 cursor-pointer mb-3">
+                            <Image 
+                                className="w-full max-h-56 sm:max-h-64 md:max-h-72 lg:max-h-80 object-contain rounded-3xl" 
+                                src={isValidUrl(meme.image) ? meme.image : "/no_image.jpg"} 
+                                alt={meme.name} 
+                                layout="responsive"
+                                width={500} // Ajusta el ancho según tus necesidades
+                                height={300} // Ajusta la altura según tus necesidades
+                            />
+                            </div>
+                        </Link>
                             <div className="flex flex-col px-3 space-y-1 md:mb-3 md:space-y-2">
                                 <h1 className="text-md md:text-xl font-semibold text-start text-black max-h-12 overflow-hidden text-ellipsis md:max-h-8">
                                     {meme.name}

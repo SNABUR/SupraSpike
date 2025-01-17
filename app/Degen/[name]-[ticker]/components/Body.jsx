@@ -44,6 +44,17 @@ const Body = () => {
   const [name, setName] = useState("");
   const [ticker, setTicker] = useState("");
 
+  
+  useEffect(() => {
+
+    const call_data = async() => {
+    //const search = name+"-"+ticker
+    //const response = await fetch(`/api/db_memes?search=${encodeURIComponent(search)}`);
+    }
+
+  call_data()
+  }, [name, ticker])
+
   useEffect(() => {
     // Obtener la parte final del URL
     const lastSegment = pathname.split('/').filter(Boolean).pop();
@@ -85,6 +96,7 @@ const Body = () => {
   const handleChange_6 = (e2, name_6) => {
     setFormData_6((prevState) => ({ ...prevState, [name_6]: e2.target.value }));
   }
+
   
   useEffect(() => {
     const fetchComments = async () => {
