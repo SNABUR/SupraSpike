@@ -11,6 +11,8 @@ async function uploadToPinata(file: File): Promise<string> {
 
         const jwt_pinata = process.env.JWT_PINATA;
         if (!jwt_pinata) {
+        //if (!jwt_pinata) {
+
             throw new Error('Pinata JWT is not set in environment variables.');
         }
 
