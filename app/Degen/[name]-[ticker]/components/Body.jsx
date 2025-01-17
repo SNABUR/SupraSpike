@@ -14,7 +14,7 @@ import  Description  from "./Description";
 import { useWallet } from '../../../context/walletContext';
 import useBuyMeme from "@/app/hooks/BuyMeme";
 import useSellMeme from "@/app/hooks/SellMeme";
-import { usePathname, useSearchParams  } from 'next/navigation';
+import { usePathname  } from 'next/navigation';
 
 
 const Input = ({ placeholder, name_6, type, value, handleChange_6 }) => (

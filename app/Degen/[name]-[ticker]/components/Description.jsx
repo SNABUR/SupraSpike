@@ -4,12 +4,29 @@ import React, { useState, useContext, useEffect } from 'react';
 //import copy_logo from "../../../../images/copy.svg";
 //import metamask from "../../../../images/metamask.svg";
 //import  DigitalClock, {TradingStatusDot}  from "./TradingTime"
+import { usePathname  } from 'next/navigation';
 
 const Description = ({ memedata, MemeFee, Tradestarted, ProtectTime, timeframeAddress, setShowMyModalDonate }) => {
   const [showExpanded, setShowExpanded] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
   const [clicked, setClicked] = useState(false);
+  const [nameMeme, setnameMeme] = useState("");
+  const [tickerMeme, setTickerMeme] = useState ("");
   //const { add_metamask } = useContext(TransactionContext); 
+  const pathname = usePathname();
+
+  useEffect(() => {
+    // Obtener la parte final del URL
+    const lastSegment = pathname.split('/').filter(Boolean).pop();
+
+    if (lastSegment) {
+      // Dividir por el guion
+      const [name, ticker] = lastSegment.split('-');
+      setnameMeme(name);
+      setTickerMeme(ticker);
+    }
+  }, [pathname]);
+
 
   useEffect(() => {
     if (Tradestarted && ProtectTime) {
@@ -78,7 +95,7 @@ const Description = ({ memedata, MemeFee, Tradestarted, ProtectTime, timeframeAd
           <div className="flex flex-col justify-center items-center lg:items-start text-center lg:text-left space-y-1 p-1 sm:p-3 lg:p-5">
             <div className="flex flex-col lg:flex-row lg:space-x-4 items-center">
               <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold">
-                {memedata.name} ({memedata.ticker})
+                {nameMeme} ({tickerMeme})
               </h3>
               <p className="flex flex-fil items-center gap-2 text-sm sm:text-md font-medium text-gray-400 italic">
                 {memedata.network}
