@@ -139,7 +139,6 @@ function PopUp({visible, onClose}) {
     const handleSubmit_2 = async (file) => {
       try {
         await createMeme(FormData_2.MemeName, FormData_2.Symbol, description, file, FormData_2.website, FormData_2.telegram, FormData_2.twitter); // Pasa los datos necesarios
-        console.log(FormData_2.MemeName, FormData_2.Symbol, description, file, FormData_2.website, FormData_2.telegram, FormData_2.twitter,"data create meme")
         console.log("done tx meme")
       } catch (err) {
         console.error("Error:", err);

@@ -6,11 +6,6 @@ const db = new Pool({
   database: process.env.DATABASE_DB_POSTGRES,
   password: process.env.PASSWORD_DB_POSTGRES,
   port: process.env.PORT_DB_POSTGRES,
-  //user: 'postgres',
-  //host: 'localhost',
-  //database: 'db_memes',
-  //password: '1M3M323_3-152G0553XD##',
-  //port: 5432,
 });
 
 export async function POST(req) {
@@ -34,11 +29,14 @@ export async function POST(req) {
       tx 
     } = body;  // Desestructura los valores enviados desde el frontend
 
-    const uniqueId = contractmeme + "_" + Date.now(); // Contrato + timestamp actual
+    // Verifica si CID está vacío y asigna un valor predeterminado si es necesario
+    const finalCID = CID ? `https://ipfs.io/ipfs/${CID}` : 'https://ipfs.io/ipfs/QmWBaeu6y1zEcKbsEqCuhuDHPL3W8pZouCPdafMCRCSUWk';
+
+    const uniqueId = memeName + memeSymbol + "_" + Date.now(); // Contrato + timestamp actual
 
     await db.query(
       'INSERT INTO db_memes(id, name, ticker, contract, image, creator, creation, webpage, twitter, telegram, description, network, uri, txhash) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)',
-      [uniqueId, memeName, memeSymbol, contractmeme, CID, mainAcc, data_creation, website, twitter, telegram, description, network, uri, tx]
+      [uniqueId, memeName, memeSymbol, contractmeme, finalCID, mainAcc, data_creation, website, twitter, telegram, description, network, uri, tx]
     );
 
     return new Response(JSON.stringify({ message: 'Registrado con éxito' }), { status: 200 });

@@ -7,20 +7,17 @@ const db = new Pool({
   database: process.env.DATABASE_DB_POSTGRES,
   password: process.env.PASSWORD_DB_POSTGRES,
   port: process.env.PORT_DB_POSTGRES,
-  //user: 'postgres',
-  //host: 'localhost',
-  //database: 'db_memes',
-  //password: '1M3M323_3-152G0553XD##',
-  //port: 5432,
 });
 
 export async function GET(req) {
-  const { search } = req.nextUrl.searchParams;
+  const { searchParams } = new URL(req.url);
+  const search = searchParams.get('search');
   let sqlQuery = '';
   let sqlParams = [];
 
   if (search) {
-    sqlQuery = `SELECT * FROM db_memes WHERE name ILIKE $1 OR contract ILIKE $1 LIMIT 3`;
+    console.log(search, "search params")
+    sqlQuery = `SELECT * FROM db_memes WHERE name ILIKE $1 OR ticker ILIKE $1 LIMIT 3`;
     const searchPattern = '%' + search + '%';
     sqlParams = [searchPattern];
   } else {

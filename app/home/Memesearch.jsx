@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useContext } from "react";
+import Link from 'next/link';
+
 //import { useRouter } from 'next/router';
 
 //import { dbMemesPoint } from '../../../utils/axiossonfig'; // Importa la configuración de Axios
@@ -105,15 +107,14 @@ const Meme_Search = () => {
     
     const handleSearch = async () => {
         try {
-            console.log("Enviando solicitud de búsqueda...");
-            const response = await fetch('/api/db_memes', {
-
-                params: {
-                    search: search, // Usar el estado 'search' para realizar la búsqueda tanto por 'name' como por 'contract'
-                }
-            });
+            console.log("Enviando solicitud de búsqueda...", search);
+            const response = await fetch(`/api/db_memes?search=${encodeURIComponent(search)}`);
             console.log(response, "response data handle search");
-
+    
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+    
             const data = await response.json(); // Solo parsea JSON si la respuesta fue exitosa
             // Actualizar el estado 'memes' con los resultados de la búsqueda
             setMemes(data);
@@ -134,15 +135,6 @@ const Meme_Search = () => {
             meme.name && meme.name.toLowerCase().includes(search.toLowerCase())
         );
     }
-
-
-    const handleClick = (meme) => {
-        router.push({
-          pathname: `/Degen/${meme.network}-${meme.contract}`,
-          query: { meme: JSON.stringify(meme) }
-        });
-      };
-
 
     return (
         <div className="flex flex-col px-3 justify-center" > {/* Fondo cálido */}
@@ -179,17 +171,22 @@ const Meme_Search = () => {
                     </>
                 ) : (
                 results.map((meme) => (
-                    <div key={meme.contract} className="flex flex-col border border-gray-400 px-3 md:px-1 font-role rounded-xl md:rounded-3xl p-1 md:p-1 shadow-sm overflow-hidden bg-white w-72">
+                    <div key={meme.id} className="flex flex-col border border-gray-400 px-3 md:px-1 font-role rounded-xl md:rounded-3xl p-1 md:p-1 shadow-sm overflow-hidden bg-white w-72">
                         <div className="flex flex-row md:flex-col">
-                            <div className="p-3 cursor-pointer mb-3"
-                                onClick={() => handleClick(meme)}
+                        <Link
+                                    href={{
+                                        pathname: `/Degen/${meme.name}-${meme.ticker}`,
+                                        //query: { meme: JSON.stringify(meme) }
+                                    }}
                                 >
-                                <img 
-                                    className="w-full max-h-56 sm:max-h-64 md:max-h-72 lg:max-h-80 object-contain rounded-3xl" 
-                                    src={meme.image || no_image} 
-                                    alt={meme.name} 
-                                />
-                            </div>
+                                    <div className="p-3 cursor-pointer mb-3">
+                                        <img 
+                                            className="w-full max-h-56 sm:max-h-64 md:max-h-72 lg:max-h-80 object-contain rounded-3xl" 
+                                            src={meme.image || no_image} 
+                                            alt={meme.name} 
+                                        />
+                                    </div>
+                                </Link>
                             <div className="flex flex-col px-3 space-y-1 md:mb-3 md:space-y-2">
                                 <h1 className="text-md md:text-xl font-semibold text-start text-black max-h-12 overflow-hidden text-ellipsis md:max-h-8">
                                     {meme.name}

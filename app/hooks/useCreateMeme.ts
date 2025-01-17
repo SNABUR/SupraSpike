@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import { BCS } from "aptos";
 import { useWallet } from "../context/walletContext"; // Importa el hook del contexto
-import { CID } from 'multiformats';
-import * as dagPB from '@ipld/dag-pb'; // Importamos todo el módulo dag-pb
-import { sha256 } from 'multiformats/hashes/sha2';
+import { predictCID } from './predictCID';
 
 const useCreateMemeTransaction = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -12,27 +10,6 @@ const useCreateMemeTransaction = () => {
   const { provider } = useWallet(); // Obtén el provider desde el contexto
   const CONTRACT_ADDRESS = "0x2b96e17617714a76df603191cb44dce6684a3e494da9f25eddc1cae0436c95bd";
 
-  const calculateCID = async (file: File | Buffer): Promise<string> => {
-    try {
-      let fileBuffer: Uint8Array;
-      if (file instanceof File) {
-        const arrayBuffer = await file.arrayBuffer();
-        fileBuffer = new Uint8Array(arrayBuffer);
-      } else if (Buffer.isBuffer(file)) {
-        fileBuffer = new Uint8Array(file);
-      } else {
-        throw new TypeError('El archivo debe ser de tipo File o Buffer.');
-      }
-      const dagPBNode = dagPB.encode({ Data: fileBuffer, Links: [] });
-      const hash = await sha256.digest(dagPBNode);
-      const cid = CID.create(1, dagPB.code, hash);
-  
-      return cid.toString(); // Retorna el CID como cadena
-    } catch (error) {
-      console.error('Error al calcular el CID:', error);
-      throw error;
-    }
-  };
 
 
   const createMeme = async (memeName: string, memeSymbol: string, description:string, image:any, website: string, telegram:string, twitter:string ) => {
@@ -45,10 +22,6 @@ const useCreateMemeTransaction = () => {
       if (!memeName || !memeSymbol) {
         setError("Please fill all fields.");
         return;
-      }
-      if (image){
-        CID = await calculateCID(image);
-        console.log(CID, "image CID");
       }
 
       setIsLoading(true);
@@ -92,26 +65,44 @@ const useCreateMemeTransaction = () => {
       const uri = "data json";
 
       if (tx) {
-        console.log(tx, "tx tx hash details");    
-        fetch("/api/create_meme", {
-            method: 'POST', // Usa POST si estás enviando datos
+        console.log(tx, "tx hash details");
+        await fetch("/api/create_meme", {
+            method: 'POST',
             headers: {
-                'Content-Type': 'application/json', // Define el tipo de contenido
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ memeName, memeSymbol, contractmeme, CID, mainAcc, data_creation, website, twitter, telegram, description, network, uri, tx }), // Envía el objeto `tx` como JSON
+            body: JSON.stringify({ memeName, memeSymbol, contractmeme, CID, mainAcc, data_creation, website, twitter, telegram, description, network, uri, tx }),
         })
         .then((response) => {
-            if (!response.ok) {
-                throw new Error(`Error en la solicitud: ${response.statusText}`);
+            if (!response || !response.ok) {
+                throw new Error(`Error in request: ${response?.statusText || 'Unknown error'}`);
             }
-            return response.json(); // Analiza la respuesta JSON
+            return response.json();
         })
         .then((data) => {
-            console.log('Respuesta de la API:', data);
-            setResult(data); // Actualiza el estado con la respuesta de la API
+          console.log('API response:', data);
+          if (image) {
+          const formData = new FormData();
+          formData.append('file', image);
+
+          return fetch('/api/save_image', {
+              method: 'POST',
+              body: formData,
+          });
+        };
+        })
+        .then((response) => {
+            if (!response || !response.ok) {
+                throw new Error(`Error in image upload: ${response?.statusText || 'Unknown error'}`);
+            }
+            return response.json();
+        })
+        .then((data) => {
+            console.log('Image upload response:', data);
+            setResult(data);
         })
         .catch((error) => {
-            console.error('Error al llamar a la API:', error);
+            console.error('Error calling the API:', error);
         });
     }
     

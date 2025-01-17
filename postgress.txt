@@ -1,0 +1,43 @@
+
+////////abrir en powershelll///////////////
+psql.exe -h viaduct.proxy.rlwy.net -U postgres -p 48637 -d railway
+YDTrHtVIqjRkwtrDMxsDnOfKTbpxQJjY
+
+///subir bases de datos////////
+\i D:/db_memes.sql
+\i D:/db_degen.sql
+
+
+VER CONTENIDO DE TABLAS
+
+SELECT * FROM data_pools_teth;
+SELECT * FROM db_memes;
+SELECT * FROM db_pools_memes;
+SELECT * FROM "0x7da9de9c0009a94f817ca85b7c248f335a718d59";
+SELECT * FROM "0xb3cd56fef8aa18db33930f6eaf94aee4c2ea3b3b";
+
+
+
+ELIMINAR TABLAS
+
+DROP TABLE data_pools_teth;
+DROP TABLE "0x7da9de9c0009a94f817ca85b7c248f335a718d59";
+DROP TABLE "0xb3cd56fef8aa18db33930f6eaf94aee4c2ea3b3b";
+DROP TABLE "db_memes";
+DROP TABLE "db_pools_memes";
+DROP TABLE "orders";
+
+
+
+//////// abrir powershell/////////////
+psql.exe -h dpg-cqe8eaogph6c73ajmbtg-a.oregon-postgres.render.com -U db_artists_user -d db_artists
+
+
+PMku9d165b9aSlCzi3CK7yFhr6xuHwGJ
+
+
+\i D:/db_artist.sql
+
+
+SELECT * FROM artist_0;
+

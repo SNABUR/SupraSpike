@@ -11,9 +11,10 @@ import  Description  from "./Description";
 //import TransportMethod from './switch';
 //import useTokenBalance  from '../../../context/Hooks/GetBalance';
 //import LoginButton from '../../LoginButton';
-import { useWallet } from '../../context/walletContext';
+import { useWallet } from '../../../context/walletContext';
 import useBuyMeme from "@/app/hooks/BuyMeme";
 import useSellMeme from "@/app/hooks/SellMeme";
+import { usePathname, useSearchParams  } from 'next/navigation';
 
 
 const Input = ({ placeholder, name_6, type, value, handleChange_6 }) => (
@@ -39,6 +40,22 @@ const Body = () => {
   const [customPercentages, setCustomPercentages] = useState([1, 2, 3, 5]);
   const [isEditing, setIsEditing] = useState(false);
   const [memedata, setMemeData] = useState({});
+  const pathname = usePathname();
+  const [name, setName] = useState("");
+  const [ticker, setTicker] = useState("");
+
+  useEffect(() => {
+    // Obtener la parte final del URL
+    const lastSegment = pathname.split('/').filter(Boolean).pop();
+
+    if (lastSegment) {
+      // Dividir por el guion
+      const [name, ticker] = lastSegment.split('-');
+      setName(name);
+      setTicker(ticker);
+    }
+  }, [pathname]);
+
   //const { BuyMeme, SellMeme, FormData_6, handleChange_6,  switchPool, setSwitchPool, change_input_swap } = useContext(TransactionContextETH); 
   //const { currentAccount, treasuryContract, BuyMemeBase, walletext, currentbalance} = useContext(TransactionContext); 
   const [showMyModalDonate, setShowMyModalDonate] = useState(false);
@@ -144,7 +161,7 @@ const Body = () => {
   }, []); // Dependencia específica para meme data */}
   
 
-  useEffect(() => {
+  /*useEffect(() => {
     const fetchMemeFee = async () => {
   
       // Reset states to avoid retaining old values
@@ -153,7 +170,7 @@ const Body = () => {
       setTradestarted(false);
       setTimeframeAddress(null);
   
-      if (memedata && memedata.contract) {
+      if (memedata) {
         try {
           const [searchNetwork, searchContract] = id.split('-');
   
@@ -175,7 +192,7 @@ const Body = () => {
     };
   
     fetchMemeFee();
-  }, [memedata]);
+  }, [memedata]);*/
   
 
   // Función para cambiar entre pestañas
@@ -352,7 +369,7 @@ const Body = () => {
                 {<div className="flex justify-center mt-4">
                   {walletAddress ? (
                     <button
-                      onClick={() => BuyMeme("POPO", "POPO", FormData_6.amountswap)}
+                      onClick={() => BuyMeme(name, ticker, FormData_6.amountswap)}
                       //onClick={() => handleBuy(id.split('-')[1])}
                       className="w-full py-2 lg:py-3 rounded-md shadow-md bg-green-500 hover:bg-green-600 transition duration-200"
                     >
@@ -419,7 +436,7 @@ const Body = () => {
                 <div className="flex justify-center mt-4">
                   {walletAddress ? (
                     <button
-                      onClick={() => SellMeme("POPO", "POPO", FormData_6.amountswap)}
+                      onClick={() => SellMeme(name, ticker, FormData_6.amountswap)}
                       //onClick={() => handleSell(id.split('-')[1])}
                       className="w-full py-2 lg:py-3 rounded-md shadow-md bg-red-500 hover:bg-red-600 transition duration-200"
                     >

@@ -17,9 +17,11 @@ const useBuyMeme = () => {
     try {
         setIsLoading(true);
         setError(null);
-
+        
       const txExpiryTime = Math.ceil(Date.now() / 1000) + 30; // 30 seconds expiry
       const optionalTransactionPayloadArgs = { txExpiryTime };
+      const upperCaseMemeSymbol = memeSymbol ? memeSymbol.toUpperCase() : '';
+      console.log(memeName, upperCaseMemeSymbol, "meme name and symbol")
       const rawTxPayload = [
         walletAddress,
         0,
@@ -29,7 +31,7 @@ const useBuyMeme = () => {
         [], // Arguments for the mint function
         [
           BCS.bcsSerializeStr(memeName), // meme description
-          BCS.bcsSerializeStr(memeSymbol), // meme SYMBOL
+          BCS.bcsSerializeStr(upperCaseMemeSymbol), // meme SYMBOL
           BCS.bcsSerializeUint64(Number(Big(Number(BuyAmount) * 100000000).toFixed(0, 0))), //amount tokens Spike to buy
         ],
         optionalTransactionPayloadArgs
