@@ -95,7 +95,7 @@ const Description = ({ memedata, MemeFee, Tradestarted, ProtectTime, timeframeAd
           <div className="flex flex-col justify-center items-center lg:items-start text-center lg:text-left space-y-1 p-1 sm:p-3 lg:p-5">
             <div className="flex flex-col lg:flex-row lg:space-x-4 items-center">
               <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold">
-                {nameMeme} ({tickerMeme})
+                {nameMeme} ({tickerMeme.toUpperCase()})
               </h3>
               <p className="flex flex-fil items-center gap-2 text-sm sm:text-md font-medium text-gray-400 italic">
                 {memedata.network}

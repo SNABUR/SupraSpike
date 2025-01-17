@@ -18,6 +18,7 @@ const useSellMeme = () => {
         setIsLoading(true);
         setError(null);
 
+        const memeSymbolUpper = memeSymbol.toUpperCase();
       const txExpiryTime = Math.ceil(Date.now() / 1000) + 30; // 30 seconds expiry
       const optionalTransactionPayloadArgs = { txExpiryTime };
       const rawTxPayload = [
@@ -29,7 +30,7 @@ const useSellMeme = () => {
         [], // Arguments for the mint function
         [
           BCS.bcsSerializeStr(memeName), // meme description
-          BCS.bcsSerializeStr(memeSymbol), // meme SYMBOL
+          BCS.bcsSerializeStr(memeSymbolUpper), // meme SYMBOL
           BCS.bcsSerializeUint64(Number(Big(Number(SellAmount) * 100000000).toFixed(0, 0))), //amount tokens Spike to buy
         ],
         optionalTransactionPayloadArgs

@@ -20,7 +20,7 @@ const useBuyMeme = () => {
         
       const txExpiryTime = Math.ceil(Date.now() / 1000) + 30; // 30 seconds expiry
       const optionalTransactionPayloadArgs = { txExpiryTime };
-      const upperCaseMemeSymbol = memeSymbol ? memeSymbol.toUpperCase() : '';
+      const upperCaseMemeSymbol = memeSymbol.toUpperCase();
       console.log(memeName, upperCaseMemeSymbol, "meme name and symbol")
       const rawTxPayload = [
         walletAddress,

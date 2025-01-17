@@ -8,9 +8,7 @@ const useCreateMemeTransaction = () => {
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState(null);
   const { provider } = useWallet(); // Obtén el provider desde el contexto
-  const CONTRACT_ADDRESS = "0x2b96e17617714a76df603191cb44dce6684a3e494da9f25eddc1cae0436c95bd";
-
-
+  const CONTRACT_ADDRESS = "0x6110f7805e01a3b4f90c1c7fb42a78c5790441a6a39b389aef0f39fd5185471d";
 
   const createMeme = async (memeName: string, memeSymbol: string, description:string, image:any, website: string, telegram:string, twitter:string ) => {
     let CID = "";
@@ -23,6 +21,8 @@ const useCreateMemeTransaction = () => {
         setError("Please fill all fields.");
         return;
       }
+
+      const uppersymbol = memeSymbol.toUpperCase();
 
       setIsLoading(true);
       setError(null);
@@ -39,7 +39,7 @@ const useCreateMemeTransaction = () => {
         [
           BCS.bcsSerializeStr(description), // meme description
           BCS.bcsSerializeStr(memeName), // meme name
-          BCS.bcsSerializeStr(memeSymbol), // meme SYMBOL
+          BCS.bcsSerializeStr(uppersymbol), // meme SYMBOL
           BCS.bcsSerializeStr("URI"), // URI JSON
           BCS.bcsSerializeStr(website), // WEBSITE
           BCS.bcsSerializeStr(telegram), // TELEGRAM
