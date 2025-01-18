@@ -15,6 +15,9 @@ import { useWallet } from '../../../context/walletContext';
 import useBuyMeme from "@/app/hooks/BuyMeme";
 import useSellMeme from "@/app/hooks/SellMeme";
 import { usePathname  } from 'next/navigation';
+import withReactContent from 'sweetalert2-react-content';
+import Swal from 'sweetalert2';
+const MySwal = withReactContent(Swal);
 
 
 const Input = ({ placeholder, name_6, type, value, handleChange_6 }) => (
@@ -32,7 +35,7 @@ const Input = ({ placeholder, name_6, type, value, handleChange_6 }) => (
 const Body = () => {
   const { walletAddress } = useWallet(); // Obtén el provider desde el contexto
   const { BuyMeme, isLoading, error, result } = useBuyMeme(); // Obtén la función de compra desde el contexto
-  const { SellMeme, isLoading: sellisLoading, error: errorisLoading, result: resultisLoading } = useSellMeme(); // Obtén la función de venta desde el contexto
+  const { SellMeme, isLoading: sellisLoading, error: errorsell, result: resultsell} = useSellMeme(); // Obtén la función de venta desde el contexto
   const [activeTab, setActiveTab] = useState("buy");
   const [buyPercentage, setBuyPercentage] = useState(0); // Nuevo estado para porcentaje de compra
   const [sellPercentage, setSellPercentage] = useState(0); // Nuevo estado para porcentaje de venta
@@ -43,6 +46,44 @@ const Body = () => {
   const pathname = usePathname();
   const [name, setName] = useState("");
   const [ticker, setTicker] = useState("");
+
+  useEffect(() => {
+    if (result) {
+      MySwal.fire({
+        position: 'bottom-end',
+        icon: 'success',
+        title: 'Transaction Successful',
+        html: `<a href="https://testnet.suprascan.io/tx/${result}" target="_blank" style="color: #ffffff;">Transaction Hash: ${result}</a>`,
+        showConfirmButton: false,
+        timer: 13700,
+        toast: true,
+        background: '#000000', // Color de fondo negro
+        iconColor: '#28a745', // Color del icono verde
+        customClass: {
+          popup: 'border border-green-500', // Borde verde alrededor del popup
+        },
+      });
+    }
+  }, [result]);
+
+  useEffect(() => {
+    if (resultsell) {
+      MySwal.fire({
+        position: 'bottom-end',
+        icon: 'success',
+        title: 'Transaction Successful',
+        html: `<a href="https://testnet.suprascan.io/tx/${resultsell}" target="_blank" style="color: #ffffff;">Transaction Hash: ${resultsell}</a>`,
+        showConfirmButton: false,
+        timer: 13700,
+        toast: true,
+        background: '#000000', // Color de fondo negro
+        iconColor: '#FF0000', // Color del rojo
+        customClass: {
+          popup: 'border border-red-500', // Borde verde alrededor del popup
+        },
+      });
+    }
+  }, [resultsell]);
 
   
   useEffect(() => {
@@ -76,14 +117,10 @@ const Body = () => {
         // Extraer el 'id' de la URL que contiene tanto el contract como el network
   //const { id } = useParams();
   const prevIdRef = useRef();
-  const handleOnCloseDonate = () => setShowMyModalDonate(false);
-  const handleOnCloseBurn = () => setShowMyModalBurn(false);
   const [dataComments, setDataComments] = useState([]);
   const [Tablename, setTableName] = useState("");
   const [ChainNet,setChainNet] = useState("");
   const [MemeFee, setMemeFee] = useState(null);
-  const [UniContract, setUniContract] = useState("0xc50f259ed3d08ea60a15e886bebd7bdaf81501f5");
-  const [GGContract, setGGContract] = useState("0xc50f259ed3d08ea60a15e886bebd7bdaf81501f5");
   //const { balance: MemeBalance} = useTokenBalance(id.split('-')[1], currentAccount, 18);
   //const { balance: MemeTreasury} = useTokenBalance(id.split('-')[1], treasuryContract, 18);
   const [showComments, setShowComments] = useState(false);
@@ -346,7 +383,7 @@ const Body = () => {
                       handleChange_6={handleChange_6}
                       className="flex-1 py-2 px-3 border border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400"
                     />
-                    <div className="text-gray-200 lg:text-lg">ETH</div>
+                    <div className="text-gray-200 lg:text-lg">{ticker}</div>
                   </div>
                 </div>
 
@@ -413,7 +450,7 @@ const Body = () => {
                       handleChange_6={handleChange_6}
                       className="flex-1 py-2 px-3 border border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-red-400 focus:border-red-400"
                     />
-                    <div className="text-gray-200 lg:text-lg">{memedata.ticker}</div>
+                    <div className="text-gray-200 lg:text-lg">{ticker}</div>
                   </div>
                 </div>
 

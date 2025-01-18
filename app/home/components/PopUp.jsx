@@ -54,7 +54,6 @@ function PopUp({visible, onClose}) {
     const [formularioVisible2, setFormularioVisible2] = useState(false);
     const [formularioVisible3, setFormularioVisible3] = useState(false);
     const [showMyModal_2, setShowMyModal_2] = useState(false);
-    const [showMyModal_3, setShowMyModal_3] = useState(false);
     const [switchState, setSwitchState] = useState("meme"); // Estado para el interruptor
     const [isChecked, setIsChecked] = useState(true);
     const [supplyError, setSupplyError] = useState(''); // Estado para controlar el mensaje de error
@@ -68,7 +67,7 @@ function PopUp({visible, onClose}) {
 
     useEffect(() => {
       if (result) {
-          
+          setShowMyModal_2(true);
       }
     }, [result]);
 
@@ -111,7 +110,6 @@ function PopUp({visible, onClose}) {
     //comandos para controlar el pop up 2
     
     const handleOnClose_2 = () => setShowMyModal_2(false);
-    const handleOnClose_3 = () => setShowMyModal_3(false);
 
 
     const handleOnCloseWallets = () => setShowMyModalWallets(false);
@@ -318,7 +316,7 @@ function PopUp({visible, onClose}) {
               
             </div>
             
-          <PopUp_2 onClose_2 = {handleOnClose_2} visible_2 = {showMyModal_2}/>
+          <PopUp_2 onClose_2 = {handleOnClose_2} visible_2 = {showMyModal_2} memedata={FormData_2} image={file}/>
           {/*<PopUp_3 onClose_3 = {handleOnClose_3} visible_3 = {showMyModal_3}/>*/}
         </div>
 

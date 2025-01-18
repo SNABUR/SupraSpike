@@ -65,7 +65,7 @@ const useCreateMemeTransaction = () => {
       const uri = "data json";
 
       if (tx) {
-        console.log(tx, "tx hash details");
+        setResult(tx);
         await fetch("/api/create_meme", {
             method: 'POST',
             headers: {
@@ -99,7 +99,6 @@ const useCreateMemeTransaction = () => {
         })
         .then((data) => {
             console.log('Image upload response:', data);
-            setResult(data);
         })
         .catch((error) => {
             console.error('Error calling the API:', error);

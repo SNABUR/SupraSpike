@@ -179,7 +179,7 @@ const Meme_Search = () => {
                     </>
                 ) : (
                 results.map((meme) => (
-                    <div key={meme.id} className="flex flex-col border border-gray-400 px-3 md:px-1 font-role rounded-xl md:rounded-3xl p-1 md:p-1 shadow-sm overflow-hidden bg-white w-72">
+                    <div key={meme.id} className="flex flex-col border border-gray-400 px-3 md:px-1 font-role rounded-xl md:rounded-3xl p-1 md:p-1 shadow-sm overflow-hidden bg-white w-72 ">
                         <div className="flex flex-row md:flex-col">
                         <Link
                             href={{
