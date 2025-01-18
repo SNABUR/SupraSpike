@@ -47,6 +47,28 @@ const Body = () => {
   const [name, setName] = useState("");
   const [ticker, setTicker] = useState("");
 
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const response = await fetch(`/api/get_meme?name=${encodeURIComponent(name)}&ticker=${encodeURIComponent(ticker)}`);
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          const data = await response.json();
+          console.log(data, "memedata from db");
+          setMemeData(data);
+        } catch (error) {
+          console.error('Error fetching meme data:', error);
+        }
+      };
+  
+      if (name && ticker) {
+        fetchData();
+      }
+    }, [name, ticker]);
+  
+
+
   useEffect(() => {
     if (result) {
       MySwal.fire({

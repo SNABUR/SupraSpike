@@ -5,6 +5,7 @@ import React, { useState, useContext, useEffect } from 'react';
 //import metamask from "../../../../images/metamask.svg";
 //import  DigitalClock, {TradingStatusDot}  from "./TradingTime"
 import { usePathname  } from 'next/navigation';
+import Image from 'next/image';
 
 const Description = ({ memedata, MemeFee, Tradestarted, ProtectTime, timeframeAddress, setShowMyModalDonate }) => {
   const [showExpanded, setShowExpanded] = useState(false);
@@ -26,7 +27,6 @@ const Description = ({ memedata, MemeFee, Tradestarted, ProtectTime, timeframeAd
       setTickerMeme(ticker);
     }
   }, [pathname]);
-
 
   useEffect(() => {
     if (Tradestarted && ProtectTime) {
@@ -86,10 +86,12 @@ const Description = ({ memedata, MemeFee, Tradestarted, ProtectTime, timeframeAd
     <div className="bg-gray-800 rounded-lg shadow-lg p-1 mt-3 font-role font-bold mb-2 text-white">
       <div className="flex flex-col lg:flex-row lg:justify-between items-center lg:items-center space-y-1 lg:space-y-0 lg:space-x-4">
         <div className="flex flex-fil lg:flex-row justify-around items-around lg:items-center w-full lg:w-auto space-y-2 lg:space-y-0 lg:space-x-4">
-          <img
+          <Image
             className="rounded-3xl w-16 h-16 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 object-cover border-2 border-gray-700 shadow-lg"
-            //src={memedata.image || no_image}
+            src={memedata.image || "/no_image.jpg"}
             alt={memedata.name}
+            width={128}
+            height={128}
           />
 
           <div className="flex flex-col justify-center items-center lg:items-start text-center lg:text-left space-y-1 p-1 sm:p-3 lg:p-5">
