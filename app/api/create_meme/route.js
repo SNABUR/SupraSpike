@@ -30,7 +30,7 @@ export async function POST(req) {
     } = body;  // Desestructura los valores enviados desde el frontend
 
     // Verifica si CID está vacío y asigna un valor predeterminado si es necesario
-    const finalCID = CID ? `https://ipfs.io/ipfs/${CID}` : 'https://ipfs.io/ipfs/QmWBaeu6y1zEcKbsEqCuhuDHPL3W8pZouCPdafMCRCSUWk';
+    const finalCID = CID ? `https://ipfs.io/ipfs/${CID}` : 'https://ipfs.io/ipfs/bafybeigkhp6t72o5mwch7fg36cj5j3cdmrhnzjd4h46qsweykbxskis2qa';
 
     const uniqueId = memeName + memeSymbol + "_" + Date.now(); // Contrato + timestamp actual
 
