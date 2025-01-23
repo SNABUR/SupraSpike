@@ -22,11 +22,10 @@ export default function Memefactory() {
         
       <div className="flex flex-col w-full max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl shadow-lg p-6 sm:p-8 md:p-10 lg:p-12 rounded-xl">
           <h1 className="text-5xl sm:text-5xl font-semibold md:text-5xl lg:text-7xl text-white font-goldeng text-center mb-4 sm:mb-7">
-            CREATE MEMES
+            CREATE COINS
           </h1>
           <p className="text-md sm:text-base md:text-lg font-role font-bold lg:text-xl text-gray-300 text-center mb-3 mt-3 sm:mb-5 md:mb-7">
-           Spike token Factory!! 🚀✨
-          </p>
+             Meme Factory + DAO Builder. Where creativity meets blockchain!🚀✨</p>
           <div className="flex justify-center">
             <button
               className="bg-amber-400 text-brown-900 rounded-full hover:bg-yellow-700 px-12 sm:px-12 md:px-24 py-4 sm:py-5 text-3xl md:text-3xl sm:text-xl md:text-2xl text-black font-goldeng mt-4 sm:mt-3 md:mt-5 transition duration-200 transform hover:scale-105"

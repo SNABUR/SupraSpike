@@ -27,7 +27,7 @@ export async function GET(req) {
       const result = await db.query(sqlQuery, sqlParams);
       const rows = result.rows;
 
-      // Calcular el precio y agrupar por intervalos de 1 minuto
+      // Calcular el precio y agrupar por intervalos de 5 minutos
       const ohlcData = calculateOHLC(rows);
 
       return new Response(JSON.stringify(ohlcData), { status: 200 });
@@ -54,7 +54,8 @@ function calculateOHLC(rows) {
     const virtualSupraReserves = entry.virtualSupraReserves;
     const price = virtualSupraReserves / virtualTokenReserves; // Calcular el precio correctamente
 
-    const interval = Math.floor(timestamp / 60000) * 60000; // Agrupar por intervalos de 1 minuto
+    // Cambiar a intervalos de 5 minutos (300,000 ms)
+    const interval = Math.floor(timestamp * 1000 / (5 * 60 * 1000)) * (5 * 60 * 1000);
 
     if (currentInterval === null || interval !== currentInterval) {
       if (currentInterval !== null) {

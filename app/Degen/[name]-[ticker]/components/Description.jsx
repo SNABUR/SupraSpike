@@ -1,19 +1,16 @@
 "use client";
 
 import React, { useState, useContext, useEffect } from 'react';
-//import copy_logo from "../../../../images/copy.svg";
-//import metamask from "../../../../images/metamask.svg";
-//import  DigitalClock, {TradingStatusDot}  from "./TradingTime"
+
 import { usePathname  } from 'next/navigation';
 import Image from 'next/image';
 
-const Description = ({ memedata, MemeFee, Tradestarted, ProtectTime, timeframeAddress, setShowMyModalDonate }) => {
+const Description = ({ memedata, MemeFee, Tradestarted, ProtectTime, setShowMyModalDonate }) => {
   const [showExpanded, setShowExpanded] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
   const [clicked, setClicked] = useState(false);
   const [nameMeme, setnameMeme] = useState("");
   const [tickerMeme, setTickerMeme] = useState ("");
-  //const { add_metamask } = useContext(TransactionContext); 
   const pathname = usePathname();
 
   useEffect(() => {
@@ -63,9 +60,7 @@ const Description = ({ memedata, MemeFee, Tradestarted, ProtectTime, timeframeAd
     setTimeout(() => setClicked(false), 200); // Duración del efecto de clic
   };
 
-  const formattedDate = typeof Tradestarted === 'number' && Tradestarted !== null 
-  ? new Date(Tradestarted * 1000).toLocaleString() 
-  : null;
+
 
   // Formatea el tiempo restante
   const formatTime = (ms) => {
@@ -89,7 +84,7 @@ const Description = ({ memedata, MemeFee, Tradestarted, ProtectTime, timeframeAd
           <Image
             className="rounded-3xl w-16 h-16 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 object-cover border-2 border-gray-700 shadow-lg"
             src={memedata.image || "/no_image.jpg"}
-            alt={memedata.name}
+            alt={memedata.name || "No image"}
             width={128}
             height={128}
           />
@@ -101,13 +96,6 @@ const Description = ({ memedata, MemeFee, Tradestarted, ProtectTime, timeframeAd
               </h3>
               <p className="flex flex-fil items-center gap-2 text-sm sm:text-md font-medium text-gray-400 italic">
                 {memedata.network}
-                <button 
-                    //onClick={() => add_metamask(memedata.contract, memedata.image)}
-                    className="flex items-center justify-center text-white font-semibold rounded-md focus:outline-none focus:ring focus:ring-blue-400 focus:ring-opacity-50">
-                    <img 
-                    //src={metamask}  
-                    alt="Metamask" className="justify-center w-4 h-4 md:w-5 md:h-5 "/>
-                </button>
                 {/*<TradingStatusDot/>*/}
               </p>
             </div>
@@ -133,9 +121,15 @@ const Description = ({ memedata, MemeFee, Tradestarted, ProtectTime, timeframeAd
                       onClick={() => copyContractAddress(memedata.tokenAddress)}
                       className={`p-1 rounded-full bg-gray-700 hover:bg-gray-600 transition-transform ${clicked ? 'scale-110' : 'hover:scale-105'}`}
                     >
-                      <img 
-                      //src={copy_logo} 
-                      alt="copy_logo" className="w-4 h-4" style={{ filter: 'invert(1)' }} />
+                    <Image 
+                      src="./copy.svg"
+                      width={16} 
+                      height={16} 
+                      alt="copy_logo" 
+                      className="w-4 h-4" 
+                      style={{ filter: 'invert(1)' }} 
+                    />
+
                     </button>
                   </div>
 
@@ -148,7 +142,7 @@ const Description = ({ memedata, MemeFee, Tradestarted, ProtectTime, timeframeAd
 
                 <div className="flex flex-col space-y-1 py-2 px-3 rounded-md bg-gray-800">
                   <p className="text-sm sm:text-md font-medium text-gray-300">
-                    Created: {formattedDate !== null ? formattedDate : 'Server Error...'}
+                    Created: {memedata.createdAt !== null ? memedata.createdAt : 'Server Error...'}
                   </p>
 
                 </div>

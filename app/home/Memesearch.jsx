@@ -115,7 +115,6 @@ const Meme_Search = () => {
     
     const handleSearch = async () => {
         try {
-            console.log("Enviando solicitud de búsqueda...", search);
             const response = await fetch(`/api/db_memes?search=${encodeURIComponent(search)}`);
             console.log(response, "response data handle search");
     
@@ -149,7 +148,7 @@ const Meme_Search = () => {
             <div className="rounded-2xl ">
 
             <div className="flex flex-col items-center p-3 md:p-8 shadow-xl transition duration-300 hover:shadow-2xl">
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-goldeng text-white mb-1 text-center  rounded-xl md:text-left">TOP MEMES</h1>
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-goldeng text-white mb-1 text-center  rounded-xl md:text-left">TOP PROJECTS</h1>
 
                 <div className="flex flex-col md:flex-row justify-between items-center w-full max-w-screen-lg rounded-lg p-4 md:p-3 shadow-md">
                     <div className="flex flex-col md:flex-row items-center w-full p-2 md:p-4 rounded-lg">
@@ -204,22 +203,19 @@ const Meme_Search = () => {
                                 </h1>
                                 <div className="flex justify-between items-center text-sm">
                                     <h1 className="text-xs font-semibold text-gray-700">Ticker: {meme.symbol}</h1>
-                                    <button 
-                                        //onClick={() => add_metamask(meme.tokenAddress, meme.image)}
-                                        className="flex font-semibold">
-                                        <img 
-                                        //src={metamask} 
-                                        alt="metamask" className="w-3 md:w-5" />
-                                    </button>
                                 </div>
                                 <div className="flex justify-between items-center text-xs">
                                     <h1 className="font-semibold text-gray-700">Contract: {meme.tokenAddress?.slice(0, 6)}...{meme.tokenAddress?.slice(-4)}</h1>
                                     <button 
                                         onClick={() => handleButtonClick(meme.tokenAddress)}
                                         className={`flex font-semibold ${scalingButtons[meme.tokenAddress] ? 'animate-scale-down' : ''}`}>
-                                        <img 
-                                        //src={copy_logo} 
-                                        alt="copy_logo" className="w-4 md:w-5" />
+                                        <Image 
+                                        src={"/copy.svg"} 
+                                        alt="copy_logo"
+                                        className="w-4 md:w-5" 
+                                        width={20}
+                                        height={20}
+                                        />
                                     </button>
                                 </div>
                                 <div className="text-xs font-semibold text-gray-700">Red: Supra
@@ -227,11 +223,15 @@ const Meme_Search = () => {
                                     </div>
                                 {/*<h1 className="text-center text-xs text-gray-700 p-2">{meme.description}</h1>*/}
                                 <div className="flex justify-between items-center text-xs mb-2">
-                                    <a href={`https://www.basescan.org/${meme.tokenAddress}`} target="_blank" rel="noopener noreferrer" className="text-gray-700 font-semibold">Created by: {meme.dev?.slice(0, 6)}...{meme.dev?.slice(-4)}</a>
-                                    <a href={`https://sepolia.basescan.org/${meme.tokenAddress}`} target="_blank" rel="noopener noreferrer">
-                                        <img 
-                                        //src={etherscan} 
-                                        alt="etherscan" className="w-5 md:w-5" />
+                                    <a href={`https://testnet.suprascan.io/address/${meme.tokenAddress}`} target="_blank" rel="noopener noreferrer" className="text-gray-700 font-semibold">Created by: {meme.dev?.slice(0, 6)}...{meme.dev?.slice(-4)}</a>
+                                    <a href={`https://testnet.suprascan.io/address/${meme.tokenAddress}`} target="_blank" rel="noopener noreferrer">
+                                        <Image 
+                                        src={"/supra.svg"} 
+                                        alt="etherscan" 
+                                        width={20}
+                                        height={20}
+                                        className="w-5 md:w-5"
+                                         />
                                     </a>
                                 </div>
                             </div>

@@ -14,7 +14,7 @@ const intervals = [
 const TradingViewChart = ({ graphData }) => {
   const chartContainerRef = useRef();
   const candleSeriesRef = useRef();
-  const [interval, setInterval] = useState('1m');
+  const [interval, setInterval] = useState('5m');
 
   useEffect(() => {
     if (!chartContainerRef.current) return;

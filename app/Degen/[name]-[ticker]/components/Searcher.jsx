@@ -1,13 +1,13 @@
-"use client"
+"use client";
 // Searcher.jsx
 import React, { useState, useEffect, useRef } from "react";
-//import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation"; // Importa useRouter para la navegación
 
-const Searcher = ({ setMemeData, setTableName, setChainNet}) => {
+const Searcher = ({ setMemeData, setTableName, setChainNet }) => {
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  //const Navigate = useNavigate();
   const searchResultsRef = useRef(null); // Ref para el contenedor de resultados de búsqueda
+  const router = useRouter(); // Hook para navegar entre rutas
 
   const handleClickOutside = (event) => {
     if (searchResultsRef.current && !searchResultsRef.current.contains(event.target)) {
@@ -16,37 +16,41 @@ const Searcher = ({ setMemeData, setTableName, setChainNet}) => {
   };
 
   useEffect(() => {
-    document.addEventListener('click', handleClickOutside);
+    document.addEventListener("click", handleClickOutside);
     return () => {
-      document.removeEventListener('click', handleClickOutside);
+      document.removeEventListener("click", handleClickOutside);
     };
   }, []);
-  
-
 
   const handleSearch = async () => {
     try {
-      const response = await dbMemesPoint.get('/db_memes', {
-        params: { search: search },
-      });
-      setSearchResults(response.data);
+      const response = await fetch(`/api/db_memes?search=${encodeURIComponent(search)}`);
+      console.log(response, "response data handle search");
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json(); // Solo parsea JSON si la respuesta fue exitosa
+      setSearchResults(data);
     } catch (error) {
-      console.error('Error fetching memes:', error);
+      console.error("Error fetching memes:", error);
     }
   };
 
   const handleSelectResult = (result) => {
     setMemeData(result);
-    setTableName(result.contract.substring(1));
+    setTableName(result.tokenAddress.substring(1));
     setChainNet(result.network);
-    Navigate(`/Degen/${result.network}-${result.contract}`, { state: { result } });
+
+    // Usa router.push para navegar entre rutas
+    router.push(`/Degen/${result.name}-${result.symbol}`);
     setSearchResults([]);
     setSearch("");
-
   };
 
   const handleKeyPress = (event) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       handleSearch();
     }
   };
@@ -68,20 +72,23 @@ const Searcher = ({ setMemeData, setTableName, setChainNet}) => {
         Search
       </button>
       {searchResults.length > 0 && (
-        <div ref={searchResultsRef} className="absolute top-full text-white mt-2 w-full max-w-lg bg-gray-800 rounded-md shadow-lg z-10">
+        <div
+          ref={searchResultsRef}
+          className="absolute top-full text-white mt-2 w-full max-w-lg bg-gray-800 rounded-md shadow-lg z-10"
+        >
           {searchResults.map((result) => (
             <div
-              key={`${result.id}-${result.contract}`}
+              key={`${result.id}-${result.tokenAddress}`}
               onClick={() => handleSelectResult(result)}
               className="px-4 py-2 cursor-pointer hover:bg-gray-700"
             >
-              {result.name} <span className="italic">{`(${result.contract.slice(0, 6)}...${result.contract.slice(-4)})`}</span>
+              {result.name}{" "}
+              <span className="italic">{`(${result.tokenAddress.slice(0, 6)}...${result.tokenAddress.slice(-4)})`}</span>
             </div>
           ))}
         </div>
       )}
     </div>
-
   );
 };
 

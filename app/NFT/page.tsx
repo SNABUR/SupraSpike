@@ -18,8 +18,6 @@ export default function Memefactory() {
 
   return (
     <div className="items-center justify-center min-h-screen bg-gradient-to-br from-yellow-200 via-pink-300 to-red-400 font-sans">
-
-
         {/* Main Content */}
         <div className="flex flex-col items-center px-4">
             <div className="relative z-10 rounded-2xl overflow-hidden w-full max-w-4xl">
@@ -51,10 +49,10 @@ export default function Memefactory() {
                             <div className="w-full bg-gray-200 rounded-full h-4 mb-4">
                                 <div
                                     className="bg-gradient-to-r from-pink-600 to-pink-400 h-4 rounded-full transition-all duration-500"
-                                    style={{ width: `${(2 / 13700) * 100}%` }}
+                                    style={{ width: `${(82 / 1370) * 100}%` }}
                                 ></div>
                             </div>
-                            <p className="text-sm text-black text-right">Minted: loading.../13,700</p>
+                            <p className="text-sm text-black text-right">Minted: 82/1,370</p>
                         </div>
                     </div>
 

@@ -395,7 +395,7 @@ const Body = () => {
               <div>
                 <div>
                   <div className="flex justify-between items-center mb-3">
-                    <label className="text-md lg:text-lg font-semibold text-gray-200">Balance:</label>
+                    <label className="text-md lg:text-lg font-semibold text-gray-200">Amount:</label>
                     {/*<p className="text-md lg:text-lg font-semibold text-gray-100">
                       {currentbalance.data?.formatted ? parseFloat(currentbalance.data.formatted).toFixed(5) : '0.00000'}
                     </p>*/}
@@ -464,7 +464,7 @@ const Body = () => {
               <div>
                 <div>
                   <div className="flex justify-between items-center mb-3">
-                    <label className="text-md lg:text-lg font-semibold text-gray-200">Balance:</label>
+                    <label className="text-md lg:text-lg font-semibold text-gray-200">Amount:</label>
                     {/*<p className="text-md lg:text-lg font-semibold text-gray-100">{parseFloat(MemeBalance).toFixed(5)}</p>*/}
                   </div>
 
@@ -606,7 +606,7 @@ const Body = () => {
             </button>
 
             {/* Sección de comentarios, visible solo si `showComments` es true */}
-            <div className={`mt-4 w-full ${showComments ? 'block' : 'hidden'} md:block`}>
+            {/*<div className={`mt-4 w-full ${showComments ? 'block' : 'hidden'} md:block`}>
               <div className="flex justify-between items-center mb-4">
                   <h3 className="text-xl font-semibold text-white">Comments (beta)</h3>
                   <button 
@@ -619,14 +619,12 @@ const Body = () => {
                     contractMeme={memedata?.contract ? memedata.contract.substring(1) : ''} 
                     chainNetwork={memedata?.network ? memedata.network : ''} 
                     Comments={dataComments || []} 
-                />*/}
-            </div>
+                />
+            </div>*/}
         </div>
-          {/* Sección de holders */}
-          <div className={`flex-none {sm:block ${showComments ? 'block' : 'hidden'} mt-4 text-white md:block lg:w-1/4 bg-gray-800 rounded-lg shadow-lg p-4 mt-4 lg:mt-0`}>
+          {/*<div className={`flex-none {sm:block ${showComments ? 'block' : 'hidden'} mt-4 text-white md:block lg:w-1/4 bg-gray-800 rounded-lg shadow-lg p-4 mt-4 lg:mt-0`}>
             <h3 className="text-xl font-semibold mb-2">🏆 Holders</h3>
-            {/* Aquí puedes añadir la lógica y el componente para los holders */}
-          </div>
+          </div>*/}
 
       </div>
 
