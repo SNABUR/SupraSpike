@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { BCS } from "aptos";
 import { useWallet } from "../context/walletContext"; // Importa el hook del contexto
-import { predictCID } from './predictCID';
+// import { predictCID } from './predictCID';
 
 const useCreateMemeTransaction = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState(null);
   const { provider } = useWallet(); // Obtén el provider desde el contexto
-  const CONTRACT_ADDRESS = "0x6110f7805e01a3b4f90c1c7fb42a78c5790441a6a39b389aef0f39fd5185471d";
+  const CONTRACT_ADDRESS = "0x224845715d4011c341443424d5aa362fa59a1002396b8e742c5e27a6be4b645a";
 
   const createMeme = async (memeName: string, memeSymbol: string, description:string, image:any, website: string, telegram:string, twitter:string ) => {
     let CID = "";
@@ -58,52 +58,34 @@ const useCreateMemeTransaction = () => {
 
       const tx = await provider.sendTransaction(params);
 
-      const mainAcc = accounts[0];
-      const contractmeme = "kjvnsdkfjvn";
-      const data_creation = Date.now;
-      const network = "Supra";
-      const uri = "data json";
+      // const mainAcc = accounts[0];
+      // const contractmeme = "kjvnsdkfjvn";
+      // const data_creation = Date.now;
+      // const network = "Supra";
+      // const uri = "data json";
 
       if (tx) {
         setResult(tx);
-        await fetch("/api/create_meme", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ memeName, memeSymbol, contractmeme, CID, mainAcc, data_creation, website, twitter, telegram, description, network, uri, tx }),
-        })
-        .then((response) => {
-            if (!response || !response.ok) {
-                throw new Error(`Error in request: ${response?.statusText || 'Unknown error'}`);
-            }
-            return response.json();
-        })
-        .then((data) => {
-          console.log('API response:', data);
+
           if (image) {
           const formData = new FormData();
           formData.append('file', image);
 
-          return fetch('/api/save_image', {
-              method: 'POST',
-              body: formData,
-          });
-        };
-        })
-        .then((response) => {
+            const response = await fetch('/api/save_image', {
+                method: 'POST',
+                body: formData,
+            });
+
             if (!response || !response.ok) {
                 throw new Error(`Error in image upload: ${response?.statusText || 'Unknown error'}`);
             }
-            return response.json();
-        })
-        .then((data) => {
+
+            const data = await response.json();
             console.log('Image upload response:', data);
-        })
-        .catch((error) => {
-            console.error('Error calling the API:', error);
-        });
-    }
+          }
+      }
+
+    console.log("Transaction successful:", tx);
     
 
 

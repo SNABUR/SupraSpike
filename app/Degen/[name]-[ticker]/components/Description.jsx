@@ -127,10 +127,10 @@ const Description = ({ memedata, MemeFee, Tradestarted, ProtectTime, timeframeAd
                 <div className="flex flex-col items-center md:items-start space-y-1 py-1 px-3 rounded-md bg-gray-800">
                   <div className="flex items-center justify-start">
                     <p className="text-sm sm:text-md font-medium mr-2 text-gray-300">
-                      Contract: {memedata?.contract ? `${memedata.contract.slice(0, 6)}...${memedata.contract.slice(-4)}` : 'N/A'}
+                      Contract: {memedata?.tokenAddress ? `${memedata.tokenAddress.slice(0, 6)}...${memedata.tokenAddress.slice(-4)}` : 'N/A'}
                     </p>
                     <button
-                      onClick={() => copyContractAddress(memedata.contract)}
+                      onClick={() => copyContractAddress(memedata.tokenAddress)}
                       className={`p-1 rounded-full bg-gray-700 hover:bg-gray-600 transition-transform ${clicked ? 'scale-110' : 'hover:scale-105'}`}
                     >
                       <img 

@@ -6,12 +6,14 @@ import { AiOutlineClose } from "react-icons/ai";
 import { HiMenuAlt4 } from "react-icons/hi";
 import { useWallet } from "./context/walletContext"; // Importa el hook del contexto
 import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { usePathname } from 'next/navigation'; // Importa usePathname de Next.js
 
 export default function Bar() {
   const [toggleMenu, setToggleMenu] = useState(false);
   const [showDisconnect, setShowDisconnect] = useState(false);
   const { walletAddress, connectWallet, disconnectWallet, changeNetworkSupra } = useWallet(); // Obtén los datos y funciones del contexto
-  const [network, setNetwork] = useState('8');
+  const [network, setNetwork] = useState('8'); // Estado para la red actual
+  const pathname = usePathname(); // Obtén la ruta actual
 
   const shortAccount = walletAddress ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}` : "";
 
@@ -45,6 +47,17 @@ export default function Bar() {
     };
   }, []);
 
+  // Efecto para cambiar automáticamente entre mainnet y testnet según la ruta
+  useEffect(() => {
+    if (pathname === '/' || pathname === '/Degen/spike-SPIKE') {
+      changeNetworkSupra(6); // Cambia a testnet (6 es el valor de testnet)
+      setNetwork('6');
+    } else if (pathname === '/NFT' || pathname === '/IDO' || pathname === '/airdrop') {
+      changeNetworkSupra(8); // Cambia a mainnet (8 es el valor de mainnet)
+      setNetwork('8');
+    }
+  }, [pathname, changeNetworkSupra]);
+
   return (
     <div className="flex w-full z-50">
       <header className="relative w-full bg-black font-bold flex md:justify-center justify-between items-center py-4">
@@ -64,8 +77,7 @@ export default function Bar() {
             <Link href="/IDO" className="nav-link">IDO</Link>
             <Link href="/Degen/spike-SPIKE" className="nav-link">Degen</Link>
 
-            {/*<Link href="/Degen" className="nav-link">Degen</Link>*/}
-
+            {/* Selector de red */}
             <FormControl sx={{ minWidth: 120, color: 'black' }}>
               <InputLabel id="network-select-label" sx={{ color: 'black' }}>Network</InputLabel>
                 <Select
@@ -146,7 +158,6 @@ export default function Bar() {
               <li><Link href="/memefactory">Factory</Link></li>
               <li><Link href="/NFT">Hall</Link></li>
               <li><Link href="/IDO">Hall</Link></li>
-
             </ul>
           )}
         </div>

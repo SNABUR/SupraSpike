@@ -3,12 +3,13 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import useGetAirdropTransaction from "../../hooks/getAirdrop";
+import  { useWallet }  from "@/app/context/walletContext";
 
 const Airdrop = () => {
   const [step, setStep] = useState(0); // Controla el progreso de los pasos
   const [showPopup, setShowPopup] = useState(false); // Controla la visibilidad del popup
   const { getTokens, isLoading, error, result } = useGetAirdropTransaction();
-
+  const { changeNetworkSupra } = useWallet(); // Obtén el provider desde el contexto
 
   useEffect(() => {
     if (result) {

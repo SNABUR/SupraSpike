@@ -183,7 +183,7 @@ const Meme_Search = () => {
                         <div className="flex flex-row md:flex-col">
                         <Link
                             href={{
-                                pathname: `/Degen/${meme.name}-${meme.ticker}`,
+                                pathname: `/Degen/${meme.name}-${meme.symbol}`,
                                 //query: { meme: JSON.stringify(meme) }
                             }}
                         >
@@ -203,9 +203,9 @@ const Meme_Search = () => {
                                     {meme.name}
                                 </h1>
                                 <div className="flex justify-between items-center text-sm">
-                                    <h1 className="text-xs font-semibold text-gray-700">Ticker: {meme.ticker}</h1>
+                                    <h1 className="text-xs font-semibold text-gray-700">Ticker: {meme.symbol}</h1>
                                     <button 
-                                        //onClick={() => add_metamask(meme.contract, meme.image)}
+                                        //onClick={() => add_metamask(meme.tokenAddress, meme.image)}
                                         className="flex font-semibold">
                                         <img 
                                         //src={metamask} 
@@ -213,20 +213,22 @@ const Meme_Search = () => {
                                     </button>
                                 </div>
                                 <div className="flex justify-between items-center text-xs">
-                                    <h1 className="font-semibold text-gray-700">Contract: {meme.contract?.slice(0, 6)}...{meme.contract?.slice(-4)}</h1>
+                                    <h1 className="font-semibold text-gray-700">Contract: {meme.tokenAddress?.slice(0, 6)}...{meme.tokenAddress?.slice(-4)}</h1>
                                     <button 
-                                        onClick={() => handleButtonClick(meme.contract)}
-                                        className={`flex font-semibold ${scalingButtons[meme.contract] ? 'animate-scale-down' : ''}`}>
+                                        onClick={() => handleButtonClick(meme.tokenAddress)}
+                                        className={`flex font-semibold ${scalingButtons[meme.tokenAddress] ? 'animate-scale-down' : ''}`}>
                                         <img 
                                         //src={copy_logo} 
                                         alt="copy_logo" className="w-4 md:w-5" />
                                     </button>
                                 </div>
-                                <div className="text-xs font-semibold text-gray-700">Red: {meme.network}</div>
+                                <div className="text-xs font-semibold text-gray-700">Red: Supra
+                                    {/*meme.network*/}
+                                    </div>
                                 {/*<h1 className="text-center text-xs text-gray-700 p-2">{meme.description}</h1>*/}
                                 <div className="flex justify-between items-center text-xs mb-2">
-                                    <a href={`https://www.basescan.org/${meme.contract}`} target="_blank" rel="noopener noreferrer" className="text-gray-700 font-semibold">Created by: {meme.creator?.slice(0, 6)}...{meme.creator?.slice(-4)}</a>
-                                    <a href={`https://sepolia.basescan.org/${meme.contract}`} target="_blank" rel="noopener noreferrer">
+                                    <a href={`https://www.basescan.org/${meme.tokenAddress}`} target="_blank" rel="noopener noreferrer" className="text-gray-700 font-semibold">Created by: {meme.dev?.slice(0, 6)}...{meme.dev?.slice(-4)}</a>
+                                    <a href={`https://sepolia.basescan.org/${meme.tokenAddress}`} target="_blank" rel="noopener noreferrer">
                                         <img 
                                         //src={etherscan} 
                                         alt="etherscan" className="w-5 md:w-5" />

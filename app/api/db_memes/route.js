@@ -17,11 +17,11 @@ export async function GET(req) {
 
   if (search) {
     console.log(search, "search params")
-    sqlQuery = `SELECT * FROM db_memes WHERE name ILIKE $1 OR ticker ILIKE $1 LIMIT 3`;
+    sqlQuery = `SELECT * FROM "PoolsDB" WHERE name ILIKE $1 OR symbol ILIKE $1 LIMIT 3`;
     const searchPattern = '%' + search + '%';
     sqlParams = [searchPattern];
   } else {
-    sqlQuery = `SELECT * FROM db_memes ORDER BY name ASC LIMIT 10`;
+    sqlQuery = `SELECT * FROM "PoolsDB" ORDER BY name ASC LIMIT 10`;
   }
 
   try {

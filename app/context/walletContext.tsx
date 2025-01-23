@@ -110,15 +110,6 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
           throw new Error("changeNetwork is not supported by the provider.");
         }
   
-        // Validar el argumento que se pasa al método changeNetwork
-        const chainId = 8;
-        if (typeof chainId !== "number" || isNaN(chainId) || chainId <= 0) {
-          throw new Error("Invalid chainId value. It must be a positive number.");
-        }
-  
-        // Intentar cambiar la red
-        await prov.changeNetwork({ chainId });
-        console.log(`Network changed to chainId: ${chainId}`);
         setProvider(prov);
   
         // Configurar los listeners

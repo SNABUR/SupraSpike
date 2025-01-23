@@ -11,16 +11,16 @@ const db = new Pool({
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const name = searchParams.get('name');
-  const ticker = searchParams.get('ticker');
+  const symbol = searchParams.get('symbol');
   let sqlQuery = '';
   let sqlParams = [];
 
-  if (name && ticker) {
-    console.log(`Searching for name: ${name} and ticker: ${ticker}`);
-    sqlQuery = `SELECT * FROM db_memes WHERE name ILIKE $1 AND ticker ILIKE $2 LIMIT 1`;
-    sqlParams = [`%${name}%`, `%${ticker}%`];
+  if (name && symbol) {
+    console.log(`Searching for name: ${name} and symbol: ${symbol}`);
+    sqlQuery = `SELECT * FROM "PoolsDB" WHERE name ILIKE $1 AND symbol ILIKE $2 LIMIT 1`;
+    sqlParams = [`%${name}%`, `%${symbol}%`];
   } else {
-    return new Response(JSON.stringify({ error: 'Both name and ticker parameters are required' }), { status: 400 });
+    return new Response(JSON.stringify({ error: 'Both name and symbol parameters are required' }), { status: 400 });
   }
 
   try {

@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useContext, useRef } from "react";
-//import UniTradingViewChart from './unitvwidget'; // Importa tu primer gráfico
-//import GGTradingViewChart from './ggtvwidget'; // Importa tu primer gráfico
+import TradingViewChart from './tvwidget'; // Importa tu primer gráfico
 import Searcher  from './Searcher';
 //import { Burn } from './';
 //import { Comments } from './';
@@ -45,27 +44,48 @@ const Body = () => {
   const [memedata, setMemeData] = useState({});
   const pathname = usePathname();
   const [name, setName] = useState("");
-  const [ticker, setTicker] = useState("");
+  const [symbol, setSymbol] = useState("");
+  const [graphData, setGraphData] = useState([]);
 
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const response = await fetch(`/api/get_meme?name=${encodeURIComponent(name)}&ticker=${encodeURIComponent(ticker)}`);
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          const data = await response.json();
-          console.log(data, "memedata from db");
-          setMemeData(data);
-        } catch (error) {
-          console.error('Error fetching meme data:', error);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        console.log(name, symbol, "name and symbol");
+        const response = await fetch(`/api/get_meme?name=${encodeURIComponent(name)}&symbol=${encodeURIComponent(symbol)}`);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
         }
-      };
-  
-      if (name && ticker) {
-        fetchData();
+        const data = await response.json();
+        setMemeData(data);
+      } catch (error) {
+        console.error('Error fetching meme data:', error);
       }
-    }, [name, ticker]);
+    };
+  
+    if (name && symbol) {
+      fetchData();
+    }
+  }, [name, symbol]);
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`/api/grapher?token_contract=${encodeURIComponent(memedata.tokenAddress)}`);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        console.log(data, "memedata from grapher", memedata.tokenAddress);
+        setGraphData(data);
+      } catch (error) {
+        console.error('Error fetching meme data:', error);
+      }
+    };
+  
+    if (memedata && memedata.tokenAddress) {
+      fetchData();
+    }
+  }, [memedata]);
   
 
 
@@ -111,12 +131,12 @@ const Body = () => {
   useEffect(() => {
 
     const call_data = async() => {
-    //const search = name+"-"+ticker
+    //const search = name+"-"+symbol
     //const response = await fetch(`/api/db_memes?search=${encodeURIComponent(search)}`);
     }
 
   call_data()
-  }, [name, ticker])
+  }, [name, symbol])
 
   useEffect(() => {
     // Obtener la parte final del URL
@@ -124,9 +144,9 @@ const Body = () => {
 
     if (lastSegment) {
       // Dividir por el guion
-      const [name, ticker] = lastSegment.split('-');
+      const [name, symbol] = lastSegment.split('-');
       setName(name);
-      setTicker(ticker);
+      setSymbol(symbol);
     }
   }, [pathname]);
 
@@ -342,26 +362,11 @@ const Body = () => {
               {/*<TransportMethod switchPool={switchPool} setSwitchPool={setSwitchPool}/>*/}
             </div>
           </div>
-          {/*<div className="w-auto h-96 bg-gray-700 rounded-lg flex items-center justify-center">
-            
-
-            {switchPool === 0 ? (
-
-
-              <GGTradingViewChart 
-              poolContract={GGContract? GGContract : ''}
-              chainNet={memedata?.network ? memedata.network : ''}
-              SetOpenDonate={setShowMyModalDonate}
-            />
-
-            ) : (
-                <UniTradingViewChart
-                poolContract={UniContract? UniContract : ''}
-                chainNet={memedata?.network ? memedata.network : ''}
-                SetOpenDonate={setShowMyModalDonate}
-              />
-            )}
-          </div>*/}
+          <div className="w-auto h-96 bg-gray-700 rounded-lg flex items-center justify-center">
+          <TradingViewChart
+            graphData={graphData}
+          />
+          </div>
         </div>
 
         {/* Sección de compra y venta */}
@@ -405,7 +410,7 @@ const Body = () => {
                       handleChange_6={handleChange_6}
                       className="flex-1 py-2 px-3 border border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400"
                     />
-                    <div className="text-gray-200 lg:text-lg">{ticker}</div>
+                    <div className="text-gray-200 lg:text-lg">{symbol}</div>
                   </div>
                 </div>
 
@@ -440,7 +445,7 @@ const Body = () => {
                 {<div className="flex justify-center mt-4">
                   {walletAddress ? (
                     <button
-                      onClick={() => BuyMeme(name, ticker, FormData_6.amountswap)}
+                      onClick={() => BuyMeme(name, symbol, FormData_6.amountswap)}
                       //onClick={() => handleBuy(id.split('-')[1])}
                       className="w-full py-2 lg:py-3 rounded-md shadow-md bg-green-500 hover:bg-green-600 transition duration-200"
                     >
@@ -472,7 +477,7 @@ const Body = () => {
                       handleChange_6={handleChange_6}
                       className="flex-1 py-2 px-3 border border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-red-400 focus:border-red-400"
                     />
-                    <div className="text-gray-200 lg:text-lg">{ticker}</div>
+                    <div className="text-gray-200 lg:text-lg">{symbol}</div>
                   </div>
                 </div>
 
@@ -507,7 +512,7 @@ const Body = () => {
                 <div className="flex justify-center mt-4">
                   {walletAddress ? (
                     <button
-                      onClick={() => SellMeme(name, ticker, FormData_6.amountswap)}
+                      onClick={() => SellMeme(name, symbol, FormData_6.amountswap)}
                       //onClick={() => handleSell(id.split('-')[1])}
                       className="w-full py-2 lg:py-3 rounded-md shadow-md bg-red-500 hover:bg-red-600 transition duration-200"
                     >
