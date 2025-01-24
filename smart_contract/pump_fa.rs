@@ -275,7 +275,7 @@ module pump::pump_fa {
                 initial_virtual_token_reserves: 100_000_000 * DECIMALS,
                 initial_virtual_supra_reserves: 30 * DECIMALS,
                 token_decimals: 8,
-                dex_transfer_threshold: 1 * DECIMALS,
+                dex_transfer_threshold: 1370 * DECIMALS,
                 wait_duration: 28800, // 8 hours = 28800 seconds
                 min_supra_amount: 100_000_000, // Minimum purchase amount = 100_000_000 (1 SUPRA)
                 high_fee: 1000 // High fee rate period fee = 1000 (10%)
@@ -563,7 +563,7 @@ module pump::pump_fa {
         };
 
         // Stage 2: After threshold but before wait duration
-        if (exists<LastBuyer>(resource_addr)) {
+        /*if (exists<LastBuyer>(resource_addr)) {
             let last_buyer = borrow_global<LastBuyer>(resource_addr);
             let current_time = timestamp::now_seconds();
 
@@ -573,10 +573,12 @@ module pump::pump_fa {
 
             // Stage 3: After wait duration
             return 3
-        };
+        };*/
 
         // Stage 2: After threshold but no last buyer yet
-        1
+        //1
+        //after bonus period reached
+        2
     }
 
     /*
@@ -1125,15 +1127,27 @@ module pump::pump_fa {
         assert!(exists<LastBuyer>(resource_addr), ERROR_NO_LAST_BUYER);
         let last_buyer = borrow_global<LastBuyer>(resource_addr);
         
-        assert!(
+        /*assert!(
             timestamp::now_seconds() >= last_buyer.timestamp + config.wait_duration,
             ERROR_WAIT_TIME_NOT_REACHED
+        );*/
+
+        let real_supra_reserves =
+        simple_map::borrow<address, Coin<SupraCoin>>(
+            &mut pool_record.real_supra_reserves, &token_addr
+        );
+
+        let current_supra_balance = coin::value<SupraCoin>(real_supra_reserves);
+
+        assert!(
+            current_supra_balance >= config.dex_transfer_threshold,
+            ERROR_INSUFFICIENT_LIQUIDITY
         );
 
         migrate_to_normal_dex(name, symbol);
     }
 
-    // Transfer movefun to normal dex if there is no dex support
+    // Transfer SUPRApool to normal dex if there is no dex support
     fun migrate_to_normal_dex(
         name: String,
         symbol: String
@@ -1180,7 +1194,7 @@ module pump::pump_fa {
         pool.is_normal_dex = true;
 
         // Calculate reward for caller (10% of the token amount)
-        let reward_amount = pool.real_token_reserves / 10;
+        let reward_amount = pool.real_token_reserves / 1000;
 
         let last_buyer = borrow_global<LastBuyer>(resource_addr);
         let winner_address = last_buyer.buyer;

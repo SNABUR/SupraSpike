@@ -10,12 +10,16 @@ import  Description  from "./Description";
 //import TransportMethod from './switch';
 //import useTokenBalance  from '../../../context/Hooks/GetBalance';
 //import LoginButton from '../../LoginButton';
-import { useWallet } from '../../../context/walletContext';
+import { useWallet } from '@/app/context/walletContext';
+import useViewFunction from "@/app/hooks/view/viewPump";
 import useBuyMeme from "@/app/hooks/BuyMeme";
 import useSellMeme from "@/app/hooks/SellMeme";
-import { usePathname  } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import withReactContent from 'sweetalert2-react-content';
 import Swal from 'sweetalert2';
+import { BCS } from "aptos";
+import Big from 'big.js';
+
 const MySwal = withReactContent(Swal);
 
 
@@ -34,6 +38,7 @@ const Input = ({ placeholder, name_6, type, value, handleChange_6 }) => (
 const Body = () => {
   const { walletAddress } = useWallet(); // Obtén el provider desde el contexto
   const { BuyMeme, isLoading, error, result } = useBuyMeme(); // Obtén la función de compra desde el contexto
+  const { resultView, loadingView, errorView, callViewFunction } = useViewFunction(); // Obtén la función de compra desde el contexto
   const { SellMeme, isLoading: sellisLoading, error: errorsell, result: resultsell} = useSellMeme(); // Obtén la función de venta desde el contexto
   const [activeTab, setActiveTab] = useState("buy");
   const [buyPercentage, setBuyPercentage] = useState(0); // Nuevo estado para porcentaje de compra
@@ -129,14 +134,17 @@ const Body = () => {
 
   
   useEffect(() => {
-
-    const call_data = async() => {
-    //const search = name+"-"+symbol
-    //const response = await fetch(`/api/db_memes?search=${encodeURIComponent(search)}`);
+    if (!name || !symbol) {
+      console.warn("Name or symbol is missing. Skipping call to callViewFunction.");
+      return;
     }
-
-  call_data()
-  }, [name, symbol])
+  
+    // Llama a la función view al cargar el componente o cuando cambian name y symbol
+    callViewFunction('get_pool_state', [name, symbol]).catch((err) => {
+      console.error("Error calling view function:", err);
+    });
+  }, [name, symbol, callViewFunction]);
+  
 
   useEffect(() => {
     // Obtener la parte final del URL
@@ -410,7 +418,7 @@ const Body = () => {
                       handleChange_6={handleChange_6}
                       className="flex-1 py-2 px-3 border border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400"
                     />
-                    <div className="text-gray-200 lg:text-lg">{symbol}</div>
+                    <div className="text-gray-200 lg:text-lg">SUPRA</div>
                   </div>
                 </div>
 
@@ -457,6 +465,33 @@ const Body = () => {
                     </div>
                   )}
                 </div>}
+                <div>
+                <div className="space-y-2 mt-7">
+                    {resultView?.result[2] === false && (
+                      <div>
+                        <label 
+                          htmlFor="bonding-curve-progress" 
+                          className="block text-sm font-medium text-white"
+                        >
+                          Bonding Curve Progress
+                        </label>
+                        <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+                          <div
+                            className="bg-blue-500 h-4"
+                            style={{
+                              width: `${
+                                (resultView?.result[1] / (1370 * Math.pow(10, 8))) * 100
+                              }%`,
+                            }}
+                          ></div>
+                        </div>
+                        <span className="text-sm text-gray-500">
+                          {((resultView?.result[1] / (1370 * Math.pow(10, 8))) * 100).toFixed(2)}%
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  </div>
               </div>
             )}
 

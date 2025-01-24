@@ -1,49 +1,85 @@
 import { useState } from 'react';
 import { useWallet } from "../context/walletContext"; // Importa el hook del contexto
 import { BCS } from 'aptos';
+import useViewFunction from './view/viewPump'; // Importa el hook del contexto
 import Big from 'big.js';
 
 const useBuyMeme = () => {
+  // Estados para manejar carga, errores y resultados
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState(null);
-  const { provider, walletAddress } = useWallet(); // Obtén el provider desde el contexto
-  
-  const CONTRACT_ADDRESS = "0x224845715d4011c341443424d5aa362fa59a1002396b8e742c5e27a6be4b645a";
-  //const CONTRACT_ADDRESS_MEME = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::meme_spike::SPIKE"; //TESTNET
+  const { provider, walletAddress } = useWallet();
 
-  
-  const BuyMeme = async (memeName:string, memeSymbol:string, BuyAmount:string) => {
+  // Dirección del contrato
+  const CONTRACT_ADDRESS = "0x224845715d4011c341443424d5aa362fa59a1002396b8e742c5e27a6be4b645a";
+
+  // Función para comprar memes
+  const BuyMeme = async (memeName: string, memeSymbol: string, BuyAmountSupra: string) => {
     try {
-        setIsLoading(true);
-        setError(null);
-        
-      const txExpiryTime = Math.ceil(Date.now() / 1000) + 30; // 30 seconds expiry
+      // Inicia el estado de carga y resetea el error
+      setIsLoading(true);
+      setError(null);
+
+      // Define el tiempo de expiración de la transacción
+      const txExpiryTime = Math.ceil(Date.now() / 1000) + 30; // 30 segundos
       const optionalTransactionPayloadArgs = { txExpiryTime };
+
+      // Convierte el símbolo del meme a mayúsculas
       const upperCaseMemeSymbol = memeSymbol.toUpperCase();
-      console.log(memeName, upperCaseMemeSymbol, "meme name and symbol")
+
+      // Construye el payload para la función de vista
+      const payload = {
+        function: CONTRACT_ADDRESS + "::pump_fa::buy_supra_amount",
+        type_arguments: [], // Tipos genéricos si aplica
+        arguments: [memeName.toString(), memeSymbol.toString(), BuyAmountSupra.toString()],
+      };
+
+      // Llama a la función de vista
+      const response = await fetch("https://rpc-testnet.supra.com/rpc/v1/view", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      // Verifica si la respuesta es válida
+      if (!response.ok) {
+        throw new Error(`Error in view function: ${response.statusText}`);
+      }
+
+      // Procesa el resultado de la función de vista
+      const CallView = await response.json();
+      const BuyAmountRaw = CallView.result[0];
+
+      // Valida que el resultado sea un número
+      if (isNaN(Number(BuyAmountRaw))) {
+        throw new Error("BuyAmount is not a valid number");
+      }
+      const BuyAmount = Number(BuyAmountRaw);
+
+      // Construye el payload de la transacción
       const rawTxPayload = [
         walletAddress,
         0,
         CONTRACT_ADDRESS,
         "pump_fa",
         "buy",
-        [], // Arguments for the mint function
+        [],
         [
-          BCS.bcsSerializeStr(memeName), // meme description
-          BCS.bcsSerializeStr(upperCaseMemeSymbol), // meme SYMBOL
-          BCS.bcsSerializeUint64(Number(Big(Number(BuyAmount) * 100000000).toFixed(0, 0))), //amount tokens Spike to buy
+          BCS.bcsSerializeStr(memeName), // Nombre del meme
+          BCS.bcsSerializeStr(upperCaseMemeSymbol), // Símbolo del meme en mayúsculas
+          BCS.bcsSerializeUint64(Number(Big(Number(BuyAmount) * 100000000).toFixed(0, 0))), // Cantidad de tokens SPIKE a comprar
         ],
-        optionalTransactionPayloadArgs
+        optionalTransactionPayloadArgs,
       ];
 
-      setIsLoading(true);
-      setError(null);
-  
+      // Genera los datos de la transacción
       const transactionData = await provider.createRawTransactionData(rawTxPayload);
       const networkData = await provider.getChainId();
-      console.log("networkData", networkData);
-  
+
+      // Construye los parámetros de la transacción
       const params = {
         data: transactionData,
         from: walletAddress,
@@ -51,16 +87,17 @@ const useBuyMeme = () => {
         chainId: networkData.chainId,
         value: "",
       };
-  
+
+      // Envía la transacción
       const tx = await provider.sendTransaction(params);
+
       if (!tx) {
         console.error("Transaction is empty.");
         return; // Detener ejecución si `tx` está vacío
       }
-      console.log("networkData.chainId", networkData.chainId);
 
-      console.log("Transaction sent:", tx);
       setResult(tx);
+
     } catch (err) {
       console.error("Error sending tokens:", err);
       setError(err instanceof Error ? err.message : "Unknown error occurred.");
