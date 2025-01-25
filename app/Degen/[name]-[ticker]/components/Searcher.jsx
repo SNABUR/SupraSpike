@@ -24,7 +24,7 @@ const Searcher = ({ setMemeData, setTableName, setChainNet }) => {
 
   const handleSearch = async () => {
     try {
-      const response = await fetch(`/api/db_memes?search=${encodeURIComponent(search)}`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/db_memes?search=${encodeURIComponent(search)}`);
       console.log(response, "response data handle search");
 
       if (!response.ok) {

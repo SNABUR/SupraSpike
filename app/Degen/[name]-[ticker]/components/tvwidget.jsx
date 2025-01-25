@@ -82,11 +82,11 @@ const TradingViewChart = ({ graphData }) => {
   }, [graphData]);
 
   return (
-    <div className="h-full w-full bg-black relative">
+    <div className="h-full w-full bg-black relative flex flex-col">
       <select
         value={interval}
         onChange={(e) => setInterval(e.target.value)}
-        className="mb-2 bg-gray-800 text-white border border-gray-600 rounded p-2"
+        className="mb-2 w-min bg-gray-800 text-white border border-gray-600 rounded p-2"
       >
         {intervals.map((intvl) => (
           <option key={intvl.value} value={intvl.value}>
@@ -94,12 +94,13 @@ const TradingViewChart = ({ graphData }) => {
           </option>
         ))}
       </select>
-
-      <div className="h-[calc(100%-30px)] w-full relative">
-        <div ref={chartContainerRef} className="h-full w-full" />
+  
+      <div className="flex-1 w-full">
+        <div ref={chartContainerRef} className="h-full w-full relative" />
       </div>
     </div>
   );
+  
 };
 
 export default TradingViewChart;

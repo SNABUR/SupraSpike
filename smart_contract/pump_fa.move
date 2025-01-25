@@ -1127,10 +1127,10 @@ module pump::pump_fa {
         assert!(exists<LastBuyer>(resource_addr), ERROR_NO_LAST_BUYER);
         let last_buyer = borrow_global<LastBuyer>(resource_addr);
         
-        /*assert!(
+        assert!(
             timestamp::now_seconds() >= last_buyer.timestamp + config.wait_duration,
             ERROR_WAIT_TIME_NOT_REACHED
-        );*/
+        );
 
         let real_supra_reserves =
         simple_map::borrow<address, Coin<SupraCoin>>(
@@ -1193,7 +1193,7 @@ module pump::pump_fa {
         pool.is_completed = true;
         pool.is_normal_dex = true;
 
-        // Calculate reward for caller (10% of the token amount)
+        // Calculate reward for caller (1% of the token amount)
         let reward_amount = pool.real_token_reserves / 1000;
 
         let last_buyer = borrow_global<LastBuyer>(resource_addr);

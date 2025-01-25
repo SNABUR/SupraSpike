@@ -56,7 +56,7 @@ const Body = () => {
     const fetchData = async () => {
       try {
         console.log(name, symbol, "name and symbol");
-        const response = await fetch(`/api/get_meme?name=${encodeURIComponent(name)}&symbol=${encodeURIComponent(symbol)}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/get_meme?name=${encodeURIComponent(name)}&symbol=${encodeURIComponent(symbol)}`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -75,7 +75,7 @@ const Body = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`/api/grapher?token_contract=${encodeURIComponent(memedata.tokenAddress)}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/grapher?token_contract=${encodeURIComponent(memedata.tokenAddress)}`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -370,11 +370,10 @@ const Body = () => {
               {/*<TransportMethod switchPool={switchPool} setSwitchPool={setSwitchPool}/>*/}
             </div>
           </div>
-          <div className="w-auto h-96 bg-gray-700 rounded-lg flex items-center justify-center">
-          <TradingViewChart
-            graphData={graphData}
-          />
+          <div className="w-full h-96 bg-gray-700 rounded-lg flex items-center justify-center p-2 md:p-4">
+            <TradingViewChart graphData={graphData} />
           </div>
+
         </div>
 
         {/* Sección de compra y venta */}
@@ -466,31 +465,40 @@ const Body = () => {
                   )}
                 </div>}
                 <div>
-                <div className="space-y-2 mt-7">
-                    {resultView?.result[2] === false && (
-                      <div>
-                        <label 
-                          htmlFor="bonding-curve-progress" 
-                          className="block text-sm font-medium text-white"
-                        >
-                          Bonding Curve Progress
-                        </label>
-                        <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
-                          <div
-                            className="bg-blue-500 h-4"
-                            style={{
-                              width: `${
-                                (resultView?.result[1] / (1370 * Math.pow(10, 8))) * 100
-                              }%`,
-                            }}
-                          ></div>
-                        </div>
-                        <span className="text-sm text-gray-500">
-                          {((resultView?.result[1] / (1370 * Math.pow(10, 8))) * 100).toFixed(2)}%
-                        </span>
+                <div className="space-y-4 mt-7">
+                  {resultView?.result[2] === true ? (
+                    <div>
+                      <label
+                        htmlFor="bonding-curve-progress"
+                        className="block text-sm font-medium text-white mb-1"
+                      >
+                        Bonding Curve Progress
+                      </label>
+                      <div className="w-full bg-gray-800 rounded-full h-4 overflow-hidden relative">
+                        <div
+                          className="bg-blue-500 h-4 transition-all duration-300 ease-in-out"
+                          style={{
+                            width: `${
+                              (resultView?.result[1] / (1370 * Math.pow(10, 8))) * 100
+                            }%`,
+                          }}
+                        ></div>
                       </div>
-                    )}
-                  </div>
+                      <span className="text-sm text-gray-400 mt-1 block">
+                        {((resultView?.result[1] / (1370 * Math.pow(10, 8))) * 100).toFixed(2)}%
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="flex justify-center">
+                      <button
+                        onClick={() => console.log("Botón clickeado")} // Cambia esto por tu acción deseada
+                        className="px-4 py-2 bg-blue-500 text-white font-medium text-sm rounded-lg shadow hover:bg-blue-600 transition duration-300"
+                      >
+                        Claim Reward
+                      </button>
+                    </div>
+                  )}
+                </div>
                   </div>
               </div>
             )}
