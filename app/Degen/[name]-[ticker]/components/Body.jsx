@@ -12,6 +12,7 @@ import  Description  from "./Description";
 //import LoginButton from '../../LoginButton';
 import { useWallet } from '@/app/context/walletContext';
 import useViewFunction from "@/app/hooks/view/viewPump";
+import useViewCoin from "@/app/hooks/view/viewCoin";
 import useBuyMeme from "@/app/hooks/BuyMeme";
 import useSellMeme from "@/app/hooks/SellMeme";
 import { usePathname } from 'next/navigation';
@@ -19,6 +20,7 @@ import withReactContent from 'sweetalert2-react-content';
 import Swal from 'sweetalert2';
 import { BCS } from "aptos";
 import Big from 'big.js';
+import { WalletProvider } from "@/app/context/walletContext";
 
 const MySwal = withReactContent(Swal);
 
@@ -36,9 +38,10 @@ const Input = ({ placeholder, name_6, type, value, handleChange_6 }) => (
 );  
 
 const Body = () => {
-  const { walletAddress } = useWallet(); // Obtén el provider desde el contexto
+  const { walletAddress, supraBalance } = useWallet(); // Obtén el provider desde el contexto
   const { BuyMeme, isLoading, error, result } = useBuyMeme(); // Obtén la función de compra desde el contexto
   const { resultView, loadingView, errorView, callViewFunction } = useViewFunction(); // Obtén la función de compra desde el contexto
+  const { resultCoin, callViewCoin } = useViewCoin(); // Obtén la función de compra desde el contexto
   const { SellMeme, isLoading: sellisLoading, error: errorsell, result: resultsell} = useSellMeme(); // Obtén la función de venta desde el contexto
   const [activeTab, setActiveTab] = useState("buy");
   const [buyPercentage, setBuyPercentage] = useState(0); // Nuevo estado para porcentaje de compra
@@ -134,7 +137,7 @@ const Body = () => {
 
   
   useEffect(() => {
-    if (!name || !symbol) {
+    if (!name || !symbol || !walletAddress) {
       console.warn("Name or symbol is missing. Skipping call to callViewFunction.");
       return;
     }
@@ -143,7 +146,11 @@ const Body = () => {
     callViewFunction('get_pool_state', [name, symbol]).catch((err) => {
       console.error("Error calling view function:", err);
     });
-  }, [name, symbol, callViewFunction]);
+    callViewCoin('get_balance', [walletAddress, name, symbol]).catch((err) => {
+      console.error("Error calling view function:", err);
+    });
+
+  }, [name, symbol, walletAddress, callViewFunction]);
   
 
   useEffect(() => {
@@ -402,10 +409,8 @@ const Body = () => {
               <div>
                 <div>
                   <div className="flex justify-between items-center mb-3">
-                    <label className="text-md lg:text-lg font-semibold text-gray-200">Amount:</label>
-                    {/*<p className="text-md lg:text-lg font-semibold text-gray-100">
-                      {currentbalance.data?.formatted ? parseFloat(currentbalance.data.formatted).toFixed(5) : '0.00000'}
-                    </p>*/}
+                    <label className="text-md lg:text-lg font-semibold text-gray-200">Balance:</label>
+                    <p className="text-md lg:text-lg font-semibold text-gray-100">{supraBalance ? Number(supraBalance).toFixed(2) : "0.00"}</p>
                   </div>
 
                   <div className="flex items-center space-x-2 text-white mb-3">
@@ -464,43 +469,7 @@ const Body = () => {
                     </div>
                   )}
                 </div>}
-                <div>
-                <div className="space-y-4 mt-7">
-                  {resultView?.result[2] === false ? (
-                    <div>
-                      <label
-                        htmlFor="bonding-curve-progress"
-                        className="block text-sm font-medium text-white mb-1"
-                      >
-                        Bonding Curve Progress
-                      </label>
-                      <div className="w-full bg-gray-800 rounded-full h-4 overflow-hidden relative">
-                        <div
-                          className="bg-blue-500 h-4 transition-all duration-300 ease-in-out"
-                          style={{
-                            width: `${
-                              (resultView?.result[1] / (1370 * Math.pow(10, 8))) * 100
-                            }%`,
-                          }}
-                        ></div>
-                      </div>
-                      <span className="text-sm text-gray-400 mt-1 block">
-                        {((resultView?.result[1] / (1370 * Math.pow(10, 8))) * 100).toFixed(2)}%
-                      </span>
-                    </div>
-                  ) : (
-                    <div className="flex justify-center">
-                      <button
-                        onClick={() => console.log("Botón clickeado")} // Cambia esto por tu acción deseada
-                        className="relative px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold text-base rounded-xl shadow-lg hover:shadow-xl hover:from-blue-600 hover:to-indigo-700 focus:ring-4 focus:ring-indigo-300 transition-all duration-300 ease-in-out"
-                      >
-                        <span className="absolute inset-0 w-full h-full bg-white opacity-10 rounded-xl blur-md"></span>
-                        <span className="relative">Migrate to DEX</span>
-                      </button>
-                    </div>
-                  )}
-                </div>
-                  </div>
+                
               </div>
             )}
 
@@ -508,8 +477,8 @@ const Body = () => {
               <div>
                 <div>
                   <div className="flex justify-between items-center mb-3">
-                    <label className="text-md lg:text-lg font-semibold text-gray-200">Amount:</label>
-                    {/*<p className="text-md lg:text-lg font-semibold text-gray-100">{parseFloat(MemeBalance).toFixed(5)}</p>*/}
+                    <label className="text-md lg:text-lg font-semibold text-gray-200">Balance:</label>
+                    <p className="text-md lg:text-lg font-semibold text-gray-100">{resultCoin?.result?.[0] ? (Number(resultCoin.result[0]) / Math.pow(10, 8)).toFixed(2) : "0.00"}</p>
                   </div>
 
                   <div className="flex items-center space-x-2  text-white mb-3">
@@ -571,6 +540,41 @@ const Body = () => {
               </div>
             )}
           </div>
+          <div className="space-y-4 mt-7">
+                  {resultView?.result[2] === false ? (
+                    <div>
+                      <label
+                        htmlFor="bonding-curve-progress"
+                        className="block text-sm font-medium text-white mb-1"
+                      >
+                        Bonding Curve Progress
+                      </label>
+                      <div className="w-full bg-gray-800 rounded-full h-4 overflow-hidden relative">
+                        <div
+                          className="bg-blue-500 h-4 transition-all duration-300 ease-in-out"
+                          style={{
+                            width: `${
+                              (resultView?.result[1] / (1370 * Math.pow(10, 8))) * 100
+                            }%`,
+                          }}
+                        ></div>
+                      </div>
+                      <span className="text-sm text-gray-400 mt-1 block">
+                        {((resultView?.result[1] / (1370 * Math.pow(10, 8))) * 100).toFixed(2)}%
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="flex justify-center">
+                      <button
+                        onClick={() => console.log("Botón clickeado")} // Cambia esto por tu acción deseada
+                        className="relative px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold text-base rounded-xl shadow-lg hover:shadow-xl hover:from-blue-600 hover:to-indigo-700 focus:ring-4 focus:ring-indigo-300 transition-all duration-300 ease-in-out"
+                      >
+                        <span className="absolute inset-0 w-full h-full bg-white opacity-10 rounded-xl blur-md"></span>
+                        <span className="relative">Migrate to DEX</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
 
         </div>
       </div>

@@ -5,6 +5,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 // Estructura del contexto
 interface WalletContextType {
   walletAddress: string | null;
+  supraBalance: any;
   connectWallet: () => Promise<void>;
   disconnectWallet: () => Promise<void>;
   isConnected: boolean;
@@ -35,11 +36,12 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [provider, setProvider] = useState<any>(null);
-
+  const [supraBalance, setSupraBalance] = useState<any>(null);  
   // Conectar la wallet
   const connectWallet = async () => {
     try {
       const prov = getProvider();
+      console.log("Connecting to Starkey...", prov);
       if (!prov) {
         window.open('https://starkey.app/', '_blank'); // Abrir una nueva pestaña con el URL
         return;
@@ -141,10 +143,25 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
   
     initializeProvider();
   }, [walletAddress]);
-  
 
+  // Obtener el balance de la cuenta
+  useEffect(() => {
+    const fetchBalance = async () => {
+      try {
+        const balance = await provider.balance();
+        setSupraBalance(balance.formattedBalance); // Usa el balance formateado para mostrar al usuario
+      } catch (err) {
+        console.error("Error fetching balance:", err);
+      }
+    };
+  
+    if (walletAddress && provider) {
+      fetchBalance();
+    }
+  }, [walletAddress, provider]); // Incluye provider en las dependencias
+  
   return (
-    <WalletContext.Provider value={{ walletAddress, provider, connectWallet, disconnectWallet, isConnected, changeNetworkSupra }}>
+    <WalletContext.Provider value={{ walletAddress, supraBalance, provider, connectWallet, disconnectWallet, isConnected, changeNetworkSupra }}>
       {children}
     </WalletContext.Provider>
   );
