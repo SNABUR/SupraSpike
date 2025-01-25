@@ -466,7 +466,7 @@ const Body = () => {
                 </div>}
                 <div>
                 <div className="space-y-4 mt-7">
-                  {resultView?.result[2] === true ? (
+                  {resultView?.result[2] === false ? (
                     <div>
                       <label
                         htmlFor="bonding-curve-progress"
@@ -492,9 +492,10 @@ const Body = () => {
                     <div className="flex justify-center">
                       <button
                         onClick={() => console.log("Botón clickeado")} // Cambia esto por tu acción deseada
-                        className="px-4 py-2 bg-blue-500 text-white font-medium text-sm rounded-lg shadow hover:bg-blue-600 transition duration-300"
+                        className="relative px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold text-base rounded-xl shadow-lg hover:shadow-xl hover:from-blue-600 hover:to-indigo-700 focus:ring-4 focus:ring-indigo-300 transition-all duration-300 ease-in-out"
                       >
-                        Claim Reward
+                        <span className="absolute inset-0 w-full h-full bg-white opacity-10 rounded-xl blur-md"></span>
+                        <span className="relative">Migrate to DEX</span>
                       </button>
                     </div>
                   )}
