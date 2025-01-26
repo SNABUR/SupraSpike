@@ -20,7 +20,7 @@ import withReactContent from 'sweetalert2-react-content';
 import Swal from 'sweetalert2';
 import { BCS } from "aptos";
 import Big from 'big.js';
-import { WalletProvider } from "@/app/context/walletContext";
+import Wallets from "@/app/wallets";
 
 const MySwal = withReactContent(Swal);
 
@@ -54,6 +54,7 @@ const Body = () => {
   const [name, setName] = useState("");
   const [symbol, setSymbol] = useState("");
   const [graphData, setGraphData] = useState([]);
+  const [visibleWallets, setVisibleWallets] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -217,6 +218,10 @@ const Body = () => {
     }
   }, [Tablename, ChainNet]); // Dependencias específicas para comentarios
 
+  const openWallets = () => setVisibleWallets(true);
+  const closeWallets = () => setVisibleWallets(false);
+
+
   {/*useEffect(() => {
     if (prevIdRef.current !== id) {
       const allMemeData = async () => {
@@ -313,19 +318,6 @@ const Body = () => {
       setIsEditing(false);
     }
   };
-
-  const handleBuy = (contract) => {
-    if (walletext==="Base Wallet") {
-      BuyMemeBase(contract, FormData_6.amountswap); 
-    } else{
-      BuyMeme(contract); 
-    }
-  }
-
-  const handleSell = (contract) => {
-
-      SellMeme(contract); 
-  }
 
   const handleClickpPercent = (value) => {
     if (activeTab === "buy") {
@@ -464,9 +456,17 @@ const Body = () => {
                       Buy
                     </button>
                   ) : (
-                    <div className="bg-amber-400 text-brown-900 rounded-xl">
-                      {/*!address && <LoginButton />*/}
-                    </div>
+                  <div className="bg-amber-400 text-brown-900 rounded-xl">
+                    {/* !address && <LoginButton /> */}
+                    
+                    <button
+                      onClick={openWallets}
+                      className="flex items-center justify-center px-6 py-3 bg-gradient-to-r from-red-600 to-yellow-600 text-white font-bold text-lg rounded-lg shadow-xl hover:bg-gradient-to-r hover:from-yellow-500 hover:to-red-500 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none"
+                      >
+                      Connect Wallet
+                    </button>
+                  </div>
+
                   )}
                 </div>}
                 
@@ -533,7 +533,12 @@ const Body = () => {
                     </button>
                   ) : (
                     <div className="bg-amber-400 text-brown-900 rounded-xl">
-                      {/*!address && <LoginButton />*/}
+                      <button
+                        onClick={openWallets}
+                        className="flex items-center justify-center px-6 py-3 bg-gradient-to-r from-red-600 to-yellow-600 text-white font-bold text-lg rounded-lg shadow-xl hover:bg-gradient-to-r hover:from-yellow-500 hover:to-red-500 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none"
+                        >
+                        Connect Wallet
+                      </button>
                     </div>
                   )}
                 </div>
@@ -541,41 +546,44 @@ const Body = () => {
             )}
           </div>
           <div className="space-y-4 mt-7">
-                  {resultView?.result[2] === false ? (
-                    <div>
-                      <label
-                        htmlFor="bonding-curve-progress"
-                        className="block text-sm font-medium text-white mb-1"
-                      >
-                        Bonding Curve Progress
-                      </label>
-                      <div className="w-full bg-gray-800 rounded-full h-4 overflow-hidden relative">
-                        <div
-                          className="bg-blue-500 h-4 transition-all duration-300 ease-in-out"
-                          style={{
-                            width: `${
-                              (resultView?.result[1] / (1370 * Math.pow(10, 8))) * 100
-                            }%`,
-                          }}
-                        ></div>
-                      </div>
-                      <span className="text-sm text-gray-400 mt-1 block">
-                        {((resultView?.result[1] / (1370 * Math.pow(10, 8))) * 100).toFixed(2)}%
-                      </span>
-                    </div>
-                  ) : (
-                    <div className="flex justify-center">
-                      <button
-                        onClick={() => console.log("Botón clickeado")} // Cambia esto por tu acción deseada
-                        className="relative px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold text-base rounded-xl shadow-lg hover:shadow-xl hover:from-blue-600 hover:to-indigo-700 focus:ring-4 focus:ring-indigo-300 transition-all duration-300 ease-in-out"
-                      >
-                        <span className="absolute inset-0 w-full h-full bg-white opacity-10 rounded-xl blur-md"></span>
-                        <span className="relative">Migrate to DEX</span>
-                      </button>
-                    </div>
-                  )}
+            {/* Verifica si result[2] es falso */}
+            {resultView?.result[2] === false ? (
+              <div>
+                <label
+                  htmlFor="bonding-curve-progress"
+                  className="block text-sm font-medium text-white mb-1"
+                >
+                  Bonding Curve Progress
+                </label>
+                <div className="w-full bg-gray-800 rounded-full h-4 overflow-hidden relative">
+                  <div
+                    className="bg-blue-500 h-4 transition-all duration-300 ease-in-out"
+                    style={{
+                      width: `${
+                        (resultView?.result[1] / (1370 * Math.pow(10, 8))) * 100
+                      }%`,
+                    }}
+                  ></div>
                 </div>
-
+                <span className="text-sm text-gray-400 mt-1 block">
+                  {((resultView?.result[1] / (1370 * Math.pow(10, 8))) * 100).toFixed(2)}%
+                </span>
+              </div>
+            ) : resultView?.result[2] === true ? ( // Si result[2] es verdadero
+              <div className="flex justify-center">
+                <button
+                  onClick={() => console.log("Botón clickeado")} // Cambia esto por tu acción deseada
+                  className="relative px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold text-base rounded-xl shadow-lg hover:shadow-xl hover:from-blue-600 hover:to-indigo-700 focus:ring-4 focus:ring-indigo-300 transition-all duration-300 ease-in-out"
+                >
+                  <span className="absolute inset-0 w-full h-full bg-white opacity-10 rounded-xl blur-md"></span>
+                  <span className="relative">Migrate to DEX</span>
+                </button>
+              </div>
+            ) : (
+              // Si result[2] no es ni true ni false, no mostrar nada
+              null
+            )}
+          </div>
         </div>
       </div>
 
@@ -680,6 +688,7 @@ const Body = () => {
       {/*<Donate onCloseWallets={handleOnCloseDonate} visibleWallets={showMyModalDonate} memedata={memedata} TreasuryBalance={MemeTreasury}/>*/}
       {/*<Burn onCloseWallets={handleOnCloseBurn} visibleWallets={showMyModalBurn} memecontract={memedata.contract} memeticker={memedata.ticker}/>*/}
 
+    <Wallets visibleWallets={visibleWallets} onCloseWallets={closeWallets} />
 
     </div>
   );

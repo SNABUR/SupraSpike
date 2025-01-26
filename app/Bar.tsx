@@ -7,11 +7,17 @@ import { HiMenuAlt4 } from "react-icons/hi";
 import { useWallet } from "./context/walletContext"; // Importa el hook del contexto
 import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { usePathname } from 'next/navigation'; // Importa usePathname de Next.js
+import Wallets from "./wallets"; // Ajusta la ruta al archivo Wallets.js
 
 export default function Bar() {
   const [toggleMenu, setToggleMenu] = useState(false);
   const [showDisconnect, setShowDisconnect] = useState(false);
-  const { walletAddress, connectWallet, disconnectWallet, changeNetworkSupra } = useWallet(); // Obtén los datos y funciones del contexto
+  const [visibleWallets, setVisibleWallets] = useState(false);
+
+  const openWallets = () => setVisibleWallets(true);
+  const closeWallets = () => setVisibleWallets(false);
+
+  const { walletAddress, disconnectWallet, changeNetworkSupra } = useWallet(); // Obtén los datos y funciones del contexto
   const [network, setNetwork] = useState('8'); // Estado para la red actual
   const pathname = usePathname(); // Obtén la ruta actual
 
@@ -114,27 +120,34 @@ export default function Bar() {
             </FormControl>
 
             {walletAddress ? (
-              <div
-                className="bg-brown-700 text-white font-bold text-sm sm:text-base py-2 px-4 sm:py-3 sm:px-6 rounded-lg shadow-md hover:bg-brown-600 transition duration-300 w-full md:w-auto justify-center text-center"
-                onClick={() => setShowDisconnect(!showDisconnect)}
-              >
-                {shortAccount}
-                {showDisconnect && (
-                  <button
-                    onClick={disconnectWallet}
-                    className="absolute top-50 bg-red-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-red-700 transition duration-300"
-                  >
-                    Disconnect
-                  </button>
-                )}
-              </div>
+                <div className="relative">
+                    {/* Botón de cuenta */}
+                    <button
+                        onClick={() => setShowDisconnect(!showDisconnect)}
+                        className="bg-[#1D2A3A] text-[#F2F5F5] font-bold text-sm sm:text-base py-2 px-4 sm:py-3 sm:px-6 rounded-lg shadow-md hover:bg-[#353F4A] transition duration-300"
+                    >
+                        {shortAccount}
+                    </button>
+
+                    {/* Menú de desconexión */}
+                    {showDisconnect && (
+                        <div className="absolute right-0 mt-2 w-48 bg-[#1D2A3A] rounded-lg shadow-lg border border-[#353F4A]">
+                            <button
+                                onClick={disconnectWallet}
+                                className="w-full text-left text-[#F2F5F5] py-2 px-4 hover:bg-[#DD1438] rounded-lg transition duration-300"
+                            >
+                                Disconnect
+                            </button>
+                        </div>
+                    )}
+                </div>
             ) : (
-              <button
-                onClick={connectWallet}
-                className="bg-yellow-700 text-white font-bold text-sm sm:text-base py-2 px-4 sm:py-3 sm:px-6 rounded-lg shadow-md hover:bg-yellow-600 transition duration-300 w-full md:w-auto justify-center text-center"
-              >
-                Connect
-              </button>
+                <button
+                    onClick={openWallets}
+                    className="flex items-center justify-center px-6 py-3 bg-gradient-to-r from-[#DD1438] to-[#FF6B6B] text-white font-bold text-lg rounded-lg shadow-xl hover:bg-gradient-to-r hover:from-[#FF6B6B] hover:to-[#DD1438] transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none"
+                >
+                    Connect Wallet
+                </button>
             )}
           </nav>
 
@@ -162,6 +175,8 @@ export default function Bar() {
           )}
         </div>
       </header>
+      <Wallets visibleWallets={visibleWallets} onCloseWallets={closeWallets} />
+
     </div>
   );
 }
