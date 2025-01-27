@@ -16,7 +16,7 @@ const useViewFunction = () => {
 
         setLoadingView(true);
         setErrorView(null);
-
+        console.log("before call payload in viewpump");
         try {
             const response = await fetch("https://rpc-testnet.supra.com/rpc/v1/view", {
                 method: "POST",

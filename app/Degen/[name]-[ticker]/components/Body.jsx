@@ -15,6 +15,8 @@ import useViewFunction from "@/app/hooks/view/viewPump";
 import useViewCoin from "@/app/hooks/view/viewCoin";
 import useBuyMeme from "@/app/hooks/BuyMeme";
 import useSellMeme from "@/app/hooks/SellMeme";
+import useMigratePool from "@/app/hooks/MigrateDEX";
+
 import { usePathname } from 'next/navigation';
 import withReactContent from 'sweetalert2-react-content';
 import Swal from 'sweetalert2';
@@ -40,7 +42,10 @@ const Input = ({ placeholder, name_6, type, value, handleChange_6 }) => (
 const Body = () => {
   const { walletAddress, supraBalance } = useWallet(); // Obtén el provider desde el contexto
   const { BuyMeme, isLoading, error, result } = useBuyMeme(); // Obtén la función de compra desde el contexto
+  const { resultView: resultmigrate, loadingView: resultloadmigrate, errorView: errorloadmigrate,   callViewFunction: callViewFunctionMigrate } = useViewFunction(); // Obtén la función de compra desde el contexto
   const { resultView, loadingView, errorView, callViewFunction } = useViewFunction(); // Obtén la función de compra desde el contexto
+  const { result: resultigrateDEX, isLoading: resulTmigrateDEX, errorresultmigrateDEX, MigratePool } = useMigratePool(); // Obtén la función de compra desde el contexto
+
   const { resultCoin, callViewCoin } = useViewCoin(); // Obtén la función de compra desde el contexto
   const { SellMeme, isLoading: sellisLoading, error: errorsell, result: resultsell} = useSellMeme(); // Obtén la función de venta desde el contexto
   const [activeTab, setActiveTab] = useState("buy");
@@ -143,10 +148,15 @@ const Body = () => {
       return;
     }
   
-    // Llama a la función view al cargar el componente o cuando cambian name y symbol
+    // estado de el pool al completarse la bondinug curve
+    callViewFunctionMigrate('get_pump_stage', [name, symbol]).catch((err) => {
+      console.error("Error calling view function:", err);
+    });
+    // estado de los pools tokens SUPRA que hay en el pool 
     callViewFunction('get_pool_state', [name, symbol]).catch((err) => {
       console.error("Error calling view function:", err);
     });
+
     callViewCoin('get_balance', [walletAddress, name, symbol]).catch((err) => {
       console.error("Error calling view function:", err);
     });
@@ -547,7 +557,7 @@ const Body = () => {
           </div>
           <div className="space-y-4 mt-7">
             {/* Verifica si result[2] es falso */}
-            {resultView?.result[2] === false ? (
+            {resultmigrate?.result[0] === 1 ? (
               <div>
                 <label
                   htmlFor="bonding-curve-progress"
@@ -569,10 +579,10 @@ const Body = () => {
                   {((resultView?.result[1] / (1370 * Math.pow(10, 8))) * 100).toFixed(2)}%
                 </span>
               </div>
-            ) : resultView?.result[2] === true ? ( // Si result[2] es verdadero
+            ) : resultmigrate?.result[0] !== 1 ? ( // Si result[2] es verdadero
               <div className="flex justify-center">
                 <button
-                  onClick={() => console.log("Botón clickeado")} // Cambia esto por tu acción deseada
+                  onClick={() => MigratePool(name, symbol)} // Esto asigna la función correctamente
                   className="relative px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold text-base rounded-xl shadow-lg hover:shadow-xl hover:from-blue-600 hover:to-indigo-700 focus:ring-4 focus:ring-indigo-300 transition-all duration-300 ease-in-out"
                 >
                   <span className="absolute inset-0 w-full h-full bg-white opacity-10 rounded-xl blur-md"></span>

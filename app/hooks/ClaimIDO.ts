@@ -50,7 +50,7 @@ const useClaimIDO = () => {
   
       const tx = await provider.sendTransaction(params);
       if (!tx) {
-        console.error("Transaction is empty.");
+        console.log("Transaction is empty.");
         return; // Detener ejecución si `tx` está vacío
       }
       console.log("networkData.chainId", networkData.chainId);

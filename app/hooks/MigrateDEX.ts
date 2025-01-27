@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import { useWallet } from "../context/walletContext"; // Importa el hook del contexto
 import { BCS } from 'aptos';
-import useViewFunction from './view/viewPump'; // Importa el hook del contexto
-import Big from 'big.js';
 
-const useBuyMeme = () => {
+const useMigratePool = () => {
   // Estados para manejar carga, errores y resultados
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -15,7 +13,7 @@ const useBuyMeme = () => {
   const CONTRACT_ADDRESS = "0x224845715d4011c341443424d5aa362fa59a1002396b8e742c5e27a6be4b645a";
 
   // Función para comprar memes
-  const BuyMeme = async (memeName: string, memeSymbol: string, BuyAmountSupra: string) => {
+  const MigratePool = async (memeName: string, memeSymbol: string) => {
     try {
       // Inicia el estado de carga y resetea el error
       setIsLoading(true);
@@ -24,41 +22,9 @@ const useBuyMeme = () => {
       // Define el tiempo de expiración de la transacción
       const txExpiryTime = Math.ceil(Date.now() / 1000) + 60; // 30 seconds expiry
       const optionalTransactionPayloadArgs = { txExpiryTime };
-      const BuyAmountSupraAdjusted = (Number(BuyAmountSupra) * 100000000).toString();
 
       // Convierte el símbolo del meme a mayúsculas
       const upperCaseMemeSymbol = memeSymbol.toUpperCase();
-
-      // Construye el payload para la función de vista
-      const payload = {
-        function: CONTRACT_ADDRESS + "::pump_fa::buy_supra_amount",
-        type_arguments: [], // Tipos genéricos si aplica
-        arguments: [memeName.toString(), memeSymbol.toString(), BuyAmountSupraAdjusted],
-      };
-
-      // Llama a la función de vista
-      const response = await fetch("https://rpc-testnet.supra.com/rpc/v1/view", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      // Verifica si la respuesta es válida
-      if (!response.ok) {
-        throw new Error(`Error in view function: ${response.statusText}`);
-      }
-
-      // Procesa el resultado de la función de vista
-      const CallView = await response.json();
-      const BuyAmountRaw = CallView.result[0];
-
-      // Valida que el resultado sea un número
-      if (isNaN(Number(BuyAmountRaw))) {
-        throw new Error("BuyAmount is not a valid number");
-      }
-      const BuyAmount = Number(BuyAmountRaw);
 
       // Construye el payload de la transacción
       const rawTxPayload = [
@@ -66,12 +32,11 @@ const useBuyMeme = () => {
         0,
         CONTRACT_ADDRESS,
         "pump_fa",
-        "buy",
+        "migrate_to_normal_dex",
         [],
         [
           BCS.bcsSerializeStr(memeName), // Nombre del meme
           BCS.bcsSerializeStr(upperCaseMemeSymbol), // Símbolo del meme en mayúsculas
-          BCS.bcsSerializeUint64(Number(Big(Number(BuyAmount)).toFixed(0, 0))), // Cantidad de tokens SPIKE a comprar
         ],
         optionalTransactionPayloadArgs,
       ];
@@ -107,7 +72,7 @@ const useBuyMeme = () => {
     }
   };
 
-  return { BuyMeme, isLoading, error, result };
+  return { MigratePool, isLoading, error, result };
 };
 
-export default useBuyMeme;
+export default useMigratePool;

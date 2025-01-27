@@ -275,10 +275,10 @@ module pump::pump_fa {
                 initial_virtual_token_reserves: 100_000_000 * DECIMALS,
                 initial_virtual_supra_reserves: 30 * DECIMALS,
                 token_decimals: 8,
-                dex_transfer_threshold: 1370 * DECIMALS,
-                wait_duration: 28800, // 8 hours = 28800 seconds
-                min_supra_amount: 100_000_000, // Minimum purchase amount = 100_000_000 (1 SUPRA)
-                high_fee: 1000 // High fee rate period fee = 1000 (10%)
+                dex_transfer_threshold: 137_000 * DECIMALS,
+                wait_duration: 60, // 1 min = 60 seconds
+                min_supra_amount: 10_000_000, // Minimum purchase amount = 100_000_000 (0.1 SUPRA)
+                high_fee: 100 // High fee rate period fee = 1000 (1%)
             }
         );
 
@@ -563,7 +563,7 @@ module pump::pump_fa {
         };
 
         // Stage 2: After threshold but before wait duration
-        /*if (exists<LastBuyer>(resource_addr)) {
+        if (exists<LastBuyer>(resource_addr)) {
             let last_buyer = borrow_global<LastBuyer>(resource_addr);
             let current_time = timestamp::now_seconds();
 
@@ -573,12 +573,11 @@ module pump::pump_fa {
 
             // Stage 3: After wait duration
             return 3
-        };*/
+        };
 
         // Stage 2: After threshold but no last buyer yet
-        //1
-        //after bonus period reached
-        2
+        1
+
     }
 
     /*
@@ -755,9 +754,9 @@ module pump::pump_fa {
             );
 
             // Check the minimum purchase amount
-            //assert!((liquidity_cost as u64) >= config.min_supra_amount, ERROR_AMOUNT_TOO_LOW);
+            assert!((liquidity_cost as u64) >= config.min_supra_amount, ERROR_AMOUNT_TOO_LOW);
 
-            // Use high fee (10%)
+            // Use high fee (1%)
             let platform_fee = math64::mul_div(
                 (liquidity_cost as u64),
                 config.high_fee, 
