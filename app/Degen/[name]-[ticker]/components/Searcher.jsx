@@ -23,20 +23,31 @@ const Searcher = ({ setMemeData, setTableName, setChainNet }) => {
   }, []);
 
   const handleSearch = async () => {
+    if (!search) return; // Evita hacer una petición vacía
+  
+    const controller = new AbortController(); // Para cancelar peticiones previas
+    const signal = controller.signal;
+  
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/db_memes?search=${encodeURIComponent(search)}`);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/db_memes?search=${encodeURIComponent(search)}`,
+        { signal }
+      );
       console.log(response, "response data handle search");
-
+  
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-
-      const data = await response.json(); // Solo parsea JSON si la respuesta fue exitosa
+  
+      const data = await response.json();
       setSearchResults(data);
     } catch (error) {
-      console.error("Error fetching memes:", error);
+      if (error.name !== "AbortError") { // Ignorar errores de cancelación
+        console.error("Error fetching memes:", error);
+      }
     }
   };
+  
 
   const handleSelectResult = (result) => {
     setMemeData(result);

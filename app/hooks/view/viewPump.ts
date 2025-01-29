@@ -6,7 +6,7 @@ const useViewFunction = () => {
     const [resultView, setResultView] = useState(null);
 
     const callViewFunction = useCallback(async (functionName: string, args: any) => {
-        const contractFunctionName = `0x224845715d4011c341443424d5aa362fa59a1002396b8e742c5e27a6be4b645a::pump_fa::${functionName}`;
+        const contractFunctionName = `0x8ca3b113f2078264e479af7f548e113731d626878cfcfe9f2f2bd12b53741d32::pump_fa::${functionName}`;
 
         const payload = {
             function: contractFunctionName,

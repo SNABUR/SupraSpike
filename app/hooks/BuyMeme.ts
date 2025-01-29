@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useWallet } from "../context/walletContext"; // Importa el hook del contexto
 import { BCS } from 'aptos';
-import useViewFunction from './view/viewPump'; // Importa el hook del contexto
 import Big from 'big.js';
 
 const useBuyMeme = () => {
@@ -12,7 +11,7 @@ const useBuyMeme = () => {
   const { provider, walletAddress } = useWallet();
 
   // Dirección del contrato
-  const CONTRACT_ADDRESS = "0x224845715d4011c341443424d5aa362fa59a1002396b8e742c5e27a6be4b645a";
+  const CONTRACT_ADDRESS = "0x8ca3b113f2078264e479af7f548e113731d626878cfcfe9f2f2bd12b53741d32";
 
   // Función para comprar memes
   const BuyMeme = async (memeName: string, memeSymbol: string, BuyAmountSupra: string) => {
@@ -93,7 +92,7 @@ const useBuyMeme = () => {
       const tx = await provider.sendTransaction(params);
 
       if (!tx) {
-        console.error("Transaction is empty.");
+        console.log("Transaction is empty.");
         return; // Detener ejecución si `tx` está vacío
       }
 

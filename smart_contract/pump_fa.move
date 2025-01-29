@@ -275,7 +275,7 @@ module pump::pump_fa {
                 initial_virtual_token_reserves: 100_000_000 * DECIMALS,
                 initial_virtual_supra_reserves: 30 * DECIMALS,
                 token_decimals: 8,
-                dex_transfer_threshold: 137_000 * DECIMALS,
+                dex_transfer_threshold: 274_000 * DECIMALS,
                 wait_duration: 60, // 1 min = 60 seconds
                 min_supra_amount: 10_000_000, // Minimum purchase amount = 100_000_000 (0.1 SUPRA)
                 high_fee: 100 // High fee rate period fee = 1000 (1%)
@@ -1131,18 +1131,6 @@ module pump::pump_fa {
             ERROR_WAIT_TIME_NOT_REACHED
         );
 
-        let real_supra_reserves =
-        simple_map::borrow<address, Coin<SupraCoin>>(
-            &mut pool_record.real_supra_reserves, &token_addr
-        );
-
-        let current_supra_balance = coin::value<SupraCoin>(real_supra_reserves);
-
-        assert!(
-            current_supra_balance >= config.dex_transfer_threshold,
-            ERROR_INSUFFICIENT_LIQUIDITY
-        );
-
         migrate_to_normal_dex(name, symbol);
     }
 
@@ -1192,8 +1180,8 @@ module pump::pump_fa {
         pool.is_completed = true;
         pool.is_normal_dex = true;
 
-        // Calculate reward for caller (1% of the token amount)
-        let reward_amount = pool.real_token_reserves / 1000;
+        // Calculate reward for caller (0.1% of the token amount)
+        let reward_amount = pool.real_token_reserves / 10000;
 
         let last_buyer = borrow_global<LastBuyer>(resource_addr);
         let winner_address = last_buyer.buyer;

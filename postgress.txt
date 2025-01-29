@@ -26,11 +26,11 @@ DROP TABLE "0xb3cd56fef8aa18db33930f6eaf94aee4c2ea3b3b";
 DROP TABLE "db_memes";
 DROP TABLE "db_pools_memes";
 DROP TABLE "orders";
-
+DROP TABLE "_LootboxWatchlist";
 
 
 //////// abrir powershell/////////////
-psql.exe -h dpg-cqe8eaogph6c73ajmbtg-a.oregon-postgres.render.com -U db_artists_user -d db_artists
+psql.exe -h autorack.proxy.rlwy.net -U postgres -p 13979 -d railway
 
 
 PMku9d165b9aSlCzi3CK7yFhr6xuHwGJ

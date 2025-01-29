@@ -45,7 +45,6 @@ const Body = () => {
   const { resultView: resultmigrate, loadingView: resultloadmigrate, errorView: errorloadmigrate,   callViewFunction: callViewFunctionMigrate } = useViewFunction(); // Obtén la función de compra desde el contexto
   const { resultView, loadingView, errorView, callViewFunction } = useViewFunction(); // Obtén la función de compra desde el contexto
   const { result: resultigrateDEX, isLoading: resulTmigrateDEX, errorresultmigrateDEX, MigratePool } = useMigratePool(); // Obtén la función de compra desde el contexto
-
   const { resultCoin, callViewCoin } = useViewCoin(); // Obtén la función de compra desde el contexto
   const { SellMeme, isLoading: sellisLoading, error: errorsell, result: resultsell} = useSellMeme(); // Obtén la función de venta desde el contexto
   const [activeTab, setActiveTab] = useState("buy");
@@ -58,8 +57,15 @@ const Body = () => {
   const pathname = usePathname();
   const [name, setName] = useState("");
   const [symbol, setSymbol] = useState("");
-  const [graphData, setGraphData] = useState([]);
   const [visibleWallets, setVisibleWallets] = useState(false);
+  const [tokenAddress, setTokenAddress] = useState(null);
+  const [graphData, setGraphData] = useState([]);
+
+    useEffect(() => {
+      if (memedata?.tokenAddress) {
+        setTokenAddress(memedata.tokenAddress);
+      }
+    }, [memedata]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -80,28 +86,37 @@ const Body = () => {
       fetchData();
     }
   }, [name, symbol]);
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/grapher?token_contract=${encodeURIComponent(memedata.tokenAddress)}`);
+        if (!tokenAddress) return;
+        // Llamar a la API para obtener los datos históricos
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/grapher`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            tokenAddress,
+            limit: 100, // Puedes ajustar el límite aquí según lo necesites
+          }),
+        });
+
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
+
         const data = await response.json();
-        console.log(data, "memedata from grapher", memedata.tokenAddress);
-        setGraphData(data);
+        console.log(data,"data before graphdata")
+        setGraphData(data); // Actualizar el estado con los datos recibidos
       } catch (error) {
-        console.error('Error fetching meme data:', error);
+        console.error('Error fetching OHLC data:', error);
       }
     };
-  
-    if (memedata && memedata.tokenAddress) {
-      fetchData();
-    }
-  }, [memedata]);
-  
 
+    fetchData();
+  }, [tokenAddress]);
 
   useEffect(() => {
     if (result) {
@@ -176,14 +191,10 @@ const Body = () => {
     }
   }, [pathname]);
 
-  //const { BuyMeme, SellMeme, FormData_6, handleChange_6,  switchPool, setSwitchPool, change_input_swap } = useContext(TransactionContextETH); 
-  //const { currentAccount, treasuryContract, BuyMemeBase, walletext, currentbalance} = useContext(TransactionContext); 
   const [showMyModalDonate, setShowMyModalDonate] = useState(false);
-  const [showMyModalBurn, setShowMyModalBurn] = useState(false);
   const [ProtectTime, setProtectTime] = useState(null);
   const [Tradestarted, setTradestarted] = useState(null);
         // Extraer el 'id' de la URL que contiene tanto el contract como el network
-  //const { id } = useParams();
   const prevIdRef = useRef();
   const [dataComments, setDataComments] = useState([]);
   const [Tablename, setTableName] = useState("");
@@ -193,10 +204,6 @@ const Body = () => {
   //const { balance: MemeTreasury} = useTokenBalance(id.split('-')[1], treasuryContract, 18);
   const [showComments, setShowComments] = useState(false);
   const [timeframeAddress, setTimeframeAddress] = useState(null);
-
-  //const { address } = useAccount();
-
-
   const [FormData_6, setFormData_6] = useState({ amountswap: ''});
   const handleChange_6 = (e2, name_6) => {
     setFormData_6((prevState) => ({ ...prevState, [name_6]: e2.target.value }));
@@ -380,7 +387,10 @@ const Body = () => {
             </div>
           </div>
           <div className="w-full h-96 bg-gray-700 rounded-lg flex items-center justify-center p-2 md:p-4">
-            <TradingViewChart graphData={graphData} />
+            <TradingViewChart 
+              tokenAddress={tokenAddress} 
+              graphData={graphData}
+            />
           </div>
 
         </div>
@@ -557,7 +567,7 @@ const Body = () => {
           </div>
           <div className="space-y-4 mt-7">
             {/* Verifica si result[2] es falso */}
-            {resultmigrate?.result[0] === 1 ? (
+            {Array.isArray(resultmigrate?.result) && resultmigrate?.result[0] === 1 ? (
               <div>
                 <label
                   htmlFor="bonding-curve-progress"
@@ -579,7 +589,7 @@ const Body = () => {
                   {((resultView?.result[1] / (1370 * Math.pow(10, 8))) * 100).toFixed(2)}%
                 </span>
               </div>
-            ) : resultmigrate?.result[0] !== 1 ? ( // Si result[2] es verdadero
+            ) : Array.isArray(resultmigrate?.result) && resultmigrate?.result[0] !== 1 ? ( // Si result[2] es verdadero
               <div className="flex justify-center">
                 <button
                   onClick={() => MigratePool(name, symbol)} // Esto asigna la función correctamente
