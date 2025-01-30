@@ -28,10 +28,8 @@ const Wallets: React.FC<WalletsProps> = ({ visibleWallets, onCloseWallets }) => 
             className="fixed z-40 inset-0 bg-[#131722] bg-opacity-90 backdrop-blur-md flex justify-center items-center"
         >
             <div className="w-96 bg-gradient-to-br from-[#1D2A3A] to-[#131722] rounded-3xl shadow-2xl p-8 relative overflow-hidden border border-[#353F4A]">
-                {/* Fondo decorativo */}
                 <div className="absolute inset-0 bg-noise opacity-10"></div>
 
-                {/* Encabezado */}
                 <div className="flex justify-between items-center mb-6 relative z-10">
                     <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#DD1438] to-[#FF6B6B]">
                         Connect Wallet
@@ -46,12 +44,10 @@ const Wallets: React.FC<WalletsProps> = ({ visibleWallets, onCloseWallets }) => 
                     </button>
                 </div>
 
-                {/* Descripción */}
                 <p className="text-sm text-[#9EABB5] mb-8 relative z-10">
                     Select your wallet to connect to the Supra blockchain and unlock the power of decentralized data.
                 </p>
 
-                {/* Botones de wallets */}
                 <div className="space-y-4 relative z-10">
                     <WalletButton
                         onClick={() => connectWallet()}
@@ -60,13 +56,11 @@ const Wallets: React.FC<WalletsProps> = ({ visibleWallets, onCloseWallets }) => 
                     />
                 </div>
 
-                {/* Efecto de brillo */}
                 <div className="absolute inset-0 pointer-events-none">
                     <div className="absolute -top-20 -left-20 w-64 h-64 bg-[#DD1438] rounded-full opacity-20 blur-3xl animate-pulse-slow"></div>
                     <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-[#1D2A3A] rounded-full opacity-20 blur-3xl animate-pulse-slow"></div>
                 </div>
 
-                {/* Supra Branding */}
                 <div className="mt-8 text-center relative z-10">
                     <p className="text-xs text-[#6A737C]">
                         Powered by <span className="text-[#DD1438] font-semibold">Supra</span> | Move VM Blockchain

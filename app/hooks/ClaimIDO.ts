@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { useWallet } from "../context/walletContext"; // Importa el hook del contexto
+import { useWallet } from "../context/walletContext"; 
 
 const useClaimIDO = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState(null);
-  const { provider, walletAddress } = useWallet(); // Obtén el provider desde el contexto
+  const { provider, walletAddress } = useWallet(); 
   const CURRENCY = "0x1::supra_coin::SupraCoin"  
   const CONTRACT_ADDRESS_IDO = "0x6e3e09ab7fd0145d7befc0c68d6944ddc1a90fd45b8a6d28c76d8c48bed676b0";
   //const CONTRACT_ADDRESS_MEME = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::meme_spike::SPIKE"; //TESTNET
@@ -17,7 +17,7 @@ const useClaimIDO = () => {
         setIsLoading(true);
         setError(null);
 
-      const txExpiryTime = Math.ceil(Date.now() / 1000) + 30; // 30 seconds expiry
+      const txExpiryTime = Math.ceil(Date.now() / 1000) + 30; 
       const optionalTransactionPayloadArgs = { txExpiryTime };
       const rawTxPayload = [
         walletAddress,
@@ -28,7 +28,7 @@ const useClaimIDO = () => {
         [
           CURRENCY,
           CONTRACT_ADDRESS_MEME
-        ], // Arguments for the mint function
+        ], 
         [],
         optionalTransactionPayloadArgs
       ];
@@ -51,7 +51,7 @@ const useClaimIDO = () => {
       const tx = await provider.sendTransaction(params);
       if (!tx) {
         console.log("Transaction is empty.");
-        return; // Detener ejecución si `tx` está vacío
+        return; 
       }
       console.log("networkData.chainId", networkData.chainId);
 

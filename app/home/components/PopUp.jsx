@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect, useContext, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import  PopUp_2  from "./PopUp_2"
 import  FileUpload  from './FileUpload'
 import useCreateMemeTransaction from "../..//hooks/useCreateMeme";
@@ -14,7 +14,6 @@ const Input2 = ({ placeholder, name_2, type, value, handleChange_2, disabled, cl
         onChange={(e2) => handleChange_2(e2, name_2)}
         className={className}
         disabled={disabled}
-        // Aplicar padding solo al input de tipo 'number'
     />
 );
 
@@ -25,15 +24,14 @@ const Textarea = ({ placeholder, name_2, type , value, handleChange_2 }) => (
     value={value}
     onChange={(e2) => handleChange_2(e2, name_2)}
     className="placeholder:italic resize-none p-2 border text-sm rounded focus:outline-none focus:ring focus:border-blue-300 rounded-lg"
-    style={{ maxHeight: '200px', minHeight: '150px', minWidth:'200px', maxWidth:'300px'  }}    // Estilos de Tailwind CSS para el textarea
-    maxLength={370} // Limita la entrada a 370 caracteres
+    style={{ maxHeight: '200px', minHeight: '150px', minWidth:'200px', maxWidth:'300px'  }} 
+    maxLength={370} 
 
   />
 );
 
 const Tooltip = ({ message, space }) => (
   <div className="relative flex justify-center items-center group z-2">
-    {/*<img src={info} alt="info icon" className="w-auto h-3  cursor-pointer" />*/}
     <div
       className={`absolute flex flex-col items-center hidden group-hover:flex`}
       style={{ bottom: `${space || 3}rem` }} 
@@ -71,18 +69,14 @@ function PopUp({visible, onClose}) {
       }
     }, [result]);
 
-        // Estado para el checkbox
         const [isCheckedTimeZone, setIsCheckedTimeZonet] = useState(false);
 
-        // Maneja el cambio de estado del checkbox
         const handleShowTradingTime = () => {
           setIsCheckedTimeZonet(!isCheckedTimeZone);
         };
 
-        // Estado para el checkbox
         const [showFeeInput, setShowFeeInput] = useState(false);
 
-        // Maneja el cambio de estado del checkbox
         const handleShowFee = () => {
             setShowFeeInput(!showFeeInput);
         };
@@ -128,7 +122,6 @@ function PopUp({visible, onClose}) {
     };
 
 
-    // Aquí actualizas el estado del archivo en PopUp cuando se selecciona un archivo en FileUpload
     const handleFileSelect = (file) => {
       setFile(file); 
     };
@@ -145,11 +138,10 @@ function PopUp({visible, onClose}) {
     
     const handleInputChange = (e2, name_2) => {
       const value = e2.target.value;
-      handleChange_2(e2, name_2); // Llamada a la función original
+      handleChange_2(e2, name_2); 
   
-      // Limpiar el error al escribir en el input de Supply
       if (name_2 === 'Supply') {
-          setSupplyError(''); // Limpia el mensaje de error al escribir
+          setSupplyError(''); 
       }
   };
   
@@ -196,7 +188,7 @@ function PopUp({visible, onClose}) {
                         </button>
                       </div>
                       {formularioVisible2 && (
-                      <div className="flex flex-col gap-3 flex-1"> {/* Utiliza flex-1 para que esta columna ocupe el espacio restante */}
+                      <div className="flex flex-col gap-3 flex-1"> 
                         <div className="flex flex-col lg:flex-row items-center justify-center gap-7">
                           <div className="flex flex-col items-center">
                             <div className="flex flex-fil items-center">
@@ -209,11 +201,9 @@ function PopUp({visible, onClose}) {
                                   type="text"
                                   handleChange_2={handleTextareaChange}
                                   className="resize-none border rounded placeholder:sitalic p-2"
-                                  // Ajustamos el estilo para que el textarea tenga el mismo aspecto que el input
                                   style={{ minHeight: 'auto' }}
-                                  // Establecemos una altura mínima para el textarea
                               />
-                              <p className="flex text-gray-500 text-xs ml-auto mt-1">{description.length}/370</p> {/* Muestra el contador */}
+                              <p className="flex text-gray-500 text-xs ml-auto mt-1">{description.length}/370</p> 
                             </div>
                           </div>
 
@@ -289,19 +279,17 @@ function PopUp({visible, onClose}) {
                         <div className="flex flex-col p-4 text-xl font-goldeng mt-3">
                           <button
                             className="px-10 py-4 bg-black text-xl text-white rounded-2xl shadow-md hover:bg-[#9e701f] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-                            onClick={() => handleSubmit_2(file)} // Pasar 'file' como parámetro
+                            onClick={() => handleSubmit_2(file)} 
                           >
                             Create Meme
                           </button>
                           <div>
                             {isLoading && <p>Esperando confirmación de la transacción...</p>}
-                            {/* Resto del contenido del PopUp */}
                           </div>
                         </div>
                         
                       ) : (
                         <div className="bg-amber-400 text-brown-900 rounded-3xl text-xl mt-3 px-7">
-                          {/*!address && <LoginButton />*/}
                         </div>
                       )}
                     </div>
@@ -317,7 +305,6 @@ function PopUp({visible, onClose}) {
             </div>
             
           <PopUp_2 onClose_2 = {handleOnClose_2} visible_2 = {showMyModal_2} memedata={FormData_2} image={file}/>
-          {/*<PopUp_3 onClose_3 = {handleOnClose_3} visible_3 = {showMyModal_3}/>*/}
         </div>
 
     )

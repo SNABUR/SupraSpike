@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useWallet } from "../context/walletContext"; // Importa el hook del contexto
+import { useWallet } from "../context/walletContext"; 
 import { BCS } from 'aptos';
 import Big from 'big.js';
 
@@ -7,7 +7,7 @@ const useSellMeme = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState(null);
-  const { provider, walletAddress } = useWallet(); // Obtén el provider desde el contexto
+  const { provider, walletAddress } = useWallet(); 
   
   const CONTRACT_ADDRESS = "0x8ca3b113f2078264e479af7f548e113731d626878cfcfe9f2f2bd12b53741d32";
   //const CONTRACT_ADDRESS_MEME = "0x0fec116479f1fd3cb9732cc768e6061b0e45b178a610b9bc23c2143a6493e794::meme_spike::SPIKE"; //TESTNET
@@ -19,7 +19,7 @@ const useSellMeme = () => {
         setError(null);
 
         const memeSymbolUpper = memeSymbol.toUpperCase();
-      const txExpiryTime = Math.ceil(Date.now() / 1000) + 30; // 30 seconds expiry
+      const txExpiryTime = Math.ceil(Date.now() / 1000) + 30; 
       const optionalTransactionPayloadArgs = { txExpiryTime };
       const rawTxPayload = [
         walletAddress,
@@ -27,11 +27,11 @@ const useSellMeme = () => {
         CONTRACT_ADDRESS,
         "pump_fa",
         "sell",
-        [], // Arguments for the mint function
+        [], 
         [
-          BCS.bcsSerializeStr(memeName), // meme description
-          BCS.bcsSerializeStr(memeSymbolUpper), // meme SYMBOL
-          BCS.bcsSerializeUint64(Number(Big(Number(SellAmount) * 100000000).toFixed(0, 0))), //amount tokens Spike to buy
+          BCS.bcsSerializeStr(memeName), 
+          BCS.bcsSerializeStr(memeSymbolUpper),
+          BCS.bcsSerializeUint64(Number(Big(Number(SellAmount) * 100000000).toFixed(0, 0))), 
         ],
         optionalTransactionPayloadArgs
       ];
@@ -54,7 +54,7 @@ const useSellMeme = () => {
       const tx = await provider.sendTransaction(params);
       if (!tx) {
         console.error("Transaction is empty.");
-        return; // Detener ejecución si `tx` está vacío
+        return; 
       }
       console.log("networkData.chainId", networkData.chainId);
 

@@ -18,7 +18,7 @@ export async function GET(req) {
       .ilike('name', `%${name}%`)
       .ilike('symbol', `%${symbol}%`)
       .limit(1)
-      .maybeSingle(); // Evita que se rompa si no hay datos
+      .maybeSingle();
 
     if (error) throw error;
 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useWallet } from "../context/walletContext"; // Importa el hook del contexto
+import { useWallet } from "../context/walletContext"; 
 import {BCS} from "aptos";
 import Big from 'big.js';
 
@@ -7,7 +7,7 @@ const useJoinIDO = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState(null);
-  const { walletAddress, connectWallet, provider } = useWallet(); // Obtén el provider desde el contexto
+  const { walletAddress, connectWallet, provider } = useWallet(); 
   const CURRENCY = "0x1::supra_coin::SupraCoin"
   const price_meme = 0.0000000026;
   
@@ -36,9 +36,9 @@ const useJoinIDO = () => {
         [
           CURRENCY,
           CONTRACT_ADDRESS_MEME
-        ], // Arguments for the mint function
+        ], 
         [
-            BCS.bcsSerializeUint64(Number(Big(joinDeposit*1000/price_meme).toFixed(0,0))), //amount tokens Spike to buyt
+            BCS.bcsSerializeUint64(Number(Big(joinDeposit*1000/price_meme).toFixed(0,0))), 
         ],
         optionalTransactionPayloadArgs,
       ];
@@ -61,7 +61,7 @@ const useJoinIDO = () => {
       const tx = await provider.sendTransaction(params);
       if (!tx) {
         console.error("Transaction is empty.");
-        return; // Detener ejecución si `tx` está vacío
+        return; 
       }
       console.log("networkData.chainId", networkData.chainId);
 

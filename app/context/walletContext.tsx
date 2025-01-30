@@ -2,7 +2,6 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
-// Estructura del contexto
 interface WalletContextType {
   walletAddress: string | null;
   supraBalance: any;
@@ -13,10 +12,8 @@ interface WalletContextType {
   provider: any;
 }
 
-// Crear el contexto
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
 
-// Función para detectar el proveedor de Starkey
 const getProvider = () => {
   if (typeof window !== "undefined" && (window as any).starkey?.supra) {
     const provider = (window as any).starkey.supra;
@@ -37,13 +34,12 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
   const [isConnected, setIsConnected] = useState(false);
   const [provider, setProvider] = useState<any>(null);
   const [supraBalance, setSupraBalance] = useState<any>(null);  
-  // Conectar la wallet
   const connectWallet = async () => {
     try {
       const prov = getProvider();
       console.log("Connecting to Starkey...", prov);
       if (!prov) {
-        window.open('https://starkey.app/', '_blank'); // Abrir una nueva pestaña con el URL
+        window.open('https://starkey.app/', '_blank');
         return;
       }
       const accounts = await prov.connect();
@@ -58,7 +54,6 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // Desconectar la wallet
   const disconnectWallet = async () => {
     try {
       setWalletAddress(null);
@@ -96,7 +91,6 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
   };
   
 
-  // Escuchar cambios en la cuenta
   useEffect(() => {
     const prov = getProvider();
   
@@ -107,7 +101,6 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
   
     const initializeProvider = async () => {
       try {
-        // Validar el proveedor antes de llamar al método
         if (typeof prov.changeNetwork !== "function") {
           throw new Error("changeNetwork is not supported by the provider.");
         }
@@ -144,12 +137,11 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
     initializeProvider();
   }, [walletAddress]);
 
-  // Obtener el balance de la cuenta
   useEffect(() => {
     const fetchBalance = async () => {
       try {
         const balance = await provider.balance();
-        setSupraBalance(balance.formattedBalance); // Usa el balance formateado para mostrar al usuario
+        setSupraBalance(balance.formattedBalance); 
       } catch (err) {
         console.error("Error fetching balance:", err);
       }
@@ -158,7 +150,7 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
     if (walletAddress && provider) {
       fetchBalance();
     }
-  }, [walletAddress, provider]); // Incluye provider en las dependencias
+  }, [walletAddress, provider]);
   
   return (
     <WalletContext.Provider value={{ walletAddress, supraBalance, provider, connectWallet, disconnectWallet, isConnected, changeNetworkSupra }}>

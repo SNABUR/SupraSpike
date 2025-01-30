@@ -10,7 +10,7 @@ const useViewFunction = () => {
 
         const payload = {
             function: contractFunctionName,
-            type_arguments: [], // Tipos genéricos si aplica
+            type_arguments: [], 
             arguments: args,
         };
 

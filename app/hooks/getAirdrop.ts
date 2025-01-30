@@ -20,7 +20,7 @@ const useGetAirdropTransaction = () => {
     setIsLoading(true);
     setError(null);
     
-      const txExpiryTime = Math.ceil(Date.now() / 1000) + 30; // 30 seconds expiry
+      const txExpiryTime = Math.ceil(Date.now() / 1000) + 30; 
       const optionalTransactionPayloadArgs = { txExpiryTime };
       const rawTxPayload = [
         walletAddress,
@@ -28,7 +28,7 @@ const useGetAirdropTransaction = () => {
         CONTRACT_ADDRESS,
         "faucet",
         "mint",
-        [CONTRACT_ADDRESS_MEME], // Arguments for the mint function
+        [CONTRACT_ADDRESS_MEME], 
         [],
         optionalTransactionPayloadArgs,
       ];
@@ -51,7 +51,7 @@ const useGetAirdropTransaction = () => {
       const tx = await provider.sendTransaction(params);
       if (!tx) {
         console.error("Transaction is empty.");
-        return; // Detener ejecución si `tx` está vacío
+        return; 
       }
       console.log("networkData.chainId", networkData.chainId);
 

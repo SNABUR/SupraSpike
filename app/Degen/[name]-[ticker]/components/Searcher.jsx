@@ -1,13 +1,12 @@
 "use client";
-// Searcher.jsx
 import React, { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation"; // Importa useRouter para la navegación
+import { useRouter } from "next/navigation"; 
 
 const Searcher = ({ setMemeData, setTableName, setChainNet }) => {
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  const searchResultsRef = useRef(null); // Ref para el contenedor de resultados de búsqueda
-  const router = useRouter(); // Hook para navegar entre rutas
+  const searchResultsRef = useRef(null); 
+  const router = useRouter(); 
 
   const handleClickOutside = (event) => {
     if (searchResultsRef.current && !searchResultsRef.current.contains(event.target)) {
@@ -23,9 +22,9 @@ const Searcher = ({ setMemeData, setTableName, setChainNet }) => {
   }, []);
 
   const handleSearch = async () => {
-    if (!search) return; // Evita hacer una petición vacía
+    if (!search) return; 
   
-    const controller = new AbortController(); // Para cancelar peticiones previas
+    const controller = new AbortController(); 
     const signal = controller.signal;
   
     try {
@@ -42,7 +41,7 @@ const Searcher = ({ setMemeData, setTableName, setChainNet }) => {
       const data = await response.json();
       setSearchResults(data);
     } catch (error) {
-      if (error.name !== "AbortError") { // Ignorar errores de cancelación
+      if (error.name !== "AbortError") { 
         console.error("Error fetching memes:", error);
       }
     }

@@ -10,8 +10,7 @@ const db = new Pool({
 
 export async function POST(req) {
   try {
-    // Lee el cuerpo de la solicitud
-    const body = await req.json();  // Deserializa el cuerpo JSON
+    const body = await req.json(); 
     
     const { 
       memeName, 
@@ -27,12 +26,11 @@ export async function POST(req) {
       network, 
       uri, 
       tx 
-    } = body;  // Desestructura los valores enviados desde el frontend
+    } = body; 
 
-    // Verifica si CID está vacío y asigna un valor predeterminado si es necesario
     const finalCID = CID ? `https://ipfs.io/ipfs/${CID}` : 'https://ipfs.io/ipfs/bafybeigkhp6t72o5mwch7fg36cj5j3cdmrhnzjd4h46qsweykbxskis2qa';
 
-    const uniqueId = memeName + memeSymbol + "_" + Date.now(); // Contrato + timestamp actual
+    const uniqueId = memeName + memeSymbol + "_" + Date.now();
 
     await db.query(
       'INSERT INTO db_memes(id, name, ticker, contract, image, creator, creation, webpage, twitter, telegram, description, network, uri, txhash) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)',

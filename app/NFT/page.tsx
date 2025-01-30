@@ -7,9 +7,8 @@ import useGetNFT from "../hooks/getNFT";
 export default function Memefactory() {
   const {mintNFT, isLoading, error, result } = useGetNFT();
   const [isdisable, setIsdisable] = useState(false);
-  const [showPopup, setShowPopup] = useState(false); // State for the pop-up
+  const [showPopup, setShowPopup] = useState(false); 
 
-  // ** Mejorando la inicialización del proveedor **
   useEffect(() => {
     if (result) {
         setShowPopup(true);
@@ -45,7 +44,6 @@ export default function Memefactory() {
                                 <p className="text-lg mb-4 text-gray-700">💎 Supply: 1370</p>
                             </div>
 
-                            {/* Barra de progreso */}
                             <div className="w-full bg-gray-200 rounded-full h-4 mb-4">
                                 <div
                                     className="bg-gradient-to-r from-pink-600 to-pink-400 h-4 rounded-full transition-all duration-500"
@@ -56,7 +54,6 @@ export default function Memefactory() {
                         </div>
                     </div>
 
-                    {/* Right Box */}
                     <div className="p-6 md:p-8 bg-gradient-to-r from-pink-700 via-pink-800 to-pink-900 text-white rounded-xl shadow-lg flex flex-col justify-between">
                         <div>
                             <h2 className="text-3xl font-bold mb-6 text-center">Spike NFT Collection 🎉</h2>
@@ -88,11 +85,11 @@ export default function Memefactory() {
         {showPopup && (
           <div 
             className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50" 
-            onClick={() => setShowPopup(false)} // Close the popup when clicking outside
+            onClick={() => setShowPopup(false)} 
           >
             <div 
               className="bg-gradient-to-r from-pink-400 to-teal-400 rounded-lg p-6 sm:p-8 max-w-sm sm:max-w-md lg:max-w-lg w-full shadow-xl relative"
-              onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the pop-up
+              onClick={(e) => e.stopPropagation()} 
             >
               <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center mb-4 sm:mb-6 text-white">
                 Transaction Successful!

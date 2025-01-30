@@ -6,10 +6,10 @@ import useGetAirdropTransaction from "../../hooks/getAirdrop";
 import  { useWallet }  from "@/app/context/walletContext";
 
 const Airdrop = () => {
-  const [step, setStep] = useState(0); // Controla el progreso de los pasos
-  const [showPopup, setShowPopup] = useState(false); // Controla la visibilidad del popup
+  const [step, setStep] = useState(0); 
+  const [showPopup, setShowPopup] = useState(false); 
   const { getTokens, isLoading, error, result } = useGetAirdropTransaction();
-  const { changeNetworkSupra } = useWallet(); // Obtén el provider desde el contexto
+  const { changeNetworkSupra } = useWallet(); 
 
   useEffect(() => {
     if (result) {
@@ -21,19 +21,19 @@ const Airdrop = () => {
     {
       text: "Follow us on Twitter",
       link: "https://x.com/supra_spikes",
-      icon: "./twitter.svg", // Ruta del ícono
+      icon: "./twitter.svg", 
 
     },
     {
       text: "Like & Retweet",
       link: "https://x.com/supra_spike/status/1870090839483122010",
-      icon: "./retweet.svg", // Ruta del ícono
+      icon: "./retweet.svg",
 
     },
     {
       text: "Claim Airdrop",
-      action: getTokens, // Llama a la función getTokens
-      icon: null, // Sin ícono para este botón
+      action: getTokens, 
+      icon: null, 
 
     },
   ];

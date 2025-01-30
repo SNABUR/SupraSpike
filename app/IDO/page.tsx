@@ -3,8 +3,6 @@
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import {BCS} from "aptos";
-import Big from "big.js";
 import useJoinIDO from "../hooks/JoinIDO";
 import useClaimIDO from "../hooks/ClaimIDO";
 
@@ -29,14 +27,12 @@ export default function LaunchPad() {
     );
   };
   
-  // ** Mejorando la inicialización del proveedor **
   useEffect(() => {
     if (txJoin) {
         setShowPopup(true);
     }
   }, [txJoin]);
 
-  // ** Mejorando la inicialización del proveedor **
   useEffect(() => {
     if (txClaim) {
       setShowPopup_2(true);

@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState, useContext, useEffect } from 'react';
-
+import React, { useState, useEffect } from 'react';
 import { usePathname  } from 'next/navigation';
 import Image from 'next/image';
 
@@ -14,11 +13,9 @@ const Description = ({ memedata, MemeFee, Tradestarted, ProtectTime, setShowMyMo
   const pathname = usePathname();
 
   useEffect(() => {
-    // Obtener la parte final del URL
     const lastSegment = pathname.split('/').filter(Boolean).pop();
 
     if (lastSegment) {
-      // Dividir por el guion
       const [name, ticker] = lastSegment.split('-');
       setnameMeme(name);
       setTickerMeme(ticker);
@@ -60,9 +57,6 @@ const Description = ({ memedata, MemeFee, Tradestarted, ProtectTime, setShowMyMo
     setTimeout(() => setClicked(false), 200); // Duración del efecto de clic
   };
 
-
-
-  // Formatea el tiempo restante
   const formatTime = (ms) => {
     if (ms <= 0) return 'Time is up!';
     
@@ -96,10 +90,8 @@ const Description = ({ memedata, MemeFee, Tradestarted, ProtectTime, setShowMyMo
               </h3>
               <p className="flex flex-fil items-center gap-2 text-sm sm:text-md font-medium text-gray-400 italic">
                 {memedata.network}
-                {/*<TradingStatusDot/>*/}
               </p>
             </div>
-            {/* Botón Expand para pantallas pequeñas */}
             <div className="lg:hidden">
               <button
                 className="bg-gray-600 hover:bg-gray-700 text-white font-bold text-sm px-4 py-1 rounded-full mt-1 transition-transform transform hover:scale-105"
@@ -109,7 +101,6 @@ const Description = ({ memedata, MemeFee, Tradestarted, ProtectTime, setShowMyMo
               </button>
             </div>
 
-            {/* Información adicional */}
             <div className={`${showExpanded ? 'block' : 'hidden'} lg:grid lg:grid-fil-2 w-full`}>
               <div className={`grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 lg:grid lg:grid-cols-2 w-full`}>
                 <div className="flex flex-col items-center md:items-start space-y-1 py-1 px-3 rounded-md bg-gray-800">
@@ -134,9 +125,6 @@ const Description = ({ memedata, MemeFee, Tradestarted, ProtectTime, setShowMyMo
                   </div>
 
                   <div className='text-sm'>
-                    {/*<DigitalClock
-                      contract={timeframeAddress}
-                    />*/}
                   </div>
                 </div>
 
@@ -211,13 +199,12 @@ const Description = ({ memedata, MemeFee, Tradestarted, ProtectTime, setShowMyMo
             </div>
             )}
           </div>
-          {/* Termómetro Visual - Posicionado a la derecha */}
           {MemeFee > 0 && (
             <div className="flex items-start lg:items-center space-x-4 mt-4 lg:mt-0 lg:ml-4 hidden lg:flex">
               <div className="relative h-32 w-3 bg-gray-200 rounded-full overflow-hidden flex flex-col">
                 <div
                   className="absolute bottom-0 left-0 w-full bg-green-600 transition-all duration-500 ease-in-out"
-                  style={{ height: `${MemeFee / 100}%` }} // Altura basada en el fee
+                  style={{ height: `${MemeFee / 100}%` }}
                 />
               </div>
               <div className="flex flex-col justify-between h-32 w-8 text-gray-400 text-xs">

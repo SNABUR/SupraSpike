@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { BCS } from "aptos";
-import { useWallet } from "../context/walletContext"; // Importa el hook del contexto
-// import { predictCID } from './predictCID';
+import { useWallet } from "../context/walletContext"; 
 
 const useCreateMemeTransaction = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState(null);
-  const { provider } = useWallet(); // Obtén el provider desde el contexto
+  const { provider } = useWallet(); 
   const CONTRACT_ADDRESS = "0x8ca3b113f2078264e479af7f548e113731d626878cfcfe9f2f2bd12b53741d32";
 
   const createMeme = async (memeName: string, memeSymbol: string, description:string, image:any, website: string, telegram:string, twitter:string ) => {
@@ -27,7 +26,6 @@ const useCreateMemeTransaction = () => {
       setIsLoading(true);
       setError(null);
       console.log("pass here")
-      // Conectar con la wallet
       const accounts = await provider.connect();
       const transactionData = await provider.createRawTransactionData([
         accounts[0],
@@ -37,13 +35,13 @@ const useCreateMemeTransaction = () => {
         "deploy",
         [],
         [
-          BCS.bcsSerializeStr(description), // meme description
-          BCS.bcsSerializeStr(memeName), // meme name
-          BCS.bcsSerializeStr(uppersymbol), // meme SYMBOL
-          BCS.bcsSerializeStr("URI"), // URI JSON
-          BCS.bcsSerializeStr(website), // WEBSITE
-          BCS.bcsSerializeStr(telegram), // TELEGRAM
-          BCS.bcsSerializeStr(twitter), // TWITTER
+          BCS.bcsSerializeStr(description), 
+          BCS.bcsSerializeStr(memeName), 
+          BCS.bcsSerializeStr(uppersymbol), 
+          BCS.bcsSerializeStr("URI"), 
+          BCS.bcsSerializeStr(website), 
+          BCS.bcsSerializeStr(telegram), 
+          BCS.bcsSerializeStr(twitter), 
         ],
         { txExpiryTime: Math.ceil(Date.now() / 1000) + 30 },
       ]);
@@ -57,12 +55,6 @@ const useCreateMemeTransaction = () => {
       };
 
       const tx = await provider.sendTransaction(params);
-
-      // const mainAcc = accounts[0];
-      // const contractmeme = "kjvnsdkfjvn";
-      // const data_creation = Date.now;
-      // const network = "Supra";
-      // const uri = "data json";
 
       if (tx) {
         setResult(tx);

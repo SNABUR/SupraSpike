@@ -1,17 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import ApproveTransaction from "./components/approve";
 import Airdrop from "./components/Airdrop";
-import { useWallet } from "../context/walletContext"; // Importa el hook del contexto
 
 export default function Home() {
   const [account, setAccount] = useState("");
   const [isInstalled, setIsInstalled] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [showDisconnect, setShowDisconnect] = useState(false);
-  const [showMenu, setShowMenu] = useState(false);
 
 
   const shortAccount = account ? `${account.slice(0, 6)}...${account.slice(-4)}` : "";

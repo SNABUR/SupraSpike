@@ -30,7 +30,6 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/* Envolvemos todo el contenido de la app en el WalletProvider */}
         <WalletProvider>
           <Bar />
           {children}

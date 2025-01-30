@@ -4,11 +4,11 @@ import React, {useState, useRef} from "react";
 function FileUpload({ onFileSelect }) {
     const [file, setFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null);
-    const fileInputRef = useRef(null); // Ref para acceder al input de archivo
+    const fileInputRef = useRef(null); 
   
   
     const handleDragOver = (event) => {
-        event.preventDefault(); // Evita comportamientos por defecto
+        event.preventDefault(); 
     };
   
     const handleDrop = (event) => {
@@ -29,7 +29,7 @@ function FileUpload({ onFileSelect }) {
     };
   
     const handleClick = () => {
-      fileInputRef.current.click(); // Activa el input de archivo cuando se hace clic en el área
+      fileInputRef.current.click();
     };
   
     const updatePreview = (file) => {
@@ -50,7 +50,7 @@ function FileUpload({ onFileSelect }) {
     return (
         <div>
             <div
-                onClick={handleClick} // Maneja clic aquí
+                onClick={handleClick} 
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
                 className="flex border-dashed border-4 border-gray-500 py-1 px-5 text-center cursor-pointer"
@@ -77,9 +77,8 @@ function FileUpload({ onFileSelect }) {
                     type="file"
                     onChange={handleFileChange}
                     style={{ display: 'none' }}
-                    ref={fileInputRef} // Referencia al input
+                    ref={fileInputRef}
   
-                    // ref={input => input && !previewUrl && input.click()} // Automatically trigger click if no file
                 />
             </div>
   

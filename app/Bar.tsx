@@ -4,10 +4,10 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { HiMenuAlt4 } from "react-icons/hi";
-import { useWallet } from "./context/walletContext"; // Importa el hook del contexto
+import { useWallet } from "./context/walletContext";
 import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
-import { usePathname } from 'next/navigation'; // Importa usePathname de Next.js
-import Wallets from "./wallets"; // Ajusta la ruta al archivo Wallets.js
+import { usePathname } from 'next/navigation'; 
+import Wallets from "./wallets";
 
 export default function Bar() {
   const [toggleMenu, setToggleMenu] = useState(false);
@@ -17,15 +17,15 @@ export default function Bar() {
   const openWallets = () => setVisibleWallets(true);
   const closeWallets = () => setVisibleWallets(false);
 
-  const { walletAddress, disconnectWallet, changeNetworkSupra } = useWallet(); // Obtén los datos y funciones del contexto
-  const [network, setNetwork] = useState('8'); // Estado para la red actual
-  const pathname = usePathname(); // Obtén la ruta actual
+  const { walletAddress, disconnectWallet, changeNetworkSupra } = useWallet();
+  const [network, setNetwork] = useState('8'); 
+  const pathname = usePathname();
 
   const shortAccount = walletAddress ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}` : "";
 
   const handleToggleClick = (e: { stopPropagation: () => void }) => {
-    e.stopPropagation(); // Evita que el clic se propague
-    setToggleMenu((prev) => !prev); // Cambia el estado de toggleMenu
+    e.stopPropagation(); 
+    setToggleMenu((prev) => !prev);
   };
 
   const handleNetworkChange = (event: any) => {
@@ -53,13 +53,12 @@ export default function Bar() {
     };
   }, []);
 
-  // Efecto para cambiar automáticamente entre mainnet y testnet según la ruta
   useEffect(() => {
     if (pathname === '/' || pathname === '/Degen/spike-SPIKE') {
-      changeNetworkSupra(6); // Cambia a testnet (6 es el valor de testnet)
+      changeNetworkSupra(6);
       setNetwork('6');
     } else if (pathname === '/NFT' || pathname === '/IDO' || pathname === '/airdrop') {
-      changeNetworkSupra(8); // Cambia a mainnet (8 es el valor de mainnet)
+      changeNetworkSupra(8); 
       setNetwork('8');
     }
   }, [pathname, changeNetworkSupra]);
@@ -83,7 +82,6 @@ export default function Bar() {
             <Link href="/IDO" className="nav-link">IDO</Link>
             <Link href="/Degen/spike-SPIKE" className="nav-link">Degen</Link>
 
-            {/* Selector de red */}
             <FormControl sx={{ minWidth: 120, color: 'black' }}>
               <InputLabel id="network-select-label" sx={{ color: 'black' }}>Network</InputLabel>
                 <Select
@@ -108,7 +106,7 @@ export default function Bar() {
                   MenuProps={{
                     PaperProps: {
                       sx: {
-                        backgroundColor: 'black', // Fondo oscuro para el menú desplegable
+                        backgroundColor: 'black', 
                         color: 'white',
                       },
                     },
@@ -121,7 +119,6 @@ export default function Bar() {
 
             {walletAddress ? (
                 <div className="relative">
-                    {/* Botón de cuenta */}
                     <button
                         onClick={() => setShowDisconnect(!showDisconnect)}
                         className="bg-[#1D2A3A] text-[#F2F5F5] font-bold text-sm sm:text-base py-2 px-4 sm:py-3 sm:px-6 rounded-lg shadow-md hover:bg-[#353F4A] transition duration-300"
@@ -129,7 +126,6 @@ export default function Bar() {
                         {shortAccount}
                     </button>
 
-                    {/* Menú de desconexión */}
                     {showDisconnect && (
                         <div className="absolute right-0 mt-2 w-48 bg-[#1D2A3A] rounded-lg shadow-lg border border-[#353F4A]">
                             <button
@@ -151,14 +147,12 @@ export default function Bar() {
             )}
           </nav>
 
-          {/* Versión móvil */}
           <div className="flex md:hidden ml-auto py-2 px-3 w-full justify-between items-center">
             <button onClick={handleToggleClick} className="text-white cursor-pointer">
               {toggleMenu ? <AiOutlineClose fontSize={28} /> : <HiMenuAlt4 fontSize={28} />}
             </button>
           </div>
 
-          {/* Menú móvil */}
           {toggleMenu && (
             <ul className="fixed top-0 right-0 w-[60vw] max-w-xs h-screen shadow-2xl md:hidden flex flex-col justify-start items-center rounded-l-lg bg-black text-white animate-slide-in z-30 p-6 toggle-menu space-y-4">
               <li>

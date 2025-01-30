@@ -6,14 +6,12 @@ const useViewCoin = () => {
   const [resultCoin, setResultCoin] = useState<number | null>(null);
 
   const callViewCoin = useCallback(async (functionName: string, args: any) => {
-    // Define la función del contrato para obtener CoinStore
     const contractFunctionName = `0x8ca3b113f2078264e479af7f548e113731d626878cfcfe9f2f2bd12b53741d32::Liquid_Staking_Token::${functionName}`;
 
-    // Construye el payload para la llamada
     const payload = {
       function: contractFunctionName,
-      type_arguments: [], // Si aplica, añade tipos genéricos
-      arguments: args, // Dirección de la cuenta como argumento
+      type_arguments: [],
+      arguments: args, 
     };
 
     setLoadingCoin(true);
@@ -32,7 +30,7 @@ const useViewCoin = () => {
 
       if (data) {
         console.log(data, "data result from view coin");
-        setResultCoin(data); // Convierte a número si es necesario
+        setResultCoin(data); 
       } else {
         throw new Error("No balance returned from the view function.");
       }

@@ -7,7 +7,6 @@ import Big from "big.js";
 export default function Admin() {
     
   const [account, setAccount] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
   const [showDisconnect, setShowDisconnect] = useState(false);
   const [memeContract, setMemeContract] = useState("");
   const [amount, setAmount] = useState("");

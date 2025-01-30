@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { useWallet } from "../context/walletContext"; // Importa el hook del contexto
+import { useWallet } from "../context/walletContext"; 
 import {BCS} from "aptos";
 
 const useGetNFT = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<string | null>(null);
-  const { connectWallet, provider, walletAddress } = useWallet(); // Obtén el provider desde el contexto
+  const { connectWallet, provider, walletAddress } = useWallet(); 
   const CONTRACT_ADDRESS = "0xa8ff8aa5c6cf9b7511250ca1218efee986a38c50c6f794dff95389623e759a4b";
 
   const mintNFT = async () => {
@@ -17,7 +17,7 @@ const useGetNFT = () => {
     try {
     setIsLoading(true);
     setError(null);
-      const txExpiryTime = Math.ceil(Date.now() / 1000) + 30; // 30 seconds expiry
+      const txExpiryTime = Math.ceil(Date.now() / 1000) + 30;
       const optionalTransactionPayloadArgs = { txExpiryTime };
       const rawTxPayload = [
         walletAddress,
@@ -25,9 +25,9 @@ const useGetNFT = () => {
         CONTRACT_ADDRESS,
         "nft",
         "mint",
-        [], // Arguments for the mint function
+        [], 
         [
-          BCS.bcsSerializeUint64(Number(1)), //amount to deposit in vault faucet
+          BCS.bcsSerializeUint64(Number(1)),
         ],
         optionalTransactionPayloadArgs,
       ];  
@@ -46,7 +46,7 @@ const useGetNFT = () => {
       const tx = await provider.sendTransaction(params);
       if (!tx) {
         console.error("Transaction is empty.");
-        return; // Detener ejecución si `tx` está vacío
+        return;
       }
       console.log("networkData.chainId", networkData.chainId);
 

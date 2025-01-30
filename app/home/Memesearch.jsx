@@ -1,16 +1,8 @@
 "use client";
 
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import Link from 'next/link';
 import Image from 'next/image';
-//import { useRouter } from 'next/router';
-
-//import { dbMemesPoint } from '../../../utils/axiossonfig'; // Importa la configuración de Axios
-
-//import no_image from "../../../../images/no_image.png";
-//import metamask from "../../../../images/metamask.svg";
-//import etherscan from "../../../../images/etherscan_logo.svg";
-//import copy_logo from "../../../../images/copy.svg";
 
 const isValidUrl = (url) => {
     try {
@@ -38,40 +30,38 @@ const LoadingBox = () => (
 );
 
 const Meme_Search = () => {
-    //const router = useRouter();
     const [memes, setMemes] = useState([]);
     const [search, setSearch] = useState("");
     const [scalingButtons, setScalingButtons] = useState({});
     const [loading, setLoading] = useState(true);
 
-    const MAX_RETRIES = 3; // Número máximo de intentos
-    const RETRY_DELAY = 3000; // Retraso entre intentos (en milisegundos)
+    const MAX_RETRIES = 3; 
+    const RETRY_DELAY = 3000; 
     
     const fetchDataWithRetry = async (retries = MAX_RETRIES) => {
-        setLoading(true); // Establecer el estado de carga al inicio de la solicitud
+        setLoading(true); 
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/db_memes`  );
             console.log(response, "response data");
     
-            // Verifica que la respuesta sea exitosa (status 200)
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
     
-            const data = await response.json(); // Solo parsea JSON si la respuesta fue exitosa
+            const data = await response.json();
             setMemes(data);
             console.log(data, "all meme data");
         } catch (error) {
             console.error('Error fetching memes:', error);
             if (retries > 0) {
                 console.log(`Reintentando... Quedan ${retries} intentos`);
-                await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY)); // Esperar antes de reintentar
-                return fetchDataWithRetry(retries - 1); // Volver a llamar a la función
+                await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY)); 
+                return fetchDataWithRetry(retries - 1);
             } else {
                 console.log("Se han agotado todos los reintentos. No se pudo obtener los datos.");
             }
         } finally {
-            setLoading(false); // Dejar de mostrar el estado de carga
+            setLoading(false);
         }
     };
     
@@ -107,7 +97,7 @@ const Meme_Search = () => {
                         ...prevState,
                         [contract]: false
                     }));
-                }, 400); // Duración de la animación en milisegundos
+                }, 400); 
             });
     };
     
@@ -123,7 +113,6 @@ const Meme_Search = () => {
             }
     
             const data = await response.json(); // Solo parsea JSON si la respuesta fue exitosa
-            // Actualizar el estado 'memes' con los resultados de la búsqueda
             setMemes(data);
         } catch (error) {
             console.error('Error fetching memes:', error);
@@ -183,7 +172,6 @@ const Meme_Search = () => {
                         <Link
                             href={{
                                 pathname: `/Degen/${meme.name}-${meme.symbol}`,
-                                //query: { meme: JSON.stringify(meme) }
                             }}
                         >
                             <div className="p-3 cursor-pointer mb-3">
@@ -192,8 +180,8 @@ const Meme_Search = () => {
                                 src={isValidUrl(meme.image) ? meme.image : "/no_image.jpg"} 
                                 alt={meme.name} 
                                 layout="responsive"
-                                width={500} // Ajusta el ancho según tus necesidades
-                                height={300} // Ajusta la altura según tus necesidades
+                                width={500} 
+                                height={300} 
                             />
                             </div>
                         </Link>
@@ -221,7 +209,6 @@ const Meme_Search = () => {
                                 <div className="text-xs font-semibold text-gray-700">Red: Supra
                                     {/*meme.network*/}
                                     </div>
-                                {/*<h1 className="text-center text-xs text-gray-700 p-2">{meme.description}</h1>*/}
                                 <div className="flex justify-between items-center text-xs mb-2">
                                     <a href={`https://testnet.suprascan.io/address/${meme.tokenAddress}`} target="_blank" rel="noopener noreferrer" className="text-gray-700 font-semibold">Created by: {meme.dev?.slice(0, 6)}...{meme.dev?.slice(-4)}</a>
                                     <a href={`https://testnet.suprascan.io/address/${meme.tokenAddress}`} target="_blank" rel="noopener noreferrer">

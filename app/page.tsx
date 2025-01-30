@@ -1,9 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { BCS,TxnBuilderTypes } from "aptos";
-import Image from "next/image";
-import Link from "next/link";
+import { useState } from "react";
+
 import PopUp from "./home/components/PopUp";
 import Meme_search from "./home/Memesearch"; 
 

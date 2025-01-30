@@ -3,14 +3,14 @@
 import { useState } from "react";
 import { AptosClient } from "aptos";
 
-const RPC_URL = "https://rpc-wallet-mainnet.supra.com/"; // URL del cliente RPC
+const RPC_URL = "https://rpc-wallet-mainnet.supra.com/"; 
 const client = new AptosClient(RPC_URL);
 
 export default function Profile() {
-  const [resources, setResources] = useState<any[]>([]); // Estado para almacenar los recursos
-  const [loading, setLoading] = useState(false); // Estado para manejar el estado de carga
-  const [error, setError] = useState<string | null>(null); // Estado para manejar errores
-  const [debugData, setDebugData] = useState<string | null>(null); // Para depuración de respuesta cruda
+  const [resources, setResources] = useState<any[]>([]); 
+  const [loading, setLoading] = useState(false); 
+  const [error, setError] = useState<string | null>(null); 
+  const [debugData, setDebugData] = useState<string | null>(null); 
 
   const getAccountResources = async (accountAddress: string) => {
     setLoading(true);
@@ -19,11 +19,7 @@ export default function Profile() {
 
     try {
       const resources = await client.getAccountResources(accountAddress);
-
-      // Guardar los datos de los recursos
       setResources(resources);
-
-      // Guardar los datos para depuración en formato legible
       setDebugData(JSON.stringify(resources, null, 2));
     } catch (err) {
       setError("Error al obtener los recursos. Por favor, inténtalo de nuevo.");
@@ -48,13 +44,10 @@ export default function Profile() {
         Obtener Recursos de la Cuenta
       </button>
 
-      {/* Indicador de carga */}
       {loading && <p className="text-gray-500">Cargando...</p>}
 
-      {/* Mensaje de error */}
       {error && <p className="text-red-500">{error}</p>}
 
-      {/* Mostrar recursos obtenidos */}
       {resources.length > 0 && (
         <div className="bg-gray-100 p-4 rounded shadow-md w-3/4 max-h-[400px] overflow-y-auto">
           <h2 className="text-lg font-semibold mb-2">Recursos:</h2>
@@ -70,7 +63,6 @@ export default function Profile() {
         </div>
       )}
 
-      {/* Bloque de depuración */}
       {debugData && (
         <div className="bg-yellow-100 p-4 rounded shadow-md w-3/4 max-h-[400px] overflow-y-auto">
           <h2 className="text-lg font-semibold mb-2 text-yellow-600">
