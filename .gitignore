@@ -20,6 +20,9 @@
 # production
 /build
 
+#contractrs
+/smart_contract
+
 # misc
 .DS_Store
 *.pem
